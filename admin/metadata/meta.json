@@ -1,0 +1,11 @@
+{
+"label":"Manage Metadata",
+"menu":"System",
+"order":"6",
+
+"user_levels":["Admin"],
+
+"permissions":
+	{
+	}
+}
