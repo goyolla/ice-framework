@@ -45,6 +45,12 @@ PermissionAdapter.method('getFormFields', function() {
 	];
 });
 
+PermissionAdapter.method('getFilters', function() {
+	return [
+	        [ "module_id", {"label":"Module","type":"select2","allow-null":true,"null-label":"All Modules","remote-source":["Module","id","menu+name"]}] 
+	];
+});
+
 PermissionAdapter.method('getActionButtonsHtml', function(id,data) {
 	var html = '<div style="width:80px;"><img class="tableActionButton" src="_BASE_images/edit.png" style="cursor:pointer;" rel="tooltip" title="Edit" onclick="modJs.edit(_id_);return false;"></img></div>';
 	html = html.replace(/_id_/g,id);
