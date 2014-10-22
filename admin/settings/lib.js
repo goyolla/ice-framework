@@ -7,8 +7,8 @@
  * SettingAdapter
  */
 
-function SettingAdapter(endPoint) {
-	this.initAdapter(endPoint);
+function SettingAdapter(endPoint,tab,filter,orderBy) {
+	this.initAdapter(endPoint,tab,filter,orderBy);
 }
 
 SettingAdapter.inherits(AdapterBase);

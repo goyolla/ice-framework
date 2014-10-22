@@ -77,8 +77,8 @@ class SNSEmailSender extends EmailSender{
 	public function __construct($settings){
 		parent::__construct($settings);
 		$arr = array(
-				'key'    => $this->settings->getSetting('Email: Amazon SNS Key'),
-				'secret' => $this->settings->getSetting('Email: Amazone SNS Secret')
+				'key'    => $this->settings->getSetting('Email: Amazon Access Key ID'),
+				'secret' => $this->settings->getSetting('Email: Amazon Secret Access Key')
 		);
 		$this->ses = new AmazonSES($arr);
 	}
@@ -157,4 +157,30 @@ class SMTPEmailSender extends EmailSender{
 		
 		return true;
     }
+}
+
+
+
+class PHPMailer extends EmailSender{
+
+	public function __construct($settings){
+		parent::__construct($settings);
+	}
+
+	protected  function sendMail($subject, $body, $toEmail, $fromEmail) {
+
+		error_log("Sending email to: ".$toEmail."/ from: ".$fromEmail);
+
+		$headers  = 'MIME-Version: 1.0' . "\r\n";
+		$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+		$headers .= 'From: '.$fromEmail. "\r\n";
+		$headers .= 'IceHrm-Mailer: PHP/' . phpversion();
+
+		// Mail it
+		$res = mail($toEmail, $subject, $body, $headers);
+
+		error_log("PHP mailer result : ".$res);
+
+		return true;
+	}
 }

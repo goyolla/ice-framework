@@ -154,7 +154,7 @@ create table `Settings` (
 	`created` DATETIME default '0000-00-00 00:00:00',
 	`updated` DATETIME default '0000-00-00 00:00:00',
 	primary key  (`id`),
-	key(`name`)
+	UNIQUE KEY (`name`)
 ) engine=innodb default charset=utf8;
 
 

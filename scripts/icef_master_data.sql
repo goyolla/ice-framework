@@ -668,14 +668,14 @@ INSERT INTO `Nationality` (`id`, `name`) VALUES
 
 INSERT INTO `Settings` (`name`, `value`, `description`, `meta`) VALUES
 ('Email: Enable', '1', '0 will disable all outgoing emails from modules. Value 1 will enable outgoing emails','["value", {"label":"Value","type":"select","source":[["1","Yes"],["0","No"]]}]'),
-('Email: Mode', 'SMTP', 'SMTP or SNS. SMTP = emails sent using local or a remote smtp server. SNS = Amazon SNS, which send emails trough amazon Simple notification system.','["value", {"label":"Value","type":"select","source":[["SMTP","SMTP"],["SNS","SNS"]]}]'),
+('Email: Mode', 'SMTP', 'SMTP, PHP Mailer or Amazon SES. SMTP = send emails using local or a remote smtp server. PHP Mailer = send emails using mail function provided by php. Amazon SES = send emails trough amazon Simple Email Service.','["value", {"label":"Value","type":"select","source":[["SMTP","SMTP"],["PHP Mailer","PHP Mailer"],["SES","Amazon SES"]]}]'),
 ('Email: SMTP Host', 'localhost', 'SMTP host IP',''),
 ('Email: SMTP Authentication Required', '0', 'Is authentication required by this SMTP server','["value", {"label":"Value","type":"select","source":[["1","Yes"],["0","No"]]}]'),
 ('Email: SMTP User', 'none', 'SMTP user',''),
 ('Email: SMTP Password', 'none', 'SMTP password',''),
 ('Email: SMTP Port', 'none', '25',''),
-('Email: Amazon SNS Key', '', 'If email mode is Amazon SNS please provide SNS Key',''),
-('Email: Amazone SNS Secret', '',  'If email mode is Amazon SNS please provide SNS Secret',''),
+('Email: Amazon Access Key ID', '',  'If email mode is Amazon SES please provide Access key ID',''),
+('Email: Amazon Secret Access Key', '',  'If email mode is Amazon SES please provide Secret Access Key',''),
 ('Email: Email From', 'iceframework@mydomain.com', '',''),
 ('System: Do not pass JSON in request', '0', 'Select Yes if you are having trouble loading data for some tables','["value", {"label":"Value","type":"select","source":[["1","Yes"],["0","No"]]}]'),
 ('System: Reset Modules and Permissions', '0', 'Select this to reset module and permission information in Database (If you have done any changes to meta files)','["value", {"label":"Value","type":"select","source":[["1","Yes"],["0","No"]]}]'),

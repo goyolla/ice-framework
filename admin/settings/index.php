@@ -1,19 +1,19 @@
 <?php 
 /*
-This file is part of Ice Framework.
+This file is part of iCE Hrm.
 
-Ice Framework is free software: you can redistribute it and/or modify
+iCE Hrm is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-Ice Framework is distributed in the hope that it will be useful,
+iCE Hrm is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Ice Framework. If not, see <http://www.gnu.org/licenses/>.
+along with iCE Hrm. If not, see <http://www.gnu.org/licenses/>.
 
 ------------------------------------------------------------------
 
@@ -46,7 +46,7 @@ include APP_BASE_PATH.'modulejslibs.inc.php';
 <script>
 var modJsList = new Array();
 
-modJsList['tabSetting'] = new SettingAdapter('Setting','Setting');
+modJsList['tabSetting'] = new SettingAdapter('Setting','Setting','','name');
 modJsList['tabSetting'].setShowAddNew(false);
 
 var modJs = modJsList['tabSetting'];

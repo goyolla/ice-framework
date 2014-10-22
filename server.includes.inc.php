@@ -131,6 +131,8 @@ if($emailEnabled == "1"){
 		$emailSender = new SMTPEmailSender($settingsManager);
 	}else if($emailMode == "SNS"){
 		$emailSender = new SNSEmailSender($settingsManager);
+	}else if($emailMode == "PHP Mailer"){
+		$emailSender = new PHPMailer($settingsManager);	
 	}
 }
 
