@@ -667,7 +667,6 @@ INSERT INTO `Nationality` (`id`, `name`) VALUES
 
 
 INSERT INTO `Settings` (`name`, `value`, `description`, `meta`) VALUES
-('Company: Name', 'Sample Company Pvt Ltd', 'Update your company name - For updating company logo copy a file named logo.png to /app/data/ folder', ''),
 ('Email: Enable', '1', '0 will disable all outgoing emails from modules. Value 1 will enable outgoing emails','["value", {"label":"Value","type":"select","source":[["1","Yes"],["0","No"]]}]'),
 ('Email: Mode', 'SMTP', 'SMTP or SNS. SMTP = emails sent using local or a remote smtp server. SNS = Amazon SNS, which send emails trough amazon Simple notification system.','["value", {"label":"Value","type":"select","source":[["SMTP","SMTP"],["SNS","SNS"]]}]'),
 ('Email: SMTP Host', 'localhost', 'SMTP host IP',''),
@@ -680,6 +679,7 @@ INSERT INTO `Settings` (`name`, `value`, `description`, `meta`) VALUES
 ('Email: Email From', 'iceframework@mydomain.com', '',''),
 ('System: Do not pass JSON in request', '0', 'Select Yes if you are having trouble loading data for some tables','["value", {"label":"Value","type":"select","source":[["1","Yes"],["0","No"]]}]'),
 ('System: Reset Modules and Permissions', '0', 'Select this to reset module and permission information in Database (If you have done any changes to meta files)','["value", {"label":"Value","type":"select","source":[["1","Yes"],["0","No"]]}]'),
+('System: Add New Permissions', '0', 'Select this to add new permission changes done to meta.json file of any module','["value", {"label":"Value","type":"select","source":[["1","Yes"],["0","No"]]}]'),
 ('System: Debug Mode', '0', '','["value", {"label":"Value","type":"select","source":[["1","Yes"],["0","No"]]}]');
 
 

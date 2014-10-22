@@ -17,6 +17,12 @@ if($settingsManager->getSetting("System: Reset Modules and Permissions") == "1")
 	$settingsManager->setSetting("System: Reset Modules and Permissions","0");
 }
 
+$addNewPermissions = false;
+if($settingsManager->getSetting("System: Add New Permissions") == "1"){
+	$addNewPermissions = true;
+	$settingsManager->setSetting("System: Add New Permissions","0");
+}
+
 function includeModuleManager($type,$name){
 	global $moduleManagers;
 	$moduleCapsName = ucfirst($name);
@@ -88,6 +94,11 @@ foreach($ams as $am){
 		//Check in admin dbmodules
 		if(isset($adminDBModuleList[$arr['label']])){
 			$dbModule = $adminDBModuleList[$arr['label']];
+			
+			if($addNewPermissions && isset($meta->permissions)){
+				createPermissions($meta, $dbModule->id);
+			}
+			
 			if($dbModule->status == 'Disabled'){
 				continue;	
 			}
@@ -152,6 +163,11 @@ foreach($ams as $am){
 		//Check in admin dbmodules
 		if(isset($userDBModuleList[$arr['label']])){
 			$dbModule = $userDBModuleList[$arr['label']];
+			
+			if($addNewPermissions && isset($meta->permissions)){
+				createPermissions($meta, $dbModule->id);
+			}
+			
 			if($dbModule->status == 'Disabled'){
 				continue;
 			}
