@@ -1,5 +1,6 @@
 <?php
 include dirname(__FILE__).'/config.php';
+include(CLIENT_APP_PATH.'../adodb512/adodb.inc.php');
 
 $isConfigFileExists = file_exists(CLIENT_APP_PATH."config.php");
 $configData = file_get_contents(CLIENT_APP_PATH."config.php");
@@ -19,42 +20,32 @@ if(!$isConfigFileExists || $configData != ""){
 $action = $_REQUEST['action'];
 
 if($action == "TEST_DB"){
-	$con = mysql_connect($_REQUEST["APP_HOST"],$_REQUEST["APP_USERNAME"],$_REQUEST["APP_PASSWORD"]);
-	if (!$con){
+	
+	$db = NewADOConnection('mysql');
+	$res = $db->Connect($_REQUEST["APP_HOST"], $_REQUEST["APP_USERNAME"], $_REQUEST["APP_PASSWORD"], $_REQUEST["APP_DB"]);
+	
+	if (!$res){
 		error_log('Could not connect: ' . mysql_error());
 		$ret["status"] = "ERROR";
 		$ret["msg"] = "Incorrect credentials or incorrect DB host";
 		echo json_encode($ret);	
 		exit();
 	}
-	$selected = mysql_select_db($_REQUEST["APP_DB"],$con);
-	if(!$selected){
-		error_log('Could not select DB: ' . mysql_error());	
-		$ret["status"] = "ERROR";
-		$ret["msg"] = "User doesn't have access to database or non existing database";
-		echo json_encode($ret);	
-		mysql_close($con);
-		exit();	
-	}
 	
-	$result = mysql_query("Show tables");
-	error_log(print_r($result,true));
-	$num_rows = mysql_num_rows($result);
-	error_log($num_rows);
+	$result = $db->Execute("Show tables");
+	error_log(print_r("Number of tables:".$result->RecordCount(),true));
+	$num_rows = $result->RecordCount();
 	if($num_rows != 0){
 		error_log('Database is not empty: ' . mysql_error());	
 		$ret["status"] = "ERROR";
 		$ret["msg"] = "Database is not empty";
 		echo json_encode($ret);	
-		mysql_close($con);
 		exit();		
 	}
 	
 	$ret["status"] = "SUCCESS";
 	$ret["msg"] = "Successfully connected to the database";
 	echo json_encode($ret);	
-	
-	mysql_close($con);
 	
 }else if($action == "INS"){
 	
@@ -80,33 +71,27 @@ if($action == "TEST_DB"){
 	$config = str_replace("_CLIENT_", 'app', $config);
 	
 	$con = mysql_connect($_REQUEST["APP_HOST"],$_REQUEST["APP_USERNAME"],$_REQUEST["APP_PASSWORD"]);
-	if (!$con){
+	
+	$db = NewADOConnection('mysql');
+	$res = $db->Connect($_REQUEST["APP_HOST"], $_REQUEST["APP_USERNAME"], $_REQUEST["APP_PASSWORD"], $_REQUEST["APP_DB"]);
+	
+	
+	if (!$res){
 		error_log('Could not connect: ' . mysql_error());
 		$ret["status"] = "ERROR";
 		$ret["msg"] = "Incorrect credentials or incorrect DB host";
 		echo json_encode($ret);	
 		exit();
 	}
-	$selected = mysql_select_db($_REQUEST["APP_DB"],$con);
-	if(!$selected){
-		error_log('Could not select DB: ' . mysql_error());	
-		$ret["status"] = "ERROR";
-		$ret["msg"] = "User doesn't have access to database or non existing database";
-		echo json_encode($ret);	
-		mysql_close($con);
-		exit();	
-	}
 	
-	$result = mysql_query("Show tables");
-	error_log(print_r($result,true));
-	$num_rows = mysql_num_rows($result);
-	error_log($num_rows);
+	$result = $db->Execute("Show tables");
+	error_log(print_r("Number of tables:".$result->RecordCount(),true));
+	$num_rows = $result->RecordCount();
 	if($num_rows != 0){
 		error_log('Database is not empty: ' . mysql_error());	
 		$ret["status"] = "ERROR";
 		$ret["msg"] = "Database is not empty";
 		echo json_encode($ret);	
-		mysql_close($con);
 		exit();		
 	}
 	
@@ -118,7 +103,7 @@ if($action == "TEST_DB"){
 		if (preg_match('/^\s+$/', $sql) || $sql == '') { # skip empty lines
         	continue;
         }
-        mysql_query($sql);	
+        $db->Execute($sql);	
 	}
 	
 	//Run create table script
@@ -128,7 +113,7 @@ if($action == "TEST_DB"){
 		if (preg_match('/^\s+$/', $sql) || $sql == '') { # skip empty lines
         	continue;
         }
-        mysql_query($sql);	
+        $db->Execute($sql);	
 	}
 	
 	
@@ -149,6 +134,4 @@ if($action == "TEST_DB"){
 	$ret["status"] = "SUCCESS";
 	$ret["msg"] = "Successfully installed. Please rename or delete install folder";
 	echo json_encode($ret);	
-	
-	mysql_close($con);
 }
