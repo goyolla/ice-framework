@@ -114,7 +114,7 @@ NotificationManager.method('renderNotification' , function(notification) {
 
 	t = t.replace('#_time_#',notification.time);
 	t = t.replace('#_fromName_#',notification.type);
-	t = t.replace('#_message_#',this.getLineBreakString(notification.message,35));
+	t = t.replace('#_message_#',this.getLineBreakString(notification.message,27));
 	return t;
 });
 

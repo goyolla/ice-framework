@@ -2,7 +2,7 @@
 "label":"Profile",
 "menu":"My Account",
 "order":"1",
-
+"icon":"fa-user",
 "user_levels":["Admin","Manager","Profile"],
 
 "permissions":

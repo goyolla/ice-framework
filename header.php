@@ -27,9 +27,9 @@ if(empty($user)){
 }
 
 if($user->user_level == "Admin"){
-	$homeLink = CLIENT_BASE_URL."?g=admin&n=profiles&m=admin_Admin";
+	$homeLink = CLIENT_BASE_URL."?g=admin&n=dashboard&m=admin_Admin";
 }else{
-	$homeLink = CLIENT_BASE_URL."?g=modules&n=profiles&m=module_My_Account";
+	$homeLink = CLIENT_BASE_URL."?g=modules&n=dashboard&m=module_My_Account";
 }
 
 //Check Module Permissions
@@ -211,12 +211,28 @@ $meta = json_decode(file_get_contents(MODULE_PATH."/meta.json"),true);
 			function download(name, closeCallback, closeCallbackData){
 	
 				var successCallback = function(data){	
-					var link = '<a href="'+modJs.getCustomActionUrl("download",{'file':data['filename']})+'" target="_blank">Download File <i class="icon-download-alt"></i> </a>';
-					var fileParts = data['filename'].split(".");
+
+					var link;
+					var fileParts;
 					var viewableImages = ["png","jpg","gif","bmp","jpge"]; 
-					if(jQuery.inArray(fileParts[fileParts.length - 1], viewableImages ) >= 0) {
-						link += '<br/><br/><img style="max-width:545px;max-height:350px;" src="'+modJs.getClientDataUrl()+data['filename']+'"/>';
+					
+					if(data['filename'].indexOf("https:") == 0){
+
+						fileParts = data['filename'].split("?");
+						fileParts = fileParts[0].split(".");
+						
+						link = '<a href="'+data['filename']+'" target="_blank">Download File <i class="icon-download-alt"></i> </a>';
+						if(jQuery.inArray(fileParts[fileParts.length - 1], viewableImages ) >= 0) {
+							link += '<br/><br/><img style="max-width:545px;max-height:350px;" src="'+data['filename']+'"/>';
+						}	
+					}else{
+						fileParts = data['filename'].split(".");
+						link = '<a href="'+modJs.getCustomActionUrl("download",{'file':data['filename']})+'" target="_blank">Download File <i class="icon-download-alt"></i> </a>';
+						if(jQuery.inArray(fileParts[fileParts.length - 1], viewableImages ) >= 0) {
+							link += '<br/><br/><img style="max-width:545px;max-height:350px;" src="'+modJs.getClientDataUrl()+data['filename']+'"/>';
+						}
 					}
+					
 					modJs.showMessage("Download File Attachment",link,closeCallback,closeCallbackData);		
 				};
 				
@@ -440,7 +456,7 @@ $meta = json_decode(file_get_contents(MODULE_PATH."/meta.json"),true);
 			            	<?php if(count($menu['menu']) == 0){continue;}?>
 			            	<li  class="treeview" ref="<?="admin_".str_replace(" ", "_", $menu['name'])?>">			       
 			            		<a href="#">
-                                	<i class="fa fa-th"></i></i> <span><?=$menu['name']?></span>
+                                	<i class="fa <?=!isset($mainIcons[$menu['name']])?"fa-th":$mainIcons[$menu['name']];?>"></i></i> <span><?=$menu['name']?></span>
                                 	<i class="fa fa-angle-left pull-right"></i>
                             	</a>
 			            	
@@ -448,7 +464,7 @@ $meta = json_decode(file_get_contents(MODULE_PATH."/meta.json"),true);
 				            	<?php foreach ($menu['menu'] as $item){?>
 					            		<li>
 					            			<a href="<?=CLIENT_BASE_URL?>?g=admin&n=<?=$item['name']?>&m=<?="admin_".str_replace(" ", "_", $menu['name'])?>">
-					            			<i class="fa fa-angle-double-right"></i> <?=$item['label']?>
+					            			<i class="fa <?=!isset($item['icon'])?"fa-angle-double-right":$item['icon']?>"></i> <?=$item['label']?>
 					            			</a>
 					            		</li>
 				            	<?php }?>
@@ -465,7 +481,7 @@ $meta = json_decode(file_get_contents(MODULE_PATH."/meta.json"),true);
 			            	<?php if(count($menu['menu']) == 0){continue;}?>
 			            	<li  class="treeview" ref="<?="module_".str_replace(" ", "_", $menu['name'])?>">			       
 			            		<a href="#">
-                                	<i class="fa fa-th"></i></i> <span><?=$menu['name']?></span>
+                                	<i class="fa <?=!isset($mainIcons[$menu['name']])?"fa-th":$mainIcons[$menu['name']];?>"></i></i> <span><?=$menu['name']?></span>
                                 	<i class="fa fa-angle-left pull-right"></i>
                             	</a>
 			            	
@@ -473,7 +489,7 @@ $meta = json_decode(file_get_contents(MODULE_PATH."/meta.json"),true);
 				            	<?php foreach ($menu['menu'] as $item){?>
 				            		<li>
 				            			<a href="<?=CLIENT_BASE_URL?>?g=modules&n=<?=$item['name']?>&m=<?="module_".str_replace(" ", "_", $menu['name'])?>">
-				            			<i class="fa fa-angle-double-right"></i> <?=$item['label']?>
+				            			<i class="fa <?=!isset($item['icon'])?"fa-angle-double-right":$item['icon']?>"></i> <?=$item['label']?>
 				            			</a>
 				            		</li>
 				            	<?php }?>

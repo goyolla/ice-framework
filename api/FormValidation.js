@@ -62,6 +62,14 @@ function FormValidation(formId,validateAll,options) {
 				return str != null && emailPattern.test(str);  
 			},  
 			
+			emailOrEmpty: function (str) {  
+				if(str == ""){
+					return true;
+				}
+				var emailPattern = /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/;  
+				return str != null && emailPattern.test(str);  
+			}, 
+			
 			username: function (str) {  
 				var username = /^[a-zA-Z0-9]+$/;  
 				return str != null && username.test(str);  
@@ -161,7 +169,21 @@ FormValidation.method('checkValues' , function(options) {
 	    	//}else if(inputObject.hasClass('datetimeInput')){
 	    		//inputValue = inputObject.getDate()+":00";
 	    	}else{
-	    		inputValue = (type == "radio" || type == "checkbox")?$("input[name='" + name + "']:checked").val():inputObject.val();
+	    		//inputValue = (type == "radio" || type == "checkbox")?$("input[name='" + name + "']:checked").val():inputObject.val();
+	    		
+	    		inputValue = null;
+	    		if(type == "radio" || type == "checkbox"){
+	    			inputValue = $("input[name='" + name + "']:checked").val()
+	    		}else if(inputObject.hasClass('select2Field')){
+	    			if($('#'+id).select2('data') != null && $('#'+id).select2('data') != undefined){
+	    				inputValue = $('#'+id).select2('data').id;
+	    			}else{
+	    				inputValue = "";
+	    			}
+	    			
+	    		}else{
+	    			inputValue = inputObject.val();
+	    		}
 	    	}
 		   
 		    var validation = inputObject.attr('validation');

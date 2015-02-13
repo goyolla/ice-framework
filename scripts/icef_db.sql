@@ -162,14 +162,13 @@ create table `Modules` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
 	`menu` varchar(30) NOT NULL,
 	`name` varchar(100) NOT NULL,
+	`icon` VARCHAR( 50 ) NULL,
 	`mod_group` varchar(30) NOT NULL,
 	`mod_order` INT(11) NULL,
 	`status` enum('Enabled','Disabled') default 'Enabled',
 	`version` varchar(10) default '',
 	`update_path` varchar(500) default '',
 	`user_levels` varchar(500) NOT NULL,
-	`created` DATETIME default '0000-00-00 00:00:00',
-	`updated` DATETIME default '0000-00-00 00:00:00',
 	primary key  (`id`),
 	UNIQUE KEY `Modules_name_modgroup` (`name`,`mod_group`)
 ) engine=innodb default charset=utf8;

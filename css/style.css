@@ -376,7 +376,7 @@ color:#405A6A;
 }
 
 table.dataTable{
-	font-size: 1.2em;
+	font-size: 1.1em;
 }
 
 .form-horizontal{
@@ -446,4 +446,18 @@ background: #f0f0f0 !important;
 .popupForm{
 	border: none !important;
 	padding: 0px 19px 14px !important;
+}
+
+.content {
+background: #FFF;
+}
+
+.wrapper {
+background: #FFF;
+}
+
+.user-panel > .info > p {
+margin-bottom: 9px;
+max-width: 135px;
+line-height: 17px;
 }

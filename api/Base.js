@@ -274,7 +274,7 @@ IceHRMBase.method('callFunction', function (callback, cbParams) {
 IceHRMBase.method('getTableTopButtonHtml', function() {
 	var html = "";
 	if(this.getShowAddNew()){
-		html = '<button onclick="modJs.renderForm();return false;" class="btn btn-small btn-primary">Add New <i class="fa fa-plus"></i></button>';
+		html = '<button onclick="modJs.renderForm();return false;" class="btn btn-small btn-primary">'+this.getAddNewLabel()+' <i class="fa fa-plus"></i></button>';
 	}
 	
 	if(this.getFilters() != null){
@@ -726,7 +726,10 @@ IceHRMBase.method('showFilters', function(object) {
       language: 'en'
     });
 	
-	$tempDomObj.find('.select2Field').select2();
+	//$tempDomObj.find('.select2Field').select2();
+	$tempDomObj.find('.select2Field').each(function() {
+		$(this).select2().select2('val', $(this).find("option:eq(0)").val());
+	});
 
 	//var tHtml = $tempDomObj.wrap('<div>').parent().html();
 	this.showDomElement("Edit",$tempDomObj,null,null,true);
@@ -825,7 +828,11 @@ IceHRMBase.method('renderForm', function(object) {
       language: 'en'
     });
 	
-	$tempDomObj.find('.select2Field').select2();
+	//$tempDomObj.find('.select2Field').select2();
+	$tempDomObj.find('.select2Field').each(function() {
+		$(this).select2().select2('val', $(this).find("option:eq(0)").val());
+		
+	});
 	
 	if(this.showSave == false){
 		$tempDomObj.find('.saveBtn').remove();
@@ -942,11 +949,12 @@ IceHRMBase.method('cancel', function() {
 });
 
 IceHRMBase.method('renderFormField', function(field) {
+	var userId = 0;
 	if(this.fieldTemplates[field[1].type] == undefined || this.fieldTemplates[field[1].type] == null){
 		return "";
 	}
 	var t = this.fieldTemplates[field[1].type];
-	if(field[1].validation != "none" && field[1].type != "placeholder"){
+	if(field[1].validation != "none" &&  field[1].validation != "emailOrEmpty" && field[1].type != "placeholder" && field[1].label.indexOf('*') < 0){
 		field[1].label = field[1].label + '<font class="redFont">*</font>';
 	}
 	if(field[1].type == 'text' || field[1].type == 'textarea' || field[1].type == 'hidden' || field[1].type == 'label' || field[1].type == 'placeholder'){
@@ -1072,6 +1080,10 @@ IceHRMBase.method('getShowAddNew', function() {
 	return this.showAddNew;
 });
 
+IceHRMBase.method('getAddNewLabel', function() {
+	return "Add New";
+});
+
 IceHRMBase.method('setShowAddNew', function(showAddNew) {
 	this.showAddNew = showAddNew;
 });
@@ -1124,10 +1136,11 @@ IceHRMBase.method('getActionButtonsHtml', function(id,data) {
 
 
 IceHRMBase.method('generateRandom', function(length) {
+	var d = new Date();
 	var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	var result = '';
 	for (var i = length; i > 0; --i) result += chars[Math.round(Math.random() * (chars.length - 1))];
-	return result;
+	return result+d.getTime();
 });
 
 
@@ -1187,4 +1200,10 @@ IceHRMBase.method('getClientGMTOffset', function () {
 	
 	return std_time_offset;
 	
+});
+
+IceHRMBase.method('getHelpLink', function () {
+
+	return null;
+
 });

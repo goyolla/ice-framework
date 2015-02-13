@@ -52,6 +52,14 @@
 				$(this).tab('show');
 				modJs = modJsList[$(this).attr('id')];
 				modJs.get([]);
+
+				var helpLink = modJs.getHelpLink();
+				if(helpLink != null && helpLink != undefined){
+					$('.helpLink').attr('href',helpLink);
+					$('.helpLink').show();
+				}else{
+					$('.helpLink').hide();
+				}
 			});
 
 			var tabName = window.location.hash.substr(1);
@@ -72,6 +80,15 @@
 			});
 
 			$("#switch_emp").select2();
+
+			var helpLink = modJs.getHelpLink();
+			if(helpLink != null && helpLink != undefined){
+				$('.helpLink').attr('href',helpLink);
+				$('.helpLink').show();
+			}else{
+				$('.helpLink').hide();
+			}
+			
 		});
 		var clientUrl = '<?=CLIENT_BASE_URL?>';
 

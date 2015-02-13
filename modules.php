@@ -87,6 +87,7 @@ foreach($ams as $am){
 		$arr = array();
 		$arr['name'] = $am;	
 		$arr['label'] = $meta->label;	
+		$arr['icon'] = $meta->icon;	
 		$arr['menu'] = $meta->menu;	
 		$arr['order'] = $meta->order;
 		$arr['user_levels'] = $meta->user_levels;
@@ -106,6 +107,7 @@ foreach($ams as $am){
 			$dbModule = new Module();
 			$dbModule->menu = $arr['menu'];
 			$dbModule->name = $arr['label'];
+			$dbModule->icon = $arr['icon'];
 			$dbModule->mod_group = "admin";
 			$dbModule->mod_order = $arr['order'];
 			$dbModule->status = "Enabled";
@@ -156,6 +158,7 @@ foreach($ams as $am){
 		$arr = array();
 		$arr['name'] = $am;	
 		$arr['label'] = $meta->label;	
+		$arr['icon'] = $meta->icon;
 		$arr['menu'] = $meta->menu;	
 		$arr['order'] = $meta->order;
 		$arr['user_levels'] = $meta->user_levels;
@@ -175,6 +178,7 @@ foreach($ams as $am){
 			$dbModule = new Module();
 			$dbModule->menu = $arr['menu'];
 			$dbModule->name = $arr['label'];
+			$dbModule->icon = $arr['icon'];
 			$dbModule->mod_group = "user";
 			$dbModule->mod_order = $arr['order'];
 			$dbModule->status = "Enabled";
@@ -230,9 +234,11 @@ $adminMenus = json_decode(file_get_contents(CLIENT_PATH.'/admin/meta.json'),true
 $adminModules = array();
 $added = array();
 foreach($adminMenus as $menu){
-	$arr = array("name"=>$menu,"menu"=>$adminModulesTemp[$menu]);
-	$adminModules[] = $arr;	
-	$added[] = $menu;
+	if(isset($adminModulesTemp[$menu])){
+		$arr = array("name"=>$menu,"menu"=>$adminModulesTemp[$menu]);
+		$adminModules[] = $arr;	
+		$added[] = $menu;
+	}
 }
 
 
@@ -248,9 +254,11 @@ $userMenus = json_decode(file_get_contents(CLIENT_PATH.'/modules/meta.json'));
 $userModules = array();
 $added = array();
 foreach($userMenus as $menu){
-	$arr = array("name"=>$menu,"menu"=>$userModulesTemp[$menu]);
-	$userModules[] = $arr;	
-	$added[] = $menu;
+	if(isset($userModulesTemp[$menu])){
+		$arr = array("name"=>$menu,"menu"=>$userModulesTemp[$menu]);
+		$userModules[] = $arr;
+		$added[] = $menu;
+	}
 }
 
 

@@ -47,7 +47,7 @@ include APP_BASE_PATH.'modulejslibs.inc.php';
 var modJsList = new Array();
 
 modJsList['moduleModule'] = new ModuleAdapter('Module','Module');
-
+modJsList['moduleModule'].setShowAddNew(false);
 var modJs = modJsList['moduleModule'];
 
 </script>

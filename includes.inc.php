@@ -35,6 +35,19 @@ if(!empty($profileSwitched)){
 
 
 
+//Menu Icons
+$mainIcons = array();
+$mainIcons['Admin'] = 'fa-cubes';
+$mainIcons['Employees'] = 'fa-users';
+$mainIcons['System'] = 'fa-cogs';
+$mainIcons['Reports'] = 'fa-file-text';
+$mainIcons['Personal Information'] = 'fa-male';
+$mainIcons['Subordinates'] = 'fa-user';
+$mainIcons['Leaves'] = 'fa-calendar-o';
+$mainIcons['Time Management'] = 'fa-clock-o';
+$mainIcons['Documents'] = 'fa-files-o';
+$mainIcons['Training'] = 'fa-briefcase';
+$mainIcons['Loans'] = 'fa-list-alt';
 
 
 
