@@ -84,8 +84,8 @@ class SNSEmailSender extends EmailSender{
 	public function __construct($settings){
 		parent::__construct($settings);
 		$arr = array(
-				'key'    => $this->settings->getSetting('Email: Amazon SNS Key'),
-				'secret' => $this->settings->getSetting('Email: Amazone SNS Secret'),
+				'key'    => $this->settings->getSetting('Email: Amazon Access Key ID'),
+				'secret' => $this->settings->getSetting('Email: Amazon Secret Access Key'),
 				'region' => AWS_REGION
 		);
 		//$this->ses = new AmazonSES($arr);

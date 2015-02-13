@@ -34,6 +34,7 @@ class UsersEmailSender{
 		
 		if(!empty($emailTo)){
 			if(!empty($this->emailSender)){
+				error_log("[sendWelcomeUserEmail] sending email to $emailTo : ".$email);
 				$this->emailSender->sendEmail("Your IceHrm account is ready",$emailTo,$email,$params);
 			}
 		}else{

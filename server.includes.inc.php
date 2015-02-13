@@ -131,7 +131,7 @@ $emailSender = null;
 if($emailEnabled == "1"){
 	if($emailMode == "SMTP"){
 		$emailSender = new SMTPEmailSender($settingsManager);
-	}else if($emailMode == "SNS"){
+	}else if($emailMode == "SES"){
 		$emailSender = new SNSEmailSender($settingsManager);
 	}else if($emailMode == "PHP Mailer"){
 		$emailSender = new PHPMailer($settingsManager);	
