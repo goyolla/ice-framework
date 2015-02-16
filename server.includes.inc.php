@@ -32,6 +32,7 @@ include (APP_BASE_PATH."classes/SettingsManager.php");
 include (APP_BASE_PATH."classes/EmailSender.php");
 include (APP_BASE_PATH."classes/ReportHandler.php");
 include (APP_BASE_PATH."classes/NotificationManager.php");
+include (APP_BASE_PATH."classes/S3FileSystem.php");
 include (APP_BASE_PATH."classes/crypt/Aes.php");
 include (APP_BASE_PATH."classes/crypt/AesCtr.php");
 

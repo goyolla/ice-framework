@@ -680,7 +680,12 @@ INSERT INTO `Settings` (`name`, `value`, `description`, `meta`) VALUES
 ('System: Do not pass JSON in request', '0', 'Select Yes if you are having trouble loading data for some tables','["value", {"label":"Value","type":"select","source":[["1","Yes"],["0","No"]]}]'),
 ('System: Reset Modules and Permissions', '0', 'Select this to reset module and permission information in Database (If you have done any changes to meta files)','["value", {"label":"Value","type":"select","source":[["1","Yes"],["0","No"]]}]'),
 ('System: Add New Permissions', '0', 'Select this to add new permission changes done to meta.json file of any module','["value", {"label":"Value","type":"select","source":[["1","Yes"],["0","No"]]}]'),
-('System: Debug Mode', '0', '','["value", {"label":"Value","type":"select","source":[["1","Yes"],["0","No"]]}]');
+('System: Debug Mode', '0', '','["value", {"label":"Value","type":"select","source":[["1","Yes"],["0","No"]]}]'),
+('Files: Upload Files to S3', '0', '','["value", {"label":"Value","type":"select","source":[["1","Yes"],["0","No"]]}]'),
+('Files: Amazon S3 Key for File Upload', '', 'Please provide S3 Key for uploading files',''),
+('Files: Amazone S3 Secret for File Upload', '',  'Please provide S3 Secret for uploading files',''),
+('Files: S3 Bucket', '',  'Please provide S3 Bucket name for uploading files',''),
+('Files: S3 Web Url', '',  'Please provide Url to the s3 bucket','');
 
 
 
