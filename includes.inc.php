@@ -66,10 +66,12 @@ $fieldTemplates['time'] = file_get_contents(CLIENT_PATH.'/templates/fields/time.
 $fieldTemplates['fileupload'] = file_get_contents(CLIENT_PATH.'/templates/fields/fileupload.html');
 $fieldTemplates['label'] = file_get_contents(CLIENT_PATH.'/templates/fields/label.html');
 $fieldTemplates['placeholder'] = file_get_contents(CLIENT_PATH.'/templates/fields/placeholder.html');
+$fieldTemplates['datagroup'] = file_get_contents(CLIENT_PATH.'/templates/fields/datagroup.html');
 
 $templates = array();
 $templates['formTemplate'] = file_get_contents(CLIENT_PATH.'/templates/form_template.html');
 $templates['filterTemplate'] = file_get_contents(CLIENT_PATH.'/templates/filter_template.html');
+$templates['datagroupTemplate'] = file_get_contents(CLIENT_PATH.'/templates/datagroup_template.html');
 
 
 //include module templates

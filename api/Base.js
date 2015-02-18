@@ -585,6 +585,7 @@ IceHRMBase.method('save', function() {
 });
 
 IceHRMBase.method('filterQuery', function() {
+	
 	var validator = new FormValidation(this.getTableName()+"_filter",true,{'ShowPopup':false,"LabelErrorClass":"error"});
 	if(validator.checkValues()){
 		var params = validator.getFormParameters();
@@ -610,6 +611,7 @@ IceHRMBase.method('filterQuery', function() {
 		
 	}
 });
+
 
 IceHRMBase.method('getFilterString', function(filters) {
 
@@ -751,6 +753,9 @@ IceHRMBase.method('showFilters', function(object) {
 	
 });
 
+
+
+
 IceHRMBase.method('preRenderForm', function(object) {
 
 });
@@ -780,31 +785,6 @@ IceHRMBase.method('renderForm', function(object) {
 	formHtml = formHtml.replace(/_id_/g,this.getTableName()+"_submit");
 	formHtml = formHtml.replace(/_fields_/g,html);
 	
-	/*
-	$("#"+this.getTableName()+'Form').html(formHtml);
-	$("#"+this.getTableName()+'Form').show();
-	$("#"+this.getTableName()).hide();
-	
-	$("#"+this.getTableName()+'Form .datefield').datepicker({'viewMode':2});
-	$("#"+this.getTableName()+'Form .timefield').datetimepicker({
-      language: 'en',
-      pickDate: false
-    });
-	$("#"+this.getTableName()+'Form .datetimefield').datetimepicker({
-      language: 'en'
-    });
-	
-	$("#"+this.getTableName()+'Form .select2Field').select2();
-	
-	if(this.showSave == false){
-		$("#"+this.getTableName()+'Form').find('.saveBtn').remove();
-	}
-	
-	if(object != undefined && object != null){
-		this.fillForm(object);
-	}
-	
-	*/
 	
 	var $tempDomObj;
 	var randomFormId = this.generateRandom(14);
@@ -834,6 +814,12 @@ IceHRMBase.method('renderForm', function(object) {
 		
 	});
 	
+	for(var i=0;i<fields.length;i++){
+		if(fields[i][1].type == "datagroup"){
+			$tempDomObj.find("#"+fields[i][0]).data('field',fields[i]);
+		}
+	}
+	
 	if(this.showSave == false){
 		$tempDomObj.find('.saveBtn').remove();
 	}
@@ -860,6 +846,269 @@ IceHRMBase.method('renderForm', function(object) {
 	this.postRenderForm(object,$tempDomObj);
 	
 	
+	
+});
+
+
+IceHRMBase.method('dataGroupToHtml', function(val, field) {
+	var data = JSON.parse(val),
+		deleteButton, t, sortFunction, item,key, i, html, template, itemHtml;
+	
+	deleteButton = '<button id="#_id_#_delete" onclick="modJs.deleteDataGroupItem(\'#_id_#\');return false;" type="button" style="float:right;margin-right:-8px;" tooltip="Delete"><li class="fa fa-times"></li></button>';
+	editButton = '<button id="#_id_#_edit" onclick="modJs.editDataGroupItem(\'#_id_#\');return false;" type="button" style="float:right;margin-right:4px;" tooltip="Edit"><li class="fa fa-edit"></li></button>';
+	
+	template = field[1]['html'];
+	
+	sortFunction = function(a, b){
+		if(field[1]['order-by-type'] == 'desc'){
+			return b[field[1]['order-by']] > a[field[1]['order-by']];
+		}else{
+			return a[field[1]['order-by']] > b[field[1]['order-by']];
+		}
+		
+	};
+	
+	if(field[1]['order-by'] != undefined){
+		data.sort(sortFunction);
+	}
+	
+	
+	html = $("<div><div>");
+	
+	for(i=0;i<data.length;i++){
+		item = data[i];
+		t = template;
+		t = t.replace('#_delete_#',deleteButton);
+		t = t.replace('#_edit_#',editButton);
+		t = t.replace(/#_id_#/g,item.id);
+		
+		for(index in field[1]['form']){
+			key = field[1]['form'][index][0];
+			t = t.replace('#_'+key+'_#', item[key]);
+		}
+		
+		itemHtml = $(t);
+		itemHtml.attr('fieldId',field[0]+"_div");
+		html.append(itemHtml);
+	}
+	
+	return html.wrap('<div>').parent().html();
+});
+
+
+IceHRMBase.method('resetDataGroup', function(field) {
+	$("#"+field[0]).val("");
+	$("#"+field[0]+"_div").html("");
+});
+
+IceHRMBase.method('showDataGroup', function(field, object) {
+	var formHtml = this.templates['datagroupTemplate'];
+	var html = "";
+	var fields = field[1]['form'];
+	
+	if(object != undefined && object != null && object.id != undefined){
+		this.currentDataGroupItemId = object.id;
+	}else{
+		this.currentDataGroupItemId = null;
+	}
+	
+	for(var i=0;i<fields.length;i++){
+		html += this.renderFormField(fields[i]);
+		
+	}
+	formHtml = formHtml.replace(/_id_/g,this.getTableName()+"_field_"+field[0]);
+	formHtml = formHtml.replace(/_fields_/g,html);
+	
+	var $tempDomObj;
+	var randomFormId = this.generateRandom(14);
+	$tempDomObj = $('<div class="reviewBlock popupForm" data-content="Form"></div>');
+	$tempDomObj.attr('id',randomFormId);
+	
+	$tempDomObj.html(formHtml);
+	
+	
+	$tempDomObj.find('.datefield').datepicker({'viewMode':2});
+	$tempDomObj.find('.timefield').datetimepicker({
+      language: 'en',
+      pickDate: false
+    });
+	$tempDomObj.find('.datetimefield').datetimepicker({
+      language: 'en'
+    });
+	
+	//$tempDomObj.find('.select2Field').select2();
+	$tempDomObj.find('.select2Field').each(function() {
+		$(this).select2().select2('val', $(this).find("option:eq(0)").val());
+	});
+
+	
+	
+	
+	
+	this.currentDataGroupField = field;
+	this.showDomElement("Add "+field[1]['label'],$tempDomObj,null,null,true);
+	
+	if(object != undefined && object != null){
+		this.fillForm(object,"#"+this.getTableName()+"_field_"+field[0], field[1]['form']);
+	}
+	
+	
+	$(".groupAddBtn").off();
+	if(object != undefined && object != null && object.id != undefined){
+		$(".groupAddBtn").on('click',function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			try{
+				modJs.editDataGroup();
+				
+			}catch(e){
+			};
+			return false;
+		});
+	}else{
+		$(".groupAddBtn").on('click',function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			try{
+				modJs.addDataGroup();
+				
+			}catch(e){
+			};
+			return false;
+		});
+	}
+	
+	
+});
+
+IceHRMBase.method('addDataGroup', function() {
+	var field = this.currentDataGroupField;
+	var validator = new FormValidation(this.getTableName()+"_field_"+field[0],true,{'ShowPopup':false,"LabelErrorClass":"error"});
+	if(validator.checkValues()){
+		var params = validator.getFormParameters();
+		if(this.doCustomFilterValidation(params)){
+			
+			var val = $("#"+field[0]).val();
+			if(val == ""){
+				val = "[]";
+			}
+			var data = JSON.parse(val);
+			
+			params['id'] = field[0]+"_"+this.dataGroupGetNextAutoIncrementId(data);
+			data.push(params);
+			
+			val = JSON.stringify(data);
+			$("#"+field[0]).val(val);
+			
+			var html = this.dataGroupToHtml(val,field);
+			
+			$("#"+field[0]+"_div").html(html);
+			
+			this.closePlainMessage();
+		}
+		
+	}
+});
+
+
+IceHRMBase.method('editDataGroup', function() {
+	var field = this.currentDataGroupField;
+	var id = this.currentDataGroupItemId;
+	var validator = new FormValidation(this.getTableName()+"_field_"+field[0],true,{'ShowPopup':false,"LabelErrorClass":"error"});
+	if(validator.checkValues()){
+		var params = validator.getFormParameters();
+		if(this.doCustomFilterValidation(params)){
+			
+			var val = $("#"+field[0]).val();
+			if(val == ""){
+				val = "[]";
+			}
+			var data = JSON.parse(val);
+			
+			var editVal = {};
+			var newVals = [];
+			for(var i=0;i<data.length;i++){
+				item = data[i];
+				if(item.id == id){
+					editVal = item;
+				}else{
+					newVals.push(item);
+				}
+			}
+			
+			
+			
+			params['id'] = editVal.id;
+			newVals.push(params);
+			
+			val = JSON.stringify(newVals);
+			$("#"+field[0]).val(val);
+			
+			var html = this.dataGroupToHtml(val,field);
+			
+			$("#"+field[0]+"_div").html(html);
+			
+			this.closePlainMessage();
+		}
+		
+	}
+});
+
+IceHRMBase.method('editDataGroupItem', function(id) {
+	var fieldId = id.substring(0,id.lastIndexOf("_"));
+	
+	var val = $("#"+fieldId).val();
+	var data = JSON.parse(val);
+	
+	var editVal = {};
+	
+	for(var i=0;i<data.length;i++){
+		item = data[i];
+		if(item.id == id){
+			editVal = item;
+		}
+	}
+	
+	this.showDataGroup($("#"+fieldId).data('field'),editVal);
+	
+	
+});
+
+IceHRMBase.method('dataGroupGetNextAutoIncrementId', function(data) {
+	var autoId = 1, id;
+	for(var i=0;i<data.length;i++){
+		item = data[i];
+		if(item.id == undefined || item.id == null){
+			item.id = 1;
+		}
+		id= item.id.substring(item.id.lastIndexOf("_")+1,item.id.length);
+		if(id >= autoId){
+			autoId = parseInt(id) + 1;
+		}
+	}
+	
+	return autoId;
+	
+});
+
+IceHRMBase.method('deleteDataGroupItem', function(id) {
+	var fieldId = id.substring(0,id.lastIndexOf("_"));
+	
+	var val = $("#"+fieldId).val();
+	var data = JSON.parse(val);
+	
+	var newVal = [];
+	
+	for(var i=0;i<data.length;i++){
+		item = data[i];
+		if(item.id != id){
+			newVal.push(item);
+		}
+	}
+	
+	$("#"+fieldId).val(JSON.stringify(newVal));
+	
+	$("#"+id).remove();
 	
 });
 
@@ -935,7 +1184,11 @@ IceHRMBase.method('fillForm', function(object, formId, fields) {
 				object[fields[i][0]] = "NULL";
 			}
 			$(formId + ' #'+fields[i][0]).select2('val',object[fields[i][0]]);
-			
+		
+		}else if(fields[i][1].type == 'datagroup'){
+			var html = this.dataGroupToHtml(object[fields[i][0]],fields[i]);
+			$(formId + ' #'+fields[i][0]).val(object[fields[i][0]]);
+			$(formId + ' #'+fields[i][0]+"_div").html(html);
 		}else{
 			$(formId + ' #'+fields[i][0]).val(object[fields[i][0]]);
 		}
@@ -1002,6 +1255,9 @@ IceHRMBase.method('renderFormField', function(field) {
 		*/
 		t = t.replace(/_rand_/g,this.generateRandom(14));
 		
+	}else if(field[1].type == 'datagroup'){
+		t = t.replace(/_id_/g,field[0]);
+		t = t.replace(/_label_/g,field[1].label);
 	}
 	
 	if(field[1].validation != undefined && field[1].validation != null && field[1].validation != ""){
