@@ -39,6 +39,8 @@ this.templates = null;
 this.customTemplates = null;
 this.emailTemplates = null;
 this.fieldMasterData = null;
+this.fieldMasterDataKeys = null;
+this.fieldMasterDataCallback = null;
 this.sourceMapping = null;
 this.currentId = null;
 this.user = null;7
@@ -120,12 +122,14 @@ IceHRMBase.method('getCurrentProfile' , function() {
 });
 
 
-IceHRMBase.method('initFieldMasterData' , function(callback) {
+IceHRMBase.method('initFieldMasterData' , function(callback, loadAllCallback) {
 	var values;
 	if(this.showAddNew == undefined || this.showAddNew == null){
 		this.showAddNew = true;
 	}
 	this.fieldMasterData = {};
+	this.fieldMasterDataKeys = {};
+	this.fieldMasterDataCallback = loadAllCallback;
 	this.sourceMapping = {};
 	var fields = this.getFormFields();
 	var filterFields = this.getFilters();
@@ -139,11 +143,40 @@ IceHRMBase.method('initFieldMasterData' , function(callback) {
 		}
 	}
 	
+	
+	var remoteSourceFields = [];
+	var remoteSourceFieldKeys = [];
+	var field = null;
+	var fieldSub = null;
 	for(var i=0;i<fields.length;i++){
-		var field = fields[i];
+		field = fields[i];
 		if(field[1]['remote-source'] != undefined && field[1]['remote-source'] != null){
 			var key = field[1]['remote-source'][0]+"_"+field[1]['remote-source'][1]+"_"+field[1]['remote-source'][2];
+			if(remoteSourceFieldKeys.indexOf(key) < 0){
+				remoteSourceFields.push(field);
+				remoteSourceFieldKeys.push(key);
+			}
 			
+		}else if(field[1]['form'] != undefined && field[1]['form'] != null){
+			for(var j=0;j<field[1]['form'].length;j++){
+				fieldSub = field[1]['form'][j];
+				if(fieldSub[1]['remote-source'] != undefined && fieldSub[1]['remote-source'] != null){
+					var key = fieldSub[1]['remote-source'][0]+"_"+fieldSub[1]['remote-source'][1]+"_"+fieldSub[1]['remote-source'][2];
+					if(remoteSourceFieldKeys.indexOf(key) < 0){
+						remoteSourceFields.push(fieldSub);
+						remoteSourceFieldKeys.push(key);
+					}
+					
+				}
+			}
+		}
+	}
+	
+	for(var i=0;i<remoteSourceFields.length;i++){
+		var field = remoteSourceFields[i];
+		if(field[1]['remote-source'] != undefined && field[1]['remote-source'] != null){
+			var key = field[1]['remote-source'][0]+"_"+field[1]['remote-source'][1]+"_"+field[1]['remote-source'][2];
+			this.fieldMasterDataKeys[key] = false;
 			this.sourceMapping[field[0]] = field[1]['remote-source'];
 			
 			var callBackData = {};
@@ -169,11 +202,26 @@ IceHRMBase.method('getRemoteTable' , function() {
 	return this.createRemoteTable;
 });
 
+IceHRMBase.method('isAllLoaded' , function(fieldMasterDataKeys) {
+	
+	for(key in fieldMasterDataKeys){
+		if(fieldMasterDataKeys[key] == false){
+			return false;
+		}
+	}
+	return true;
+});
 
 IceHRMBase.method('initFieldMasterDataResponse' , function(key,data, callback) {
 	this.fieldMasterData[key] = data;
+	this.fieldMasterDataKeys[key] = true;
+
 	if(callback != undefined && callback != null){
 		callback();
+	}
+	
+	if(this.fieldMasterDataCallback != null && this.fieldMasterDataCallback != undefined && this.isAllLoaded(this.fieldMasterDataKeys)){
+		this.fieldMasterDataCallback();
 	}
 	
 });
@@ -852,39 +900,40 @@ IceHRMBase.method('renderForm', function(object) {
 
 IceHRMBase.method('dataGroupToHtml', function(val, field) {
 	var data = JSON.parse(val),
-		deleteButton, t, sortFunction, item,key, i, html, template, itemHtml;
+		deleteButton, t, sortFunction, item,key = null, i, html, template, itemHtml, itemVal;
 	
 	deleteButton = '<button id="#_id_#_delete" onclick="modJs.deleteDataGroupItem(\'#_id_#\');return false;" type="button" style="float:right;margin-right:-8px;" tooltip="Delete"><li class="fa fa-times"></li></button>';
 	editButton = '<button id="#_id_#_edit" onclick="modJs.editDataGroupItem(\'#_id_#\');return false;" type="button" style="float:right;margin-right:4px;" tooltip="Edit"><li class="fa fa-edit"></li></button>';
 	
 	template = field[1]['html'];
 	
-	sortFunction = function(a, b){
-		if(field[1]['order-by-type'] == 'desc'){
-			return b[field[1]['order-by']] > a[field[1]['order-by']];
-		}else{
-			return a[field[1]['order-by']] > b[field[1]['order-by']];
-		}
-		
-	};
-	
-	if(field[1]['order-by'] != undefined){
-		data.sort(sortFunction);
+	if(field[1]['sort-function'] != undefined && field[1]['sort-function'] != null){
+		data.sort(field[1]['sort-function']);
 	}
 	
 	
 	html = $("<div><div>");
 	
+	
+	
 	for(i=0;i<data.length;i++){
 		item = data[i];
+		
+		if(field[1]['pre-format-function'] != undefined && field[1]['pre-format-function'] != null){
+			item = field[1]['pre-format-function'].apply(this,[item]);
+		}
+		
 		t = template;
 		t = t.replace('#_delete_#',deleteButton);
 		t = t.replace('#_edit_#',editButton);
 		t = t.replace(/#_id_#/g,item.id);
 		
-		for(index in field[1]['form']){
-			key = field[1]['form'][index][0];
-			t = t.replace('#_'+key+'_#', item[key]);
+		for(key in item){
+			itemVal = item[key];
+			if(itemVal != undefined && itemVal != null){
+				itemVal = itemVal.replace(/(?:\r\n|\r|\n)/g, '<br />');
+			}
+			t = t.replace('#_'+key+'_#', itemVal);
 		}
 		
 		itemHtml = $(t);
@@ -982,30 +1031,40 @@ IceHRMBase.method('showDataGroup', function(field, object) {
 });
 
 IceHRMBase.method('addDataGroup', function() {
-	var field = this.currentDataGroupField;
+	var field = this.currentDataGroupField, tempParams;
+	$("#"+this.getTableName()+"_field_"+field[0]+"_error").html("");
+	$("#"+this.getTableName()+"_field_"+field[0]+"_error").hide();
 	var validator = new FormValidation(this.getTableName()+"_field_"+field[0],true,{'ShowPopup':false,"LabelErrorClass":"error"});
 	if(validator.checkValues()){
 		var params = validator.getFormParameters();
-		if(this.doCustomFilterValidation(params)){
-			
-			var val = $("#"+field[0]).val();
-			if(val == ""){
-				val = "[]";
+		if(field[1]['custom-validate-function'] != undefined && field[1]['custom-validate-function'] != null){
+			tempParams = field[1]['custom-validate-function'].apply(this,[params]);
+			if(tempParams['valid']){
+				params = tempParams['params'];
+			}else{
+				$("#"+this.getTableName()+"_field_"+field[0]+"_error").html(tempParams['message']);
+				$("#"+this.getTableName()+"_field_"+field[0]+"_error").show();
+				return false;
 			}
-			var data = JSON.parse(val);
-			
-			params['id'] = field[0]+"_"+this.dataGroupGetNextAutoIncrementId(data);
-			data.push(params);
-			
-			val = JSON.stringify(data);
-			$("#"+field[0]).val(val);
-			
-			var html = this.dataGroupToHtml(val,field);
-			
-			$("#"+field[0]+"_div").html(html);
-			
-			this.closePlainMessage();
 		}
+		
+		var val = $("#"+field[0]).val();
+		if(val == ""){
+			val = "[]";
+		}
+		var data = JSON.parse(val);
+		
+		params['id'] = field[0]+"_"+this.dataGroupGetNextAutoIncrementId(data);
+		data.push(params);
+		
+		val = JSON.stringify(data);
+		$("#"+field[0]).val(val);
+		
+		var html = this.dataGroupToHtml(val,field);
+		
+		$("#"+field[0]+"_div").html(html);
+		
+		this.closePlainMessage();
 		
 	}
 });
