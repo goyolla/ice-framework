@@ -43,6 +43,10 @@ class ICEHRM_Record extends ADOdb_Active_Record{
 		return "profile";
 	}
 	
+	public function getUserOnlyMeAccessRequestField(){
+		return "profile";
+	}
+	
 	public function validateSave($obj){
 		return new IceResponse(IceResponse::SUCCESS,"");
 	}	

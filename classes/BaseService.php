@@ -517,7 +517,7 @@ class BaseService{
 		return $this->db;
 	}
 	
-	public function checkSecureAccess($type,$object){
+	public function checkSecureAccessOld($type,$object){
 		
 		$accessMatrix = array();
 		if($this->currentUser->user_level == 'Admin'){
@@ -573,6 +573,47 @@ class BaseService{
 		echo json_encode($ret);
 		exit();
 	}
+	
+	
+	
+	public function checkSecureAccess($type,$object){
+		
+		$accessMatrix = array();
+		
+		//Construct permission method
+		$permMethod = "get".$this->currentUser->user_level."Access";
+		$accessMatrix = $object->$permMethod();
+		if (in_array($type, $accessMatrix)) {
+			//The user has required permission, so return true
+			return true;
+		}else{
+			//Now we need to check whther the user has access to his own records
+			$accessMatrix = $object->getUserOnlyMeAccess();
+			
+			$userOnlyMeAccessRequestField = $object->getUserOnlyMeAccessRequestField();
+			
+			//This will check whether user can access his own records using a value in request
+			if (in_array($type, $accessMatrix) && $_REQUEST[$object->getUserOnlyMeAccessField()] == $this->currentUser->$userOnlyMeAccessRequestField) {
+				return true;
+			}
+			
+			//This will check whether user can access his own records using a value in requested object
+			if (in_array($type, $accessMatrix)) {
+				$field = $object->getUserOnlyMeAccessField();
+				if($this->currentUser->$userOnlyMeAccessRequestField == $object->$field){
+					return true;
+				}
+			
+			}
+		}
+		
+		$ret['status'] = "ERROR";
+		$ret['message'] = "Access violation";
+		echo json_encode($ret);
+		exit();
+	}
+	
+	
 	
 	public function getUserFromProfileId($profileId){
 		$user = new User();
