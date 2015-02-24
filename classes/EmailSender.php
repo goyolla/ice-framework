@@ -20,6 +20,7 @@ abstract class EmailSender{
 		foreach($params as $k=>$v){
 			$body = str_replace("#_".$k."_#", $v, $body);
 		}
+		
 		$fromEmail = APP_NAME." <".$this->settings->getSetting("Email: Email From").">";
 
 
@@ -27,6 +28,9 @@ abstract class EmailSender{
 		$emailBody = file_get_contents(APP_BASE_PATH.'/templates/email/emailBody.html');
 
 		$emailBody = str_replace("#_emailBody_#", $body, $emailBody);
+		$emailBody = str_replace("#_logourl_#",
+				BASE_URL."images/logo.png"
+				, $emailBody);
 
 		$user = new User();
 		$user->load("username = ?",array('admin'));
