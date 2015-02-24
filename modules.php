@@ -229,8 +229,10 @@ foreach ($userModulesTemp as $k=>$v){
 	ksort($userModulesTemp[$k]);	
 }
 
+$adminIcons = json_decode(file_get_contents(CLIENT_PATH.'/admin/meta.json'),true);
+$adminMenus = array_keys($adminIcons);
 
-$adminMenus = json_decode(file_get_contents(CLIENT_PATH.'/admin/meta.json'),true);
+
 $adminModules = array();
 $added = array();
 foreach($adminMenus as $menu){
@@ -249,7 +251,8 @@ foreach($adminModulesTemp as $k=>$v){
 	}
 }
 
-$userMenus = json_decode(file_get_contents(CLIENT_PATH.'/modules/meta.json'));
+$userIcons = json_decode(file_get_contents(CLIENT_PATH.'/modules/meta.json'),true);
+$userMenus = array_keys($userIcons);
 
 $userModules = array();
 $added = array();
@@ -261,6 +264,7 @@ foreach($userMenus as $menu){
 	}
 }
 
+$mainIcons = array_merge($adminIcons,$userIcons);
 
 foreach($userModulesTemp as $k=>$v){
 	if(!in_array($k, $added)){

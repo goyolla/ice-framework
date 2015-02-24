@@ -1,3 +1,5 @@
-[
-"Admin","System"
-]
+{
+	"Admin":"fa-cubes",
+	"System":"fa-cogs"
+}
+
