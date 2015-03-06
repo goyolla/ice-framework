@@ -255,9 +255,9 @@ AdapterBase.method('getElement', function(id,callBackData) {
 	sourceMappingJson = this.fixJSON(sourceMappingJson);
 	$.post(this.moduleRelativeURL, {'t':this.table,'a':'getElement','id':id,'sm':sourceMappingJson}, function(data) {
 		if(data.status == "SUCCESS"){
-			that.getElementSuccessCallBack(callBackData,data.object);
+			that.getElementSuccessCallBack.apply(that,[callBackData,data.object]);
 		}else{
-			that.getElementFailCallBack(callBackData,data.object);
+			that.getElementFailCallBack.apply(that,[callBackData,data.object]);
 		}
 	},"json");
 	this.trackEvent("getElement",this.tab,this.table);
@@ -269,7 +269,7 @@ AdapterBase.method('getElementSuccessCallBack', function(callBackData,serverData
 			callBackData['callBackData'] = new Array();
 		}
 		callBackData['callBackData'].push(serverData);
-		this.callFunction(callBackData['callBack'],callBackData['callBackData']);
+		this.callFunction(callBackData['callBack'],callBackData['callBackData'],this);
 	}
 	this.currentElement = serverData;
 	if(callBackData['noRender']!= undefined && callBackData['noRender'] != null && callBackData['noRender'] == true){

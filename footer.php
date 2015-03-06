@@ -14,9 +14,9 @@
 				<?php if(isset($emailTemplates)){?>
 				modJsList[prop].setEmailTemplates(<?=json_encode($emailTemplates)?>);
 				<?php } ?>
+				modJsList[prop].setUser(<?=json_encode($user)?>);
 				modJsList[prop].initFieldMasterData();
 				modJsList[prop].setBaseUrl('<?=BASE_URL?>');
-				modJsList[prop].setUser(<?=json_encode($user)?>);
 				modJsList[prop].setCurrentProfile(<?=json_encode($activeProfile)?>);
 				modJsList[prop].setInstanceId('<?=$baseService->getInstanceId()?>');
 				modJsList[prop].setGoogleAnalytics(ga);

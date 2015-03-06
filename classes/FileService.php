@@ -52,6 +52,26 @@ class FileService{
 		return $employee;
 	}
 	
+	public function getFileUrl($fileName){
+		global $settingsManager;
+		$file = new File();
+		$file->Load('name = ?',array($fileName));
+	
+		$uploadFilesToS3 = $settingsManager->getSetting("Files: Upload Files to S3");
+		
+		if($uploadFilesToS3 == "1"){
+			$uploadFilesToS3Key = $settingsManager->getSetting("Files: Amazon S3 Key for File Upload");
+			$uploadFilesToS3Secret = $settingsManager->getSetting("Files: Amazone S3 Secret for File Upload");
+			$s3FileSys = new S3FileSystem($uploadFilesToS3Key, $uploadFilesToS3Secret);
+			$s3WebUrl = $settingsManager->getSetting("Files: S3 Web Url");
+			$fileUrl = $s3WebUrl.CLIENT_NAME."/".$file->filename;
+			$fileUrl = $s3FileSys->generateExpiringURL($fileUrl);
+			return $fileUrl;
+		}else{
+			return  CLIENT_BASE_URL.'data/'.$file->filename;
+		}
+	}
+	
 	public function deleteProfileImage($employeeId){
 		$file = new File();
 		$file->Load('name = ?',array('profile_image_'.$employeeId));

@@ -109,6 +109,7 @@ $meta = json_decode(file_get_contents(MODULE_PATH."/meta.json"),true);
 		<script type="text/javascript" src="<?=BASE_URL?>api/FormValidation.js?v=<?=$jsVersion?>"></script>
 		<script type="text/javascript" src="<?=BASE_URL?>api/Notifications.js?v=<?=$jsVersion?>"></script>
 		<script type="text/javascript" src="<?=BASE_URL?>api/TimeUtils.js?v=<?=$jsVersion?>"></script>
+		<script type="text/javascript" src="<?=BASE_URL?>api/AesCrypt.js?v=<?=$jsVersion?>"></script>
 		<?php include 'modulejslibs.inc.php';?>
 		
 	

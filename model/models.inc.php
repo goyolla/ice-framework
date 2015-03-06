@@ -54,6 +54,22 @@ class ICEHRM_Record extends ADOdb_Active_Record{
 	public function validateSave($obj){
 		return new IceResponse(IceResponse::SUCCESS,"");
 	}	
+	
+	public function executePreSaveActions($obj){
+		return new IceResponse(IceResponse::SUCCESS,$obj);
+	}
+	
+	public function executePreUpdateActions($obj){
+		return new IceResponse(IceResponse::SUCCESS,$obj);
+	}
+	
+	public function executePostSaveActions($obj){
+		
+	}
+	
+	public function executePostUpdateActions($obj){
+	
+	}
 }
 
 class Country extends ICEHRM_Record {
@@ -65,6 +81,10 @@ class Country extends ICEHRM_Record {
 	
 	public function getUserAccess(){
 		return array();
+	}
+	
+	public function getAnonymousAccess(){
+		return array("get","element");
 	}
 }
 
@@ -78,6 +98,10 @@ class Province extends ICEHRM_Record {
 	public function getUserAccess(){
 		return array();
 	}
+	
+	public function getAnonymousAccess(){
+		return array("get","element");
+	}
 }
 
 class CurrencyType extends ICEHRM_Record {
@@ -90,6 +114,10 @@ class CurrencyType extends ICEHRM_Record {
 	public function getUserAccess(){
 		return array();
 	}
+	
+	public function getAnonymousAccess(){
+		return array("get","element");
+	}
 }
 
 class Nationality extends ICEHRM_Record {
@@ -101,6 +129,10 @@ class Nationality extends ICEHRM_Record {
 	
 	public function getUserAccess(){
 		return array();
+	}
+	
+	public function getAnonymousAccess(){
+		return array("get","element");
 	}
 }
 
@@ -169,6 +201,10 @@ class File extends ICEHRM_Record {
 	
 	public function getUserAccess(){
 		return array();
+	}
+	
+	public function getAnonymousAccess(){
+		return array("save");
 	}
 }
 

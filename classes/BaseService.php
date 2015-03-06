@@ -311,6 +311,22 @@ class BaseService{
 			return $resp;
 		}
 		
+		if($isAdd){
+			if(empty($ele->created)){
+				$ele->created = date("Y-m-d H:i:s");
+			}
+		}
+		
+		if(empty($ele->updated)){
+			$ele->updated = date("Y-m-d H:i:s");
+		}
+		if($isAdd){
+			$ele = $ele->executePreSaveActions($ele)->getData();
+		}else{
+			$ele = $ele->executePreUpdateActions($ele)->getData();
+		}
+		
+		
 		$ok = $ele->Save();
 		if(!$ok){
 			
@@ -327,8 +343,10 @@ class BaseService{
 		}
 		
 		if($isAdd){
+			$ele->executePostSaveActions($ele);
 			$this->audit(IceConstants::AUDIT_ADD, "Added an object to ".$table." [id:".$ele->id."]");
 		}else{
+			$ele->executePostUpdateActions($ele);
 			$this->audit(IceConstants::AUDIT_EDIT, "Edited an object in ".$table." [id:".$ele->id."]");
 		}
 		

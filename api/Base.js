@@ -43,7 +43,7 @@ this.fieldMasterDataKeys = null;
 this.fieldMasterDataCallback = null;
 this.sourceMapping = null;
 this.currentId = null;
-this.user = null;7
+this.user = null;
 this.currentProfile = null;
 this.permissions = {};
 
@@ -301,10 +301,15 @@ IceHRMBase.method('moveToTop', function () {
 });
 
 
-IceHRMBase.method('callFunction', function (callback, cbParams) {
+IceHRMBase.method('callFunction', function (callback, cbParams,thisParam) {
 	if($.isFunction(callback)) {
 		try{
-			callback.apply(document, cbParams);
+			if(thisParam == undefined || thisParam == null){
+				callback.apply(document, cbParams);
+			}else{
+				callback.apply(thisParam, cbParams);
+			}
+			
 		} catch(e) {
 		}
 	} else {
@@ -616,7 +621,7 @@ IceHRMBase.method('save', function() {
 	var validator = new FormValidation(this.getTableName()+"_submit",true,{'ShowPopup':false,"LabelErrorClass":"error"});
 	if(validator.checkValues()){
 		var params = validator.getFormParameters();
-		
+		params = this.forceInjectValuesBeforeSave(params);
 		var msg = this.doCustomValidation(params);
 		if(msg == null){
 			var id = $('#'+this.getTableName()+"_submit #id").val();
@@ -630,6 +635,10 @@ IceHRMBase.method('save', function() {
 		}
 		
 	}
+});
+
+IceHRMBase.method('forceInjectValuesBeforeSave', function(params) {
+	return params;
 });
 
 IceHRMBase.method('filterQuery', function() {
@@ -810,6 +819,8 @@ IceHRMBase.method('preRenderForm', function(object) {
 
 IceHRMBase.method('renderForm', function(object) {
 	
+	var that = this;
+	
 	this.preRenderForm(object);
 	
 	var formHtml = this.templates['formTemplate'];
@@ -870,10 +881,26 @@ IceHRMBase.method('renderForm', function(object) {
 	
 	if(this.showSave == false){
 		$tempDomObj.find('.saveBtn').remove();
+	}else{
+		$tempDomObj.find('.saveBtn').off();
+		$tempDomObj.find('.saveBtn').data("modJs",this);
+		$tempDomObj.find('.saveBtn').on( "click", function() {
+			  $(this ).data('modJs').save();
+			  return false;
+		});
+		
 	}
 	
 	if(this.showCancel== false){
 		$tempDomObj.find('.cancelBtn').remove();
+	}else{
+		$tempDomObj.find('.cancelBtn').off();
+		$tempDomObj.find('.cancelBtn').data("modJs",this);
+		$tempDomObj.find('.cancelBtn').on( "click", function() {
+			  $(this ).data('modJs').cancel();
+			  return false;
+		});
+		
 	}
 	
 	if(!this.showFormOnPopup){
@@ -884,8 +911,16 @@ IceHRMBase.method('renderForm', function(object) {
 		}
 		
 	}else{
-		var tHtml = $tempDomObj.wrap('<div>').parent().html();
-		this.showMessage("Edit",tHtml,null,null,true);
+		
+		
+		
+		//var tHtml = $tempDomObj.wrap('<div>').parent().html();
+		//this.showMessage("Edit",tHtml,null,null,true);
+		this.showMessage("Edit","",null,null,true);
+		
+		$("#plainMessageModel .modal-body").html("");
+		$("#plainMessageModel .modal-body").append($tempDomObj);
+		
 		if(object != undefined && object != null){
 			this.fillForm(object,"#"+randomFormId);
 		}
