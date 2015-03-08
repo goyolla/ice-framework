@@ -7,7 +7,7 @@
        
   <testsuites>
   	<testsuite name="ice-framework">
-    	<file>${basedir}/test/UsersActionManagerTest.php</file>
+    	<file>${basedir}/test/admin/UsersActionManagerTest.php</file>
     </testsuite>
   </testsuites>
 
