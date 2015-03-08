@@ -3,7 +3,7 @@ if(!class_exists("TestTemplate")) {
 	include dirname(__FILE__).'/../../TestTemplate.php';
 }
 
-class UsersActionManagerTester extends TestTemplate{
+class UsersActionManagerTest extends TestTemplate{
 	
 	var $obj = null;
 	
