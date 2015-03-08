@@ -1,39 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="ice-framework" default="phpunit">
+<phpunit bootstrap="tests/bootstrap.php"
+         backupGlobals="false"
+         backupStaticAttributes="false"
+         strict="true"
+         verbose="true">
+       
+  <testsuites>
+    <testsuite name="ice-framework">
+      <directory suffix="Test.php">${basedir}/test/</directory>
+    </testsuite>
+  </testsuites>
 
-	<target name="phpunitsetup" depends="">
-		<copy todir="${basedir}/build/test">
-			<fileset dir="${basedir}/test">
-				<include name="*.*" />
-				<include name="**/*.*" />
-			</fileset>
-		</copy>
-	</target>
+  <logging>
+    <log type="coverage-html" target="build/coverage"/>
+    <log type="coverage-clover" target="build/logs/clover.xml"/>
+    <log type="coverage-crap4j" target="build/logs/crap4j.xml"/>
+    <log type="junit" target="build/logs/junit.xml" logIncompleteSkipped="false"/>
+  </logging>
 
-	<target name="phpunit" depends="phpunitsetup">
-		<coverage-setup database="${basedir}/build/coverage/coverage.db">
-			<fileset dir="src">
-				<include name="*.php" />
-				<include name="**/*.php" />
-				<exclude name="index.php"/>
-			</fileset>
-		</coverage-setup>
-
-		<phpunit haltonfailure="true" haltonerror="true" haltonskipped="true" printsummary="true" codecoverage="true">
-			<formatter todir="${basedir}/build/coverage" type="xml" outfile="utiltest.xml"/>
-
-			<batchtest>
-				<fileset dir="${basedir}/build/test">
-					<include name="*Test.php" />
-				</fileset>
-			</batchtest>
-		</phpunit>
-		
-		<coverage-report outfile="${basedir}/build/coverage/coverage.xml">
-			<report todir="${basedir}/build/coverage" />
-		</coverage-report>
-		
-		<coverage-threshold perProject="0" perClass="0" perMethod="0"/>
-	</target>
-	
-</project>
+  <filter>
+    <whitelist addUncoveredFilesFromWhitelist="true">
+      <directory suffix=".php">src</directory>
+      <exclude>
+        <file>${basedir}/test/bootstrap.php</file>
+        <file>${basedir}/test/test.config.php</file>
+        <file>${basedir}/test/test.includes.php</file>
+      </exclude>
+    </whitelist>
+  </filter>
+</phpunit>
