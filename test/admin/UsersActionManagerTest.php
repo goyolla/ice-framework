@@ -1,6 +1,6 @@
 <?php
 if(!class_exists("TestTemplate")) {
-	include dirname(__FILE__).'/../../TestTemplate.php';
+	include dirname(__FILE__).'/../TestTemplate.php';
 }
 
 class UsersActionManagerTest extends TestTemplate{
