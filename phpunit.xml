@@ -7,7 +7,7 @@
        
   <testsuites>
     <testsuite name="ice-framework">
-      <directory suffix="Test.php">${basedir}/test/admin/</directory>
+      <directory suffix="Test.php">${basedir}/test/admin</directory>
     </testsuite>
   </testsuites>
 
