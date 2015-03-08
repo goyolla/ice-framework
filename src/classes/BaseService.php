@@ -465,34 +465,34 @@ class BaseService{
 	}
 	
 	public function getCurrentUser(){
-		$user = getSessionObject('user');
+		$user = SessionUtils::getSessionObject('user');
 		return $user;
 	}
 	
 	public function getCurrentProfileId(){
-		if (!function_exists('saveSessionObject')) {
+		if (!class_exists('SessionUtils')) {
 			include (APP_BASE_PATH."include.common.php");
 		}
-		$adminEmpId = getSessionObject('admin_current_profile');
+		$adminEmpId = SessionUtils::getSessionObject('admin_current_profile');
 		if(empty($adminEmpId)){
-			$user = getSessionObject('user');	
+			$user = SessionUtils::getSessionObject('user');	
 			return $user->profile;
 		}
 		return $adminEmpId;
 	}
 	
 	public function setCurrentAdminProfile($profileId){
-		if (!function_exists('saveSessionObject')) {
+		if (!class_exists('SessionUtils')) {
 			include (APP_BASE_PATH."include.common.php");
 		}
 		
 		if($profileId == "-1"){
-			saveSessionObject('admin_current_profile',null);
+			SessionUtils::saveSessionObject('admin_current_profile',null);
 			return;
 		}
 		
 		if($this->currentUser->user_level == 'Admin'){
-			saveSessionObject('admin_current_profile',$profileId);
+			SessionUtils::saveSessionObject('admin_current_profile',$profileId);
 					
 		}else if($this->currentUser->user_level == 'Manager'){
 			$subordinate = new Profile();
@@ -509,7 +509,7 @@ class BaseService{
 				return;	
 			}
 			
-			saveSessionObject('admin_current_profile',$profileId);
+			SessionUtils::saveSessionObject('admin_current_profile',$profileId);
 			
 		}
 	}

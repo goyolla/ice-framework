@@ -1,12 +1,12 @@
 <?php
 include ("include.common.php");
 if(defined('MODULE_PATH')){
-	saveSessionObject("modulePath", MODULE_PATH);
+	SessionUtils::saveSessionObject("modulePath", MODULE_PATH);
 }
 define('CLIENT_PATH',dirname(__FILE__));
 include (CLIENT_PATH."/include.common.php");
 include (CLIENT_PATH."/server.includes.inc.php");
-$user = getSessionObject('user');
+$user = SessionUtils::getSessionObject('user');
 
 $profileCurrent = null;
 $profileSwitched = null;

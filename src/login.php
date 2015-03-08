@@ -10,7 +10,7 @@ if(empty($user)){
 		
 		if($suser->password == md5($_REQUEST['password'])){
 			$user = $suser;
-			saveSessionObject('user', $user);
+			SessionUtils::saveSessionObject('user', $user);
 			$suser->last_login = date("Y-m-d H:i:s");
 			$suser->Save();
 			
@@ -34,7 +34,7 @@ if(empty($user)){
 	
 }
 
-$tuser = getSessionObject('user');
+$tuser = SessionUtils::getSessionObject('user');
 //check user
 
 $logoFileName = CLIENT_BASE_PATH."data/logo.png";

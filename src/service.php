@@ -24,7 +24,7 @@ define('CLIENT_PATH',dirname(__FILE__));
 include ("include.common.php");
 
 
-$modulePath = getSessionObject("modulePath");
+$modulePath = SessionUtils::getSessionObject("modulePath");
 if(!defined('MODULE_PATH')){
 	define('MODULE_PATH',$modulePath);
 }
