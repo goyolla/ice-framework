@@ -19,13 +19,14 @@
   </logging>
 
   <filter>
-  	<blacklist>
-          <directory>./src/composer</directory>
-          <directory>./src/lib</directory>
-    </blacklist>
     <whitelist addUncoveredFilesFromWhitelist="true">
       <directory suffix=".php">src</directory>
       <exclude>
+      	<directory suffix=".php">./src/composer</directory>
+      	<directory suffix=".php">./src/lib</directory>
+      	<directory suffix=".php">./src/lib/Mail</directory>
+      	<directory suffix=".php">./src/adodb512</directory>
+      	<directory suffix=".php">./src/classes/crypt</directory>
         <file>./test/bootstrap.php</file>
         <file>./test/test.config.php</file>
         <file>./test/test.includes.php</file>
