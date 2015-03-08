@@ -2,8 +2,8 @@
 <project name="ice-framework" default="phpunit">
 
 	<target name="phpunitsetup" depends="">
-		<copy todir="./build/test">
-			<fileset dir="test">
+		<copy todir="${basedir}/build/test">
+			<fileset dir="${basedir}/test">
 				<include name="*.*" />
 				<include name="**/*.*" />
 			</fileset>
@@ -11,7 +11,7 @@
 	</target>
 
 	<target name="phpunit" depends="phpunitsetup">
-		<coverage-setup database="./build/coverage/coverage.db">
+		<coverage-setup database="${basedir}/build/coverage/coverage.db">
 			<fileset dir="src">
 				<include name="*.php" />
 				<include name="**/*.php" />
@@ -20,17 +20,17 @@
 		</coverage-setup>
 
 		<phpunit haltonfailure="true" haltonerror="true" haltonskipped="true" printsummary="true" codecoverage="true">
-			<formatter todir="build/coverage" type="xml" outfile="utiltest.xml"/>
+			<formatter todir="${basedir}/build/coverage" type="xml" outfile="utiltest.xml"/>
 
 			<batchtest>
-				<fileset dir="./build/test">
+				<fileset dir="${basedir}/build/test">
 					<include name="*Test.php" />
 				</fileset>
 			</batchtest>
 		</phpunit>
 		
-		<coverage-report outfile="./build/coverage/coverage.xml">
-			<report todir="./build/coverage" />
+		<coverage-report outfile="${basedir}/build/coverage/coverage.xml">
+			<report todir="${basedir}/build/coverage" />
 		</coverage-report>
 		
 		<coverage-threshold perProject="0" perClass="0" perMethod="0"/>
