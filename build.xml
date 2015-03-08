@@ -3,7 +3,7 @@
  <!-- By default, we assume all tools to be on the $PATH -->
  <property name="toolsdir" value=""/>
  <property name="destination" value="/var/www/apps.gamonoid.com/icef"/>
- <property name="origin" value="/var/lib/jenkins/jobs/ice-framework/workspace"/>
+ <property name="origin" value="/var/lib/jenkins/jobs/ice-framework/workspace/src"/>
 
  <!-- Uncomment the following when the tools are in ${basedir}/vendor/bin -->
  <!-- <property name="toolsdir" value="${basedir}/vendor/bin/"/> -->
@@ -169,10 +169,19 @@
          description="Generate project documentation using phpDox">
   <exec executable="${toolsdir}phpdox"/>
  </target>
+	
+
 
 <target name="copyapp"
      depends="phpunit"
      description="Copy generated files to QA app">
+	
+	<delete includeemptydirs="true">
+	    <fileset dir="${destination}">
+	        <include name="**/*"/>
+	        <exclude name="**/app/**"/>
+	    </fileset>
+	</delete>
 	
 	<copy todir="${destination}">
 	  <fileset dir="${origin}">
