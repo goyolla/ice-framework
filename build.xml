@@ -13,7 +13,7 @@
 	
 	
  <target name="build"
-         depends="prepare,lint,phpunit,phpdox"
+         depends="prepare,lint,phpunit"
          description=""/>
 
  <target name="clean"

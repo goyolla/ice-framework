@@ -19,6 +19,10 @@
   </logging>
 
   <filter>
+  	<blacklist>
+          <directory>./src/composer</directory>
+          <directory>./src/lib</directory>
+    </blacklist>
     <whitelist addUncoveredFilesFromWhitelist="true">
       <directory suffix=".php">src</directory>
       <exclude>
