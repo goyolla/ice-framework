@@ -2,8 +2,8 @@
 <project name="ice-framework" default="build">
  <!-- By default, we assume all tools to be on the $PATH -->
  <property name="toolsdir" value=""/>
- <property name="destination" value="/var/www/apps.gamonoid.com/icef"/>
- <property name="origin" value="/var/lib/jenkins/jobs/ice-framework/workspace/src"/>
+ <property name="destination" value="${basedir}/build/app"/>
+ <property name="origin" value="${basedir}/src"/>
 
  <!-- Uncomment the following when the tools are in ${basedir}/vendor/bin -->
  <!-- <property name="toolsdir" value="${basedir}/vendor/bin/"/> -->
@@ -27,6 +27,7 @@
   <delete dir="${basedir}/build/pdepend"/>
   <delete dir="${basedir}/build/phpdox"/>
   <delete dir="${basedir}/build/test"/>
+  <delete dir="${basedir}/build/app"/>
   <property name="clean.done" value="true"/>
  </target>
 
@@ -40,6 +41,7 @@
   <mkdir dir="${basedir}/build/pdepend"/>
   <mkdir dir="${basedir}/build/phpdox"/>
   <mkdir dir="${basedir}/build/test"/>
+  <mkdir dir="${basedir}/build/app"/>
   <property name="prepare.done" value="true"/>
  </target>
 
