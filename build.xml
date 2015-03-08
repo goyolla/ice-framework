@@ -174,7 +174,7 @@
      depends="phpunit"
      description="Copy generated files to QA app">
 	
-	<copy todir="${destination}" depends="phpunit">
+	<copy todir="${destination}">
 	  <fileset dir="${origin}">
 	    <include name="**/*"/>
 	    <exclude name="**/app*"/>
