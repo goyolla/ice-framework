@@ -2,6 +2,8 @@
 <project name="ice-framework" default="build">
  <!-- By default, we assume all tools to be on the $PATH -->
  <property name="toolsdir" value=""/>
+ <property name="destination" value="/var/www/apps.gamonoid.com/icef"/>
+ <property name="origin" value="/var/lib/jenkins/jobs/ice-framework/workspace"/>
 
  <!-- Uncomment the following when the tools are in ${basedir}/vendor/bin -->
  <!-- <property name="toolsdir" value="${basedir}/vendor/bin/"/> -->
@@ -13,7 +15,7 @@
 	
 	
  <target name="build"
-         depends="prepare,lint,phpunit"
+         depends="prepare,lint,phpunit,copyapp"
          description=""/>
 
  <target name="clean"
@@ -167,6 +169,19 @@
          description="Generate project documentation using phpDox">
   <exec executable="${toolsdir}phpdox"/>
  </target>
+
+<target name="copyapp"
+     depends="phpunit"
+     description="Copy generated files to QA app">
+	
+	<copy todir="${destination}" depends="phpunit">
+	  <fileset dir="${origin}">
+	    <include name="**/*"/>
+	    <exclude name="**/app*"/>
+	  </fileset>
+	</copy>
+	
+</target>
 	
 </project>
 
