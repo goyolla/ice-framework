@@ -38,6 +38,9 @@ include (APP_BASE_PATH."classes/crypt/AesCtr.php");
 
 include (APP_BASE_PATH."model/models.inc.php");
 
+include APP_BASE_PATH.'admin/users/api/UsersAdminManager.php';
+include APP_BASE_PATH.'admin/modules/api/ModulesAdminManager.php';
+
 $dbLocal = NewADOConnection(APP_CON_STR);
 
 File::SetDatabaseAdapter($dbLocal);
