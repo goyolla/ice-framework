@@ -1,5 +1,6 @@
 <?php
 include dirname(__FILE__).'/test.includes.php';
+include APP_BASE_PATH.'admin/users/api/UsersAdminManager.php';
 
 class TestTemplate extends PHPUnit_Framework_TestCase{
 	
