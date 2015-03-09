@@ -42,6 +42,26 @@
   <mkdir dir="${basedir}/build/phpdox"/>
   <mkdir dir="${basedir}/build/test"/>
   <mkdir dir="${basedir}/build/app"/>
+  <mkdir dir="${basedir}/src/lib"/>
+ 	
+ 	<copy todir="${basedir}/src/lib">
+	  <fileset dir="${basedir}/lib">
+	    <include name="**/*"/>
+	  </fileset>
+	</copy>
+ 	
+ 	<copy todir="${basedir}/src">
+	  <fileset dir="${basedir}/ext">
+	    <include name="**/*"/>
+	  </fileset>
+	</copy>
+ 	
+ 	<copy todir="${basedir}/src">
+	  <fileset dir="${basedir}/tp">
+	    <include name="**/*"/>
+	  </fileset>
+	</copy>
+ 	
   <property name="prepare.done" value="true"/>
  </target>
 
