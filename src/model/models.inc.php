@@ -72,126 +72,6 @@ class ICEHRM_Record extends ADOdb_Active_Record{
 	}
 }
 
-class Country extends ICEHRM_Record {
-	var $_table = 'Country';
-	
-	public function getAdminAccess(){
-		return array("get","element","save","delete");
-	}
-	
-	public function getUserAccess(){
-		return array();
-	}
-	
-	public function getAnonymousAccess(){
-		return array("get","element");
-	}
-}
-
-class Province extends ICEHRM_Record {
-	var $_table = 'Province';
-	
-	public function getAdminAccess(){
-		return array("get","element","save","delete");
-	}
-	
-	public function getUserAccess(){
-		return array();
-	}
-	
-	public function getAnonymousAccess(){
-		return array("get","element");
-	}
-}
-
-class CurrencyType extends ICEHRM_Record {
-	var $_table = 'CurrencyTypes';
-	
-	public function getAdminAccess(){
-		return array("get","element","save","delete");
-	}
-	
-	public function getUserAccess(){
-		return array();
-	}
-	
-	public function getAnonymousAccess(){
-		return array("get","element");
-	}
-}
-
-class Nationality extends ICEHRM_Record {
-	var $_table = 'Nationality';
-	
-	public function getAdminAccess(){
-		return array("get","element","save","delete");
-	}
-	
-	public function getUserAccess(){
-		return array();
-	}
-	
-	public function getAnonymousAccess(){
-		return array("get","element");
-	}
-}
-
-class Profile extends ICEHRM_Record {
-	
-	public function getAdminAccess(){
-		return array("get","element","save","delete");
-	}
-	
-	public function getManagerAccess(){
-		return array("get","element","save");
-	}
-	
-	public function getUserAccess(){
-		return array("get");
-	}
-	
-	public function getUserOnlyMeAccess(){
-		return array("element","save");
-	}
-	
-	public function getUserOnlyMeAccessField(){
-		return "id";
-	}
-	
-	var $_table = 'Profiles';
-}
-
-class User extends ICEHRM_Record {
-	public function getAdminAccess(){
-		return array("get","element","save","delete");
-	}
-	
-	public function getUserAccess(){
-		return array();
-	}
-	
-	
-	public function validateSave($obj){
-		$userTemp = new User();
-		
-		if(empty($obj->id)){
-			$users = $userTemp->Find("email = ?",array($obj->email));
-			if(count($users) > 0){
-				return new IceResponse(IceResponse::ERROR,"A user with same authentication email already exist");
-			}
-		}else{
-			$users = $userTemp->Find("email = ? and id <> ?",array($obj->email, $obj->id));
-			if(count($users) > 0){
-				return new IceResponse(IceResponse::ERROR,"A user with same authentication email already exist");
-			}
-		}
-	
-		return new IceResponse(IceResponse::SUCCESS,"");
-	}
-	
-	var $_table = 'Users';
-}
-
 
 class File extends ICEHRM_Record {
 	var $_table = 'Files';
@@ -206,18 +86,6 @@ class File extends ICEHRM_Record {
 	public function getAnonymousAccess(){
 		return array("save");
 	}
-}
-
-
-class Module extends ICEHRM_Record {
-	public function getAdminAccess(){
-		return array("get","element","save","delete");
-	}
-		
-	public function getUserAccess(){
-		return array();
-	}
-	var $_table = 'Modules';
 }
 
 
@@ -252,18 +120,6 @@ class Audit extends ICEHRM_Record {
 	var $_table = 'AuditLog';
 }
 
-class Permission extends ICEHRM_Record {
-	var $_table = 'Permissions';
-
-	public function getAdminAccess(){
-		return array("get","element","save","delete");
-	}
-
-	public function getUserAccess(){
-		return array();
-	}
-
-}
 
 class DataEntryBackup extends ICEHRM_Record {
 	var $_table = 'DataEntryBackups';

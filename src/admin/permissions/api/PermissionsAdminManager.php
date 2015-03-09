@@ -15,8 +15,23 @@ if (!class_exists('PermissionsAdminManager')) {
 		}
 		
 		public function setupModuleClassDefinitions(){
-			
+			$this->addModelClass('Permission');
 		}
 		
+	}
+}
+
+if (!class_exists('Permission')) {
+	class Permission extends ICEHRM_Record {
+		var $_table = 'Permissions';
+	
+		public function getAdminAccess(){
+			return array("get","element","save","delete");
+		}
+	
+		public function getUserAccess(){
+			return array();
+		}
+	
 	}
 }
