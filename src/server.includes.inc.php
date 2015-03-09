@@ -40,19 +40,9 @@ include (APP_BASE_PATH."model/models.inc.php");
 
 $dbLocal = NewADOConnection(APP_CON_STR);
 
-
-
-Country::SetDatabaseAdapter($dbLocal);
-Province::SetDatabaseAdapter($dbLocal);
-CurrencyType::SetDatabaseAdapter($dbLocal);
-Nationality::SetDatabaseAdapter($dbLocal);
-Profile::SetDatabaseAdapter($dbLocal);
-User::SetDatabaseAdapter($dbLocal);
 File::SetDatabaseAdapter($dbLocal);
 Setting::SetDatabaseAdapter($dbLocal);
-Module::SetDatabaseAdapter($dbLocal);
 Report::SetDatabaseAdapter($dbLocal);
-Permission::SetDatabaseAdapter($dbLocal);
 DataEntryBackup::SetDatabaseAdapter($dbLocal);
 Audit::SetDatabaseAdapter($dbLocal);
 Notification::SetDatabaseAdapter($dbLocal);
