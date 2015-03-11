@@ -27,9 +27,9 @@ if(empty($user)){
 }
 
 if($user->user_level == "Admin"){
-	$homeLink = CLIENT_BASE_URL."?g=admin&n=dashboard&m=admin_Admin";
+	$homeLink = HOME_LINK_ADMIN;
 }else{
-	$homeLink = CLIENT_BASE_URL."?g=modules&n=dashboard&m=module_My_Account";
+	$homeLink = HOME_LINK_OTHERS;
 }
 
 //Check Module Permissions
@@ -111,7 +111,7 @@ $meta = json_decode(file_get_contents(MODULE_PATH."/meta.json"),true);
 		<script type="text/javascript" src="<?=BASE_URL?>api/TimeUtils.js?v=<?=$jsVersion?>"></script>
 		<script type="text/javascript" src="<?=BASE_URL?>api/AesCrypt.js?v=<?=$jsVersion?>"></script>
 		<?php include 'modulejslibs.inc.php';?>
-		
+	
 	
 	    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -125,6 +125,7 @@ $meta = json_decode(file_get_contents(MODULE_PATH."/meta.json"),true);
 		</script>
 		<script type="text/javascript" src="<?=BASE_URL?>js/app-global.js"></script>
 		
+		
 	
   	</head>
     <body class="skin-blue">
@@ -134,11 +135,14 @@ $meta = json_decode(file_get_contents(MODULE_PATH."/meta.json"),true);
 		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 		
-		  ga('create', '<?=$baseService->getGAKey()?>', 'google.com');
+		  ga('create', '<?=$baseService->getGAKey()?>', 'gamonoid.com');
 		  ga('send', 'pageview');
 	
 	  	</script>
-	  	
+	  	<script type="text/javascript">
+	  			
+			
+		</script>
 		
         <header id="delegationDiv" class="header">
             <a href="<?=$homeLink?>" class="logo" style="font-family: 'Source Sans Pro', sans-serif;">
@@ -162,7 +166,7 @@ $meta = json_decode(file_get_contents(MODULE_PATH."/meta.json"),true);
                         <li class="user user-menu">
                             <a href="#" onclick="$('#profileSwitchModal').modal();return false;" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="glyphicon glyphicon-new-window"></i>
-                                <span>Switch Profile</span>
+                                <span>Switch</span>
                             </a>
                         </li>
                         <?php }?>
@@ -178,9 +182,7 @@ $meta = json_decode(file_get_contents(MODULE_PATH."/meta.json"),true);
                                     <img src="<?=$profileCurrent->image?>" class="img-circle" alt="User Image" />
                                     <p>
                                         <?=$profileCurrent->first_name." ".$profileCurrent->last_name?>
-                                        <!--  
-                                        <small>Member since Nov. 2012</small>
-                                        -->
+                        
                                     </p>
                                 </li>
                                 <!-- Menu Body -->
@@ -200,7 +202,7 @@ $meta = json_decode(file_get_contents(MODULE_PATH."/meta.json"),true);
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
                                     <div class="pull-left">
-                                        <a href="<?=CLIENT_BASE_URL?>?g=modules&n=profiles" class="btn btn-default btn-flat">Profile</a>
+                                        <a href="<?=$homeLink?>" class="btn btn-default btn-flat">Profile</a>
                                     </div>
                                     <div class="pull-right">
                                         <a href="<?=CLIENT_BASE_URL?>logout.php" class="btn btn-default btn-flat">Sign out</a>
@@ -227,7 +229,7 @@ $meta = json_decode(file_get_contents(MODULE_PATH."/meta.json"),true);
                                 <li class="user-footer">
                                 	<?php if(!empty($profileCurrent) || !empty($profileSwitched)){?>
                                     <div class="pull-left">
-                                        <a href="<?=CLIENT_BASE_URL?>?g=modules&n=profiles" class="btn btn-default btn-flat">Profile</a>
+                                        <a href="<?=$homeLink?>" class="btn btn-default btn-flat">Profile</a>
                                     </div>
                                     <?php }?>
                                     <div class="pull-right">
@@ -245,8 +247,8 @@ $meta = json_decode(file_get_contents(MODULE_PATH."/meta.json"),true);
 	                            </a>
 	                            <ul class="dropdown-menu">
 	                                    <li>
-	                                    	<a target="_bloank" href=""><h5>Download Administrators' Guide</h5></a>
-	                                    	<a href="#" onclick="modJs.showMessage('About','<p>Ice Framework<br/>Version 6.1<br/>Release Date: 2014/08/13</p>')"><h5>About</h5></a>
+	                                    	<a target="_bloank" href="http://blog.icehrm.com/"><h5>Administrators' Guide</h5></a>
+	                                    	<a href="#" onclick="modJs.showMessage('About','<p><?=APP_NAME?><br/>Version <?=VERSION?><br/>Release Date: <?=VERSION_DATE?></p>')"><h5>About</h5></a>
 	                                    </li>
 	                             </ul>
 	                        </li>
@@ -394,7 +396,10 @@ $meta = json_decode(file_get_contents(MODULE_PATH."/meta.json"),true);
                 <section class="content-header">
                     <h1>
                         <?=$meta['label']?>
-                        <small><?=$meta['menu']?></small>
+                        <small>
+                        	<?=$meta['menu']?>&nbsp;&nbsp;
+                        	<a href="#" class="helpLink" target="_blank" style="display:none;"><i class="glyphicon glyphicon-question-sign"></i></a>
+                        </small>
                     </h1>
                 </section>
 

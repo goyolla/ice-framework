@@ -1,4 +1,5 @@
 <?php
+include ("config.base.php");
 include ("include.common.php"); 
 include("server.includes.inc.php");
 if(empty($user)){
@@ -25,9 +26,9 @@ if(empty($user)){
 			}
 			
 			if($user->user_level == "Admin"){
-				header("Location:".CLIENT_BASE_URL."?g=admin&n=profiles&m=admin_Admin");	
+				header("Location:".HOME_LINK_ADMIN);	
 			}else{
-				header("Location:".CLIENT_BASE_URL."?g=modules&n=profiles&m=module_Personal_Information");	
+				header("Location:".HOME_LINK_OTHER);	
 			}
 		}else{
 			header("Location:".CLIENT_BASE_URL."login.php?f=1");
@@ -35,9 +36,9 @@ if(empty($user)){
 	}
 }else{
 	if($user->user_level == "Admin"){
-		header("Location:".CLIENT_BASE_URL."?g=admin&n=profiles&m=admin_Admin");	
+		header("Location:".HOME_LINK_ADMIN);	
 	}else{
-		header("Location:".CLIENT_BASE_URL."?g=modules&n=profiles&m=module_Personal_Information");	
+		header("Location:".HOME_LINK_OTHER);	
 	}
 	
 }

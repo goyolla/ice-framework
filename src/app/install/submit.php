@@ -97,7 +97,7 @@ if($action == "TEST_DB"){
 	
 	
 	//Run create table script
-	$insql = file_get_contents(CLIENT_APP_PATH."../scripts/icef_db.sql");
+	$insql = file_get_contents(CLIENT_APP_PATH."../scripts/".APP_ID."db.sql");
 	$sql_list = preg_split('/;/',$insql);
 	foreach($sql_list as $sql){
 		if (preg_match('/^\s+$/', $sql) || $sql == '') { # skip empty lines
@@ -107,7 +107,7 @@ if($action == "TEST_DB"){
 	}
 	
 	//Run create table script
-	$insql = file_get_contents(CLIENT_APP_PATH."../scripts/icef_master_data.sql");
+	$insql = file_get_contents(CLIENT_APP_PATH."../scripts/".APP_ID."_master_data.sql");
 	$sql_list = preg_split('/;/',$insql);
 	foreach($sql_list as $sql){
 		if (preg_match('/^\s+$/', $sql) || $sql == '') { # skip empty lines

@@ -1,5 +1,6 @@
 <?php
 define('CLIENT_PATH',dirname(__FILE__));
+include ("config.base.php");
 include ("include.common.php");
 $modulePath = SessionUtils::getSessionObject("modulePath");
 if(!defined('MODULE_PATH')){

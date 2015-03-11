@@ -174,7 +174,8 @@ if($uploadFilesToS3.'' == '1' && !empty($uploadFilesToS3Key) && !empty($uploadFi
 if($result['success'] == 1){
 	$file->name = $saveFileName;
 	$file->filename = $result['filename'];
-	$file->profile = $_POST['user']=="_NONE_"?null:$_POST['user'];
+	$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+	$file->$signInMappingField = $_POST['user']=="_NONE_"?null:$_POST['user'];
 	$file->file_group = $_POST['file_group'];
 	$file->Save();
 	if($uploadedToS3){

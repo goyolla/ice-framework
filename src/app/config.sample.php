@@ -20,3 +20,11 @@ define('APP_CON_STR', 'mysql://'.APP_USERNAME.':'.APP_PASSWORD.'@'.APP_HOST.'/'.
 //file upload
 define('FILE_TYPES', 'jpg,png,jpeg');
 define('MAX_FILE_SIZE_KB', 10 * 1024);
+
+//Home Links
+define('HOME_LINK_ADMIN', CLIENT_BASE_URL."?g=admin&n=dashboard&m=admin_Admin");
+define('HOME_LINK_OTHERS', CLIENT_BASE_URL."?g=modules&n=dashboard&m=module_My_Account");
+
+//Version
+define('VERSION', '2.0');
+define('VERSION_DATE', '12/03/2015');

@@ -1,6 +1,6 @@
 <?php
-//error_reporting(0);
-define('TAGS_TO_PRESERVE','');
+error_reporting(0);
+if(!defined('TAGS_TO_PRESERVE')){define('TAGS_TO_PRESERVE','');}
 $jsVersion = '41.8';
 $cssVersion = '2.8';
 

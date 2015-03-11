@@ -21,6 +21,7 @@ Original work Copyright (c) 2012 [Gamonoid Media Pvt. Ltd]
 Developer: Thilina Hasantha (thilina.hasantha[at]gmail.com / facebook.com/thilinah)
  */
 define('CLIENT_PATH',dirname(__FILE__));
+include ("config.base.php");
 include ("include.common.php");
 
 
