@@ -35,8 +35,9 @@ class S3FileSystem{
 		
 		error_log("Response from s3:".print_r($res,true));
 		
-		if(!empty($res->get('RequestId'))){
-			return 	$res->get('RequestId');
+		$result = $res->get('RequestId');
+		if(!empty($result)){
+			return 	$result;
 		}
 		
 		return NULL;
@@ -57,8 +58,9 @@ class S3FileSystem{
 		
 		error_log("Response from s3:".print_r($res,true));
 		
-		if(!empty($res->get('RequestId'))){
-			return 	$res->get('RequestId');
+		$result = $res->get('RequestId');
+		if(!empty($result)){
+			return 	$result;
 		}
 		
 		return NULL;

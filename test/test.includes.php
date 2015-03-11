@@ -37,7 +37,7 @@ if (!class_exists('SessionUtils')) {
 
 
 include (APP_BASE_PATH."/include.common.php");
-include(APP_BASE_PATH."/server.includes.inc.php");
+
 
 $dropDBCommand = 'echo "DROP DATABASE IF EXISTS '.APP_DB.'"| mysql -u'.MYSQL_ROT_USER.' -p'.MYSQL_ROT_PASS;
 $createDBCommand = 'echo "CREATE DATABASE '.APP_DB.'"| mysql -u'.MYSQL_ROT_USER.' -p'.MYSQL_ROT_PASS;
@@ -69,3 +69,5 @@ echo "Command:".$insql."\r\n";
 exec($command);
 
 echo "Source File Done:".$insql."\r\n";
+
+include(APP_BASE_PATH."/server.includes.inc.php");

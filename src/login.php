@@ -3,18 +3,26 @@ include ("include.common.php");
 include("server.includes.inc.php");
 if(empty($user)){
 	if(!empty($_REQUEST['username']) && !empty($_REQUEST['password'])){
+		$suser = null;
+		$ssoUserLoaded = false;
 		
+		include 'login.com.inc.php';
 		
-		$suser = new User();
-		$suser->Load("(username = ? or email = ?) and password = ?",array($_REQUEST['username'],$_REQUEST['username'],md5($_REQUEST['password'])));
+		if(empty($suser)){
+			$suser = new User();
+			$suser->Load("(username = ? or email = ?) and password = ?",array($_REQUEST['username'],$_REQUEST['username'],md5($_REQUEST['password'])));
+		}
 		
-		if($suser->password == md5($_REQUEST['password'])){
+		if($suser->password == md5($_REQUEST['password']) || $ssoUserLoaded){
 			$user = $suser;
 			SessionUtils::saveSessionObject('user', $user);
 			$suser->last_login = date("Y-m-d H:i:s");
 			$suser->Save();
 			
-			$baseService->audit(IceConstants::AUDIT_AUTHENTICATION, "User Login");
+			if(!$ssoUserLoaded && !empty($baseService->auditManager)){
+				$baseService->auditManager->user = $user;
+				$baseService->audit(IceConstants::AUDIT_AUTHENTICATION, "User Login");
+			}
 			
 			if($user->user_level == "Admin"){
 				header("Location:".CLIENT_BASE_URL."?g=admin&n=profiles&m=admin_Admin");	
@@ -118,7 +126,7 @@ if(!file_exists($logoFileName)){
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', '<?=$baseService->getGAKey()?>', 'google.com');
+  ga('create', '<?=$baseService->getGAKey()?>', 'gamonoid.com');
   ga('send', 'pageview');
 
   </script>
@@ -219,7 +227,10 @@ if(!file_exists($logoFileName)){
 							</div>
 							<?php if(isset($_REQUEST['f'])){?>
 							<div class="clearfix alert alert-error" style="font-size:11px;width:147px;margin-bottom: 5px;">
-								Login failed	
+								Login failed
+								<?php if(isset($_REQUEST['fm'])){
+									echo $_REQUEST['fm'];	
+								}?>
 							</div>
 							<?php } ?>
 							<?php if(isset($_REQUEST['c'])){?>

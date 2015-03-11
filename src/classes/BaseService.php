@@ -69,7 +69,8 @@ class BaseService{
 		if(in_array($table, $this->userTables)){
 			$cemp = $this->getCurrentProfileId();
 			if(!empty($cemp)){
-				$list = $obj->Find("profile = ?".$query.$orderBy, array_merge(array($cemp),$queryData));	
+				$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+				$list = $obj->Find($signInMappingField." = ?".$query.$orderBy, array_merge(array($cemp),$queryData));	
 			}else{
 				$list = array();
 			}
@@ -137,7 +138,8 @@ class BaseService{
 			if(!empty($cemp)){
 				if(!$isSubOrdinates){
 					array_unshift($queryData, $cemp);
-					$list = $obj->Find("profile = ?".$query.$orderBy.$limit, $queryData);
+					$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+					$list = $obj->Find($signInMappingField." = ?".$query.$orderBy.$limit, $queryData);
 				}else{
 					$subordinate = new Profile();
 					$subordinates = $subordinate->Find("supervisor = ?",array($cemp));
@@ -149,7 +151,8 @@ class BaseService{
 						$subordinatesIds.=$sub->id;
 					}
 					$subordinatesIds.="";
-					$list = $obj->Find("profile in (".$subordinatesIds.") ".$query.$orderBy.$limit, $queryData);
+					$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+					$list = $obj->Find($signInMappingField." in (".$subordinatesIds.") ".$query.$orderBy.$limit, $queryData);
 				}
 					
 			}else{
@@ -267,9 +270,10 @@ class BaseService{
 	public function addElement($table,$obj){
 		$isAdd = true;
 		$ele = new $table();
-		if($table == "Profile"){
-			if(class_exists("ProVersion")){
-				$pro = new ProVersion();
+		if(class_exists("ProVersion")){
+			$pro = new ProVersion();
+			$subscriptionTables = $pro->getSubscriptionTables();
+			if(in_array($table,$subscriptionTables)){
 				$resp = $pro->subscriptionCheck($obj);
 				if($resp->getStatus() != IceResponse::SUCCESS){
 					return $resp;
@@ -297,7 +301,8 @@ class BaseService{
 			if(in_array($table, $this->userTables)){
 				$cemp = $this->getCurrentProfileId();
 				if(!empty($cemp)){
-					$ele->profile = $cemp;	
+					$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+					$ele->$signInMappingField = $cemp;	
 				}else{
 					return new IceResponse(IceResponse::ERROR,"Profile id is not set");
 				}		
@@ -476,7 +481,8 @@ class BaseService{
 		$adminEmpId = SessionUtils::getSessionObject('admin_current_profile');
 		if(empty($adminEmpId)){
 			$user = SessionUtils::getSessionObject('user');	
-			return $user->profile;
+			$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+			return $user->$signInMappingField;
 		}
 		return $adminEmpId;
 	}
@@ -495,8 +501,11 @@ class BaseService{
 			SessionUtils::saveSessionObject('admin_current_profile',$profileId);
 					
 		}else if($this->currentUser->user_level == 'Manager'){
-			$subordinate = new Profile();
-			$subordinates = $subordinate->Find("supervisor = ?",array($this->currentUser->profile));
+			$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+			$signInMappingFieldTable = ucfirst($signInMappingField);
+			$subordinate = new $signInMappingFieldTable();
+			$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+			$subordinates = $subordinate->Find("supervisor = ?",array($this->currentUser->$signInMappingField));
 			$subFound = false;
 			foreach($subordinates as $sub){
 				if($sub->id == $profileId){
@@ -549,15 +558,16 @@ class BaseService{
 				return true;
 			}else{
 				$accessMatrix = $object->getUserOnlyMeAccess();
-				
-				if (in_array($type, $accessMatrix) && $_REQUEST[$object->getUserOnlyMeAccessField()] == $this->currentUser->profile) {
+				$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+				if (in_array($type, $accessMatrix) && $_REQUEST[$object->getUserOnlyMeAccessField()] == $this->currentUser->$signInMappingField) {
 					return true;	
 				}
 				
 				if (in_array($type, $accessMatrix)) {
 					
 					$field = $object->getUserOnlyMeAccessField();
-					if($this->currentUser->profile."" == $object->$field){
+					$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+					if($this->currentUser->$signInMappingField."" == $object->$field){
 						return true;
 					}
 					
@@ -570,15 +580,16 @@ class BaseService{
 				return true;
 			}else{
 				$accessMatrix = $object->getUserOnlyMeAccess();
-				
-				if (in_array($type, $accessMatrix) && $_REQUEST[$object->getUserOnlyMeAccessField()] == $this->currentUser->profile) {
+				$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+				if (in_array($type, $accessMatrix) && $_REQUEST[$object->getUserOnlyMeAccessField()] == $this->currentUser->$signInMappingField) {
 					return true;	
 				}
 				
 				if (in_array($type, $accessMatrix)) {
 					
 					$field = $object->getUserOnlyMeAccessField();
-					if($this->currentUser->profile."" == $object->$field){
+					$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+					if($this->currentUser->$signInMappingField."" == $object->$field){
 						return true;
 					}
 					
@@ -635,8 +646,9 @@ class BaseService{
 	
 	public function getUserFromProfileId($profileId){
 		$user = new User();
-		$user->load("profile = ?",array($profileId));
-		if($user->profile == $profileId){
+		$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+		$user->load($signInMappingField." = ?",array($profileId));
+		if($user->$signInMappingField == $profileId){
 			return $user;	
 		}
 		return null;

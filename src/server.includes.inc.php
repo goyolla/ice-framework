@@ -10,6 +10,9 @@ $ADODB_ASSOC_CASE = 2;
 //detect admin and user modules
 if(defined("MODULE_PATH")){
 	$tArr = explode("/", MODULE_PATH);
+	if(count($tArr) == 1){
+		$tArr = explode("\\", MODULE_PATH);
+	}
 	if(!defined('MODULE_TYPE')){
 		if(count($tArr) >= 2){
 			define('MODULE_TYPE',$tArr[count($tArr)-2]);
@@ -40,6 +43,7 @@ include (APP_BASE_PATH."model/models.inc.php");
 
 include APP_BASE_PATH.'admin/users/api/UsersAdminManager.php';
 include APP_BASE_PATH.'admin/modules/api/ModulesAdminManager.php';
+include APP_BASE_PATH.'admin/permissions/api/PermissionsAdminManager.php';
 
 $dbLocal = NewADOConnection(APP_CON_STR);
 
@@ -82,32 +86,31 @@ if($debugMode == "1"){
 $userTables = array();
 $fileFields = array();
 $mysqlErrors = array();
-
 //============ Start - Initializing Modules ==========
 if(defined('CLIENT_PATH')){
-	$moduleManagers = array();
-	include 'modules.php';
+$moduleManagers = array();
+include 'modules.php';
+
+
+
+
+foreach($moduleManagers as $moduleManagerObj){
 	
+	$moduleManagerObj->setupModuleClassDefinitions();
+	$moduleManagerObj->initializeUserClasses();
+	$moduleManagerObj->initializeFieldMappings();
+	$moduleManagerObj->initializeDatabaseErrorMappings();
 	
+	$moduleManagerObj->setupUserClasses($userTables);
+	$moduleManagerObj->setupFileFieldMappings($fileFields);
+	$moduleManagerObj->setupErrorMappings($mysqlErrors);
 	
+	$modelClassList = $moduleManagerObj->getModelClasses();
 	
-	foreach($moduleManagers as $moduleManagerObj){
-		
-		$moduleManagerObj->setupModuleClassDefinitions();
-		$moduleManagerObj->initializeUserClasses();
-		$moduleManagerObj->initializeFieldMappings();
-		$moduleManagerObj->initializeDatabaseErrorMappings();
-		
-		$moduleManagerObj->setupUserClasses($userTables);
-		$moduleManagerObj->setupFileFieldMappings($fileFields);
-		$moduleManagerObj->setupErrorMappings($mysqlErrors);
-		
-		$modelClassList = $moduleManagerObj->getModelClasses();
-		
-		foreach($modelClassList as $modelClass){
-			$modelClass::SetDatabaseAdapter($dbLocal);
-		}
+	foreach($modelClassList as $modelClass){
+		$modelClass::SetDatabaseAdapter($dbLocal);
 	}
+}
 }
 //============= End - Initializing Modules ============
 
@@ -118,6 +121,13 @@ $baseService->setSqlErrors($mysqlErrors);
 
 include ("includes.com.php");
 
+if(file_exists(APP_BASE_PATH.'admin/audit/api/AuditActionManager.php')){
+	include APP_BASE_PATH.'admin/audit/api/AuditActionManager.php';
+	$auditManager = new AuditActionManager();
+	$auditManager->setBaseService($baseService);
+	$auditManager->setUser($user);
+	$baseService->setAuditManager($auditManager);
+}
 
 $emailEnabled = $settingsManager->getSetting("Email: Enable");
 $emailMode = $settingsManager->getSetting("Email: Mode");
