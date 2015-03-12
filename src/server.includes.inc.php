@@ -80,9 +80,9 @@ $noJSONRequests = $settingsManager->getSetting("System: Do not pass JSON in requ
 
 $debugMode = $settingsManager->getSetting("System: Debug Mode");
 if($debugMode == "1"){
-	if(!defined('LOG_LEVEL')){define('LOG_LEVEL',Logger::DEBUG);}	
+	if(!defined('LOG_LEVEL')){define('LOG_LEVEL',Monolog\Logger::DEBUG);}	
 }else{
-	if(!defined('LOG_LEVEL')){define('LOG_LEVEL',Logger::INFO);}
+	if(!defined('LOG_LEVEL')){define('LOG_LEVEL',Monolog\Logger::INFO);}
 }
 
 LogManager::getInstance();
