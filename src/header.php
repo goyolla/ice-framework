@@ -53,6 +53,10 @@ $companyName = $settingsManager->getSetting('Company: Name');
 //Load meta info
 $meta = json_decode(file_get_contents(MODULE_PATH."/meta.json"),true);
 
+UIManager::getInstance()->setProfiles($profileCurrent, $profileSwitched);
+UIManager::getInstance()->setCurrentUser($user);
+UIManager::getInstance()->setHomeLink($homeLink);
+
 ?><!DOCTYPE html>
 <html>
     <head>
@@ -158,101 +162,8 @@ $meta = json_decode(file_get_contents(MODULE_PATH."/meta.json"),true);
                     <span class="icon-bar"></span>
                 </a>
                 <div class="navbar-right">
-                    	<ul class="nav navbar-nav">
-                    	
-                    	<li class="dropdown messages-menu" id="notifications" style="display: none;"></li>
-	                    	
-                    	<?php if($user->user_level == "Admin"){?>
-                        <li class="user user-menu">
-                            <a href="#" onclick="$('#profileSwitchModal').modal();return false;" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="glyphicon glyphicon-new-window"></i>
-                                <span>Switch</span>
-                            </a>
-                        </li>
-                        <?php }?>
-                        <?php if(!empty($profileCurrent)){?>
-                        <li class="dropdown user user-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="glyphicon glyphicon-user"></i>
-                                <span><?=$profileCurrent->first_name?> <i class="caret"></i></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <!-- User image -->
-                                <li class="user-header bg-light-blue">
-                                    <img src="<?=$profileCurrent->image?>" class="img-circle" alt="User Image" />
-                                    <p>
-                                        <?=$profileCurrent->first_name." ".$profileCurrent->last_name?>
-                        
-                                    </p>
-                                </li>
-                                <!-- Menu Body -->
-                                <!--  
-                                <li class="user-body">
-                                    <div class="col-xs-4 text-center">
-                                        <a href="#">Followers</a>
-                                    </div>
-                                    <div class="col-xs-4 text-center">
-                                        <a href="#">Sales</a>
-                                    </div>
-                                    <div class="col-xs-4 text-center">
-                                        <a href="#">Friends</a>
-                                    </div>
-                                </li>
-                                -->
-                                <!-- Menu Footer-->
-                                <li class="user-footer">
-                                    <div class="pull-left">
-                                        <a href="<?=$homeLink?>" class="btn btn-default btn-flat">Profile</a>
-                                    </div>
-                                    <div class="pull-right">
-                                        <a href="<?=CLIENT_BASE_URL?>logout.php" class="btn btn-default btn-flat">Sign out</a>
-                                    </div>
-                                </li>
-                            </ul>
-                        </li>
-                        <?php }else{?>
-                        <li class="dropdown user user-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="glyphicon glyphicon-user"></i>
-                                <span><?=$user->username?> <i class="caret"></i></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <!-- User image -->
-                                <li class="user-header bg-light-blue">
-                                    <img src="<?=BASE_URL?>images/user_male.png" class="img-circle" alt="User Image" />
-                                    <p>
-                                        <?=$user->username?>
-                                    </p>
-                                </li>
-                                
-                                <!-- Menu Footer-->
-                                <li class="user-footer">
-                                	<?php if(!empty($profileCurrent) || !empty($profileSwitched)){?>
-                                    <div class="pull-left">
-                                        <a href="<?=$homeLink?>" class="btn btn-default btn-flat">Profile</a>
-                                    </div>
-                                    <?php }?>
-                                    <div class="pull-right">
-                                        <a href="<?=CLIENT_BASE_URL?>logout.php" class="btn btn-default btn-flat">Sign out</a>
-                                    </div>
-                                </li>
-                            </ul>
-                        </li>
-                        <?php }?>
-                        <?php if($user->user_level == "Admin"){?>
-                        	<li class="dropdown messages-menu">
-	                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-	                                <i class="glyphicon glyphicon-question-sign"></i>
-	                                <span>Help</span>
-	                            </a>
-	                            <ul class="dropdown-menu">
-	                                    <li>
-	                                    	<a target="_bloank" href="http://blog.icehrm.com/"><h5>Administrators' Guide</h5></a>
-	                                    	<a href="#" onclick="modJs.showMessage('About','<p><?=APP_NAME?><br/>Version <?=VERSION?><br/>Release Date: <?=VERSION_DATE?></p>')"><h5>About</h5></a>
-	                                    </li>
-	                             </ul>
-	                        </li>
-	                    <?php }?>
+                    <ul class="nav navbar-nav">
+                    	<?=UIManager::getInstance()->getMenuItemsHTML();?>
                     </ul>
                 </div>
             </nav>
@@ -263,73 +174,7 @@ $meta = json_decode(file_get_contents(MODULE_PATH."/meta.json"),true);
                 <!-- sidebar: style can be found in sidebar.less -->
                 <section class="sidebar">
                     <!-- Sidebar user panel -->
-                    <?php if(!empty($profileCurrent) && !empty($profileSwitched)){?>
-                    <div class="user-panel">
-                        <div class="pull-left image">
-                            <img src="<?=$profileCurrent->image?>" class="img-circle" alt="User Image" />
-                        </div>
-                        <div class="pull-left info">
-                            <p><?=$profileCurrent->first_name." ".$profileCurrent->last_name?></p>
-
-                            <a href="#"><i class="fa fa-circle text-success"></i> Logged In</a>
-                        </div>
-                    </div>
-                    <div class="user-panel">
-                    	<button type="button" onclick="modJs.setAdminProfile('-1');return false;"><li class="fa fa-times"/></button>
-                        <div class="pull-left image">
-                            <img src="<?=$profileSwitched->image?>" class="img-circle" alt="User Image" />
-                        </div>
-                        <div class="pull-left info">
-                            <p><?=$profileSwitched->first_name." ".$profileSwitched->last_name?></p>
-
-                            <a href="#"><i class="fa fa-circle text-warning"></i> Updating </a>
-                        </div>
-                    </div>
-                    <?php } else if(!empty($profileCurrent)){?>
-                    <div class="user-panel">
-                        <div class="pull-left image">
-                            <img src="<?=$profileCurrent->image?>" class="img-circle" alt="User Image" />
-                        </div>
-                        <div class="pull-left info">
-                            <p><?=$profileCurrent->first_name." ".$profileCurrent->last_name?></p>
-
-                            <a href="#"><i class="fa fa-circle text-success"></i> Logged In</a>
-                        </div>
-                    </div>
-                    <?php } else if(!empty($profileSwitched)){?>
-                    <div class="user-panel">
-                        <div class="pull-left image">
-                            <img src="<?=BASE_URL?>images/user_male.png" class="img-circle" alt="User Image" />
-                        </div>
-                        <div class="pull-left info">
-                            <p><?=$user->username?></p>
-
-                            <a href="#"><i class="fa fa-circle text-success"></i> Logged In</a>
-                        </div>
-                    </div>
-                    <div class="user-panel">
-                    	<button type="button" onclick="modJs.setAdminProfile('-1');return false;"><li class="fa fa-times"/></button>
-                        <div class="pull-left image">
-                            <img src="<?=$profileSwitched->image?>" class="img-circle" alt="User Image" />
-                        </div>
-                        <div class="pull-left info">
-                            <p><?=$profileSwitched->first_name." ".$profileSwitched->last_name?></p>
-
-                            <a href="#"><i class="fa fa-circle text-warning"></i> Updating</a>
-                        </div>
-                    </div>
-                    <?php } else {?>
-                    <div class="user-panel">
-                        <div class="pull-left image">
-                            <img src="<?=BASE_URL?>images/user_male.png" class="img-circle" alt="User Image" />
-                        </div>
-                        <div class="pull-left info">
-                            <p><?=$user->username?></p>
-
-                            <a href="#"><i class="fa fa-circle text-success"></i> Logged In</a>
-                        </div>
-                    </div>
-                    <?php }?>
+                    <?=UIManager::getInstance()->getProfileBlocks();?>
                   
                     <ul class="sidebar-menu">
                     	
