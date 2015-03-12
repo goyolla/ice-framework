@@ -16,7 +16,7 @@ if(!class_exists('LogManager')){
 		public static function getInstance(){
 			if(empty(self::$me)){
 				self::$me = new LogManager();
-				self::$me->log = new Logger(APP_NANE);
+				self::$me->log = new Logger(APP_NAME);
 				self::$me->log->pushHandler(new StreamHandler(ini_get('error_log'), LOG_LEVEL));
 			}
 	
