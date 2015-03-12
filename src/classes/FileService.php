@@ -78,7 +78,7 @@ class FileService{
 		if($file->name == 'profile_image_'.$employeeId){
 			$ok = $file->Delete();	
 			if($ok){
-				error_log("Delete File:".CLIENT_BASE_PATH.$file->filename);
+				LogManager->getInstance()->info("Delete File:".CLIENT_BASE_PATH.$file->filename);
 				unlink(CLIENT_BASE_PATH.'data/'.$file->filename);		
 			}else{
 				return false;
@@ -89,7 +89,7 @@ class FileService{
 	
 	public function deleteFileByField($value, $field){
 		global $settingsManager;
-		error_log("Delete file by field: $field / value: $value");
+		LogManager->getInstance()->info("Delete file by field: $field / value: $value");
 		$file = new File();
 		$file->Load("$field = ?",array($value));
 		if($file->$field == $value){
@@ -103,13 +103,13 @@ class FileService{
 					$s3Bucket = $settingsManager->getSetting("Files: S3 Bucket");
 					
 					$uploadname = CLIENT_NAME."/".$file->filename;
-					error_log("Delete from S3:".$uploadname);
+					LogManager->getInstance()->info("Delete from S3:".$uploadname);
 					
 					$s3FileSys = new S3FileSystem($uploadFilesToS3Key, $uploadFilesToS3Secret);
 					$res = $s3FileSys->deleteObject($s3Bucket, $uploadname);
 						
 				}else{
-					error_log("Delete:".CLIENT_BASE_PATH.'data/'.$file->filename);
+					LogManager->getInstance()->info("Delete:".CLIENT_BASE_PATH.'data/'.$file->filename);
 					unlink(CLIENT_BASE_PATH.'data/'.$file->filename);
 				}
 				

@@ -102,7 +102,7 @@ class SNSEmailSender extends EmailSender{
 			$replyToEmail = $fromEmail;
 		}
 
-		error_log("Sending email to: ".$toEmail."/ from: ".$fromEmail);
+		LogManager->getInstance()->info("Sending email to: ".$toEmail."/ from: ".$fromEmail);
 
 		$toArray = array('ToAddresses' => array($toEmail),
 				'CcAddresses' => array(),
@@ -131,7 +131,7 @@ class SNSEmailSender extends EmailSender{
 				)
 		);
 		 
-		error_log("SES Response:".print_r($response,true));
+		LogManager->getInstance()->info("SES Response:".print_r($response,true));
 		 
 		return $response;
 		 
@@ -151,7 +151,7 @@ class SMTPEmailSender extends EmailSender{
 			$replyToEmail = $fromEmail;
 		}
 
-		error_log("Sending email to: ".$toEmail."/ from: ".$fromEmail);
+		LogManager->getInstance()->info("Sending email to: ".$toEmail."/ from: ".$fromEmail);
 
 		$host = $this->settings->getSetting("Email: SMTP Host");
 		$username = $this->settings->getSetting("Email: SMTP User");
@@ -205,7 +205,7 @@ class PHPMailer extends EmailSender{
 			$replyToEmail = $fromEmail;
 		}
 
-		error_log("Sending email to: ".$toEmail."/ from: ".$fromEmail);
+		LogManager->getInstance()->info("Sending email to: ".$toEmail."/ from: ".$fromEmail);
 
 		$headers  = 'MIME-Version: 1.0' . "\r\n";
 		$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
@@ -216,7 +216,7 @@ class PHPMailer extends EmailSender{
 		// Mail it
 		$res = mail($toEmail, $subject, $body, $headers);
 
-		error_log("PHP mailer result : ".$res);
+		LogManager->getInstance()->info("PHP mailer result : ".$res);
 
 		return true;
 	}

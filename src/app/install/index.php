@@ -15,9 +15,6 @@ if($isConfigFileExists){
 	fclose($file);
 }
 
-$isConfigFileWriteable = is_writable(CLIENT_APP_PATH."config.php");
-error_log("Config writable ".$isConfigFileWriteable);
-error_log("Config exists ".file_exists(CLIENT_APP_PATH."config.php"));
 if(!$isConfigFileWriteable){
 	$errorMap[] = array("important","Configuration file [".CLIENT_APP_PATH."config.php] is not writable","Make this file writable",array("sudo touch ".CLIENT_APP_PATH."config.php","sudo chmod 777 ".CLIENT_APP_PATH."config.php"));				
 }

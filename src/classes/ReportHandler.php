@@ -30,7 +30,7 @@ class ReportHandler{
 		$report->DB()->SetFetchMode(ADODB_FETCH_ASSOC);
 		$rs = $report->DB()->Execute($query,$parameters);
 		if(!$rs){
-			error_log($report->DB()->ErrorMsg());
+			LogManager->getInstance()->info($report->DB()->ErrorMsg());
 			return array("ERROR","Error generating report");
 		}
 		
@@ -109,7 +109,7 @@ class ReportHandler{
 		$ok = $fileObj->Save();
 		
 		if(!$ok){
-			error_log($fileObj->ErrorMsg());
+			LogManager->getInstance()->info($fileObj->ErrorMsg());
 			return array("ERROR","Error generating report");
 		}
 		

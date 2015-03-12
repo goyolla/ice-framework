@@ -29,11 +29,11 @@ class S3FileSystem{
 					/*'ContentType' => 'image/jpeg'*/
 			));
 		}catch(Exception $e){
-			error_log($e->getMessage());
+			LogManager->getInstance()->info($e->getMessage());
 			return NULL;	
 		}
 		
-		error_log("Response from s3:".print_r($res,true));
+		LogManager->getInstance()->info("Response from s3:".print_r($res,true));
 		
 		$result = $res->get('RequestId');
 		if(!empty($result)){
@@ -52,11 +52,11 @@ class S3FileSystem{
 					'Key'    => $key
 			));
 		}catch(Exception $e){
-			error_log($e->getMessage());
+			LogManager->getInstance()->info($e->getMessage());
 			return NULL;	
 		}
 		
-		error_log("Response from s3:".print_r($res,true));
+		LogManager->getInstance()->info("Response from s3:".print_r($res,true));
 		
 		$result = $res->get('RequestId');
 		if(!empty($result)){

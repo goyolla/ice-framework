@@ -2,7 +2,7 @@
 if(!defined("AWS_REGION")){define('AWS_REGION','us-east-1');}
 include(APP_BASE_PATH.'lib/Mail.php');
 include(APP_BASE_PATH.'lib/aws.phar');
-error_log(APP_BASE_PATH);
+LogManager->getInstance()->info(APP_BASE_PATH);
 include(APP_BASE_PATH.'adodb512/adodb.inc.php');
 include(APP_BASE_PATH.'adodb512/adodb-active-record.inc.php');
 $ADODB_ASSOC_CASE = 2;
@@ -80,9 +80,12 @@ $noJSONRequests = $settingsManager->getSetting("System: Do not pass JSON in requ
 
 $debugMode = $settingsManager->getSetting("System: Debug Mode");
 if($debugMode == "1"){
-	error_reporting(E_ALL);
-	error_log("System is on debug mode");	
+	if(!defined('LOG_LEVEL')){define('LOG_LEVEL',Logger::DEBUG);}	
+}else{
+	if(!defined('LOG_LEVEL')){define('LOG_LEVEL',Logger::INFO);}
 }
+
+LogManager::getInstance();
 
 $userTables = array();
 $fileFields = array();

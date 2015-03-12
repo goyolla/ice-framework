@@ -50,7 +50,7 @@ function ADODB_SetDatabaseAdapter(&$db, $index=false)
 {
 	global $_ADODB_ACTIVE_DBS;
 	$obj = null;
-	//error_log("Coming into ".self::_pluralize(get_called_class())."'s SetDatabaseAdapter where ".get_class());
+	//LogManager->getInstance()->info("Coming into ".self::_pluralize(get_called_class())."'s SetDatabaseAdapter where ".get_class());
 	foreach($_ADODB_ACTIVE_DBS as $k => $d) {
 		if (PHP_VERSION >= 5) {
 			if ($d->db === $db) {
@@ -105,7 +105,7 @@ class ADODB_Active_Record {
 	// should be static
 	static function SetDatabaseAdapter(&$db, $index=false) 
 	{
-		//error_log("Coming into ".self::_pluralize(get_called_class())."'s SetDatabaseAdapter where ".get_class());
+		//LogManager->getInstance()->info("Coming into ".self::_pluralize(get_called_class())."'s SetDatabaseAdapter where ".get_class());
 		if(!$index || !isset($index)) {
 			$index = self::_pluralize(get_called_class());
 		}

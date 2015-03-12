@@ -67,9 +67,9 @@ function ADODB_Error_Handler($dbms, $fn, $errno, $errmsg, $p1, $p2, &$thisConnec
 	if (defined('ADODB_ERROR_LOG_TYPE')) {
 		$t = date('Y-m-d H:i:s');
 		if (defined('ADODB_ERROR_LOG_DEST'))
-			error_log("($t) $s", ADODB_ERROR_LOG_TYPE, ADODB_ERROR_LOG_DEST);
+			LogManager->getInstance()->info("($t) $s", ADODB_ERROR_LOG_TYPE, ADODB_ERROR_LOG_DEST);
 		else
-			error_log("($t) $s", ADODB_ERROR_LOG_TYPE);
+			LogManager->getInstance()->info("($t) $s", ADODB_ERROR_LOG_TYPE);
 	}
 
 
