@@ -1,4 +1,7 @@
 <?php
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
 if(!class_exists('LogManager')){
 	class LogManager{
 	

@@ -1,7 +1,6 @@
 <?php
 require dirname(__FILE__).'/composer/vendor/autoload.php';
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
+
 
 if(!defined('TAGS_TO_PRESERVE')){define('TAGS_TO_PRESERVE','');}
 $jsVersion = '41.8';
