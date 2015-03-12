@@ -17,22 +17,22 @@ if(!class_exists('LogManager')){
 			if(empty(self::$me)){
 				self::$me = new LogManager();
 				self::$me->log = new Logger(APP_NANE);
-				$log->pushHandler(new StreamHandler(ini_get('error_log'), LOG_LEVEL));
+				self::$me->log->pushHandler(new StreamHandler(ini_get('error_log'), LOG_LEVEL));
 			}
 	
 			return self::$me;
 		}
 	
 		public function info($message){
-			$log->addInfo($message);
+			$this->log->addInfo($message);
 		}
 	
 		public function debug($message){
-			$log->addDebug($message);
+			$this->log->addDebug($message);
 		}
 	
 		public function error($message){
-			$log->addError($message);
+			$this->log->addError($message);
 		}
 	}	
 }
