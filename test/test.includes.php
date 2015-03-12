@@ -49,7 +49,7 @@ exec($createDBCommand);
 
 
 //Run create table script
-$insql = APP_BASE_PATH."scripts/icehrmdb.sql";
+$insql = APP_BASE_PATH."scripts/ice_frameworkdb.sql";
 echo "Source File:".$insql."\r\n";
 
 $command = "cat ".$insql."| mysql -u".MYSQL_ROT_USER." -p".MYSQL_ROT_PASS." ".APP_DB;
@@ -60,7 +60,7 @@ echo "Source File Done:".$insql."\r\n";
 
 
 //Run create table script
-$insql = APP_BASE_PATH."scripts/icehrm_master_data.sql";
+$insql = APP_BASE_PATH."scripts/ice_framework_master_data.sql";
 //echo "Source File:".$insql."\r\n";
 
 $command = "cat ".$insql."| mysql -u".MYSQL_ROT_USER." -p".MYSQL_ROT_PASS." ".APP_DB;
