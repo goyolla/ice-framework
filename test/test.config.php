@@ -1,5 +1,5 @@
 <?php
-ini_set('error_log', '/var/log/nginx/iceframework_test.log');
+ini_set('error_log', '/tmp/iceframework_test.log');
 
 define('TEST_BASE_PATH', dirname(__FILE__).'/');
 
