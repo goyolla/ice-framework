@@ -37,7 +37,7 @@ class UIManager{
 	}
 	
 	public function populateTemplate($name, $type, $params){
-		$template= $this->getAppTemplate($name);
+		$template= $this->getTemplate($name, $type);
 		foreach($params as $key=>$value){
 			$template = str_replace("#_".$key."_#", $value, $template);
 		}
@@ -157,7 +157,7 @@ class UIManager{
 		$menuItems = $this->getMenuBlocks();
 		$menuHtml = "";
 		foreach($menuItems as $item){
-			$menuItems.=$item->getHtml();
+			$menuHtml.=$item->getHtml();
 		}
 		
 		return $menuItems;
