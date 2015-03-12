@@ -70,4 +70,5 @@ exec($command);
 echo "Source File Done:".$insql."\r\n";
 
 
+include(APP_BASE_PATH."/include.common.php");
 include(APP_BASE_PATH."/server.includes.inc.php");
