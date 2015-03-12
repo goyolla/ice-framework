@@ -208,7 +208,6 @@
 	<copy todir="${destination}">
 	  <fileset dir="${origin}">
 	    <include name="**/*"/>
-	    <exclude name="**/app/*"/>
 	  </fileset>
 	</copy>
 	

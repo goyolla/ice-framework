@@ -160,7 +160,7 @@ class UIManager{
 			$menuHtml.=$item->getHtml();
 		}
 		
-		return $menuItems;
+		return $menuHtml;
 	}
 	
 }
