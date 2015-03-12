@@ -201,7 +201,6 @@
 	<delete includeemptydirs="true">
 	    <fileset dir="${destination}">
 	        <include name="**/*"/>
-	        <exclude name="**/app/**"/>
 	    </fileset>
 	</delete>
 	

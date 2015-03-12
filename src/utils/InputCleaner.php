@@ -3,7 +3,7 @@ if(!class_exists('InputCleaner')){
 	class InputCleaner{
 		public static function cleanParameters($input){
 			foreach($input as $key => $value) {
-				$cleaned = cleanParameter($value);
+				$cleaned = $this->cleanParameter($value);
 				$input[$key] = $cleaned;
 			}
 			return $input;
