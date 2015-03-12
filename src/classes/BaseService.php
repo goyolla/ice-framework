@@ -49,7 +49,7 @@ class BaseService{
 			
 			if(!empty($filter)){
 				foreach($filter as $k=>$v){
-					LogManager->getInstance()->info($filterStr);
+					LogManager::getInstance()->info($filterStr);
 					if($v == '__myid__'){
 						$v = $this->getCurrentProfileId();
 					}
@@ -337,7 +337,7 @@ class BaseService{
 			
 			$error = $ele->ErrorMsg();
 			
-			LogManager->getInstance()->info($error);
+			LogManager::getInstance()->info($error);
 			
 			if($isAdd){
 				$this->audit(IceConstants::AUDIT_ERROR, "Error occured while adding an object to ".$table." \ Error: ".$error);
@@ -381,7 +381,7 @@ class BaseService{
 		$ok = $ele->Delete();
 		if(!$ok){
 			$error = $ele->ErrorMsg();
-			LogManager->getInstance()->info($error);
+			LogManager::getInstance()->info($error);
 			return $this->findError($error);	
 		}else{
 			//Backup

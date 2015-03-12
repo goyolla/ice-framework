@@ -98,7 +98,7 @@ if($action == 'get'){
 	
 	$subAction = $_REQUEST['sa'];
 	$apiFile = APP_BASE_PATH.$modPath[0]."/".$modPath[1]."/api/".$moduleCapsName."ActionManager.php";
-	LogManager->getInstance()->info("Api File:".$apiFile);
+	LogManager::getInstance()->info("Api File:".$apiFile);
 	$emailSenderFile = APP_BASE_PATH.$modPath[0]."/".$modPath[1]."/api/".$moduleCapsName."EmailSender.php";
 	if(file_exists($apiFile)){
 		include ($apiFile);
@@ -129,7 +129,7 @@ if($action == 'get'){
 		$ret = $res->getJsonArray();
 	}else{
 		$ret = array("status"=>"ERROR");
-		LogManager->getInstance()->info("File dosen't exist :".$apiFile);	
+		LogManager::getInstance()->info("File dosen't exist :".$apiFile);	
 	}	
 	
 }else if($action == 'file'){
@@ -187,7 +187,7 @@ if($action == 'get'){
 		
 		$user->Load("id = ?",array($userId));
 		if(!empty($user->id)){
-			LogManager->getInstance()->info("Key : ".$key);
+			LogManager::getInstance()->info("Key : ".$key);
 			$data = AesCtr::decrypt($key, $user->password, 256);
 			if(empty($data)){
 				$ret['status'] = "ERROR";
@@ -199,14 +199,14 @@ if($action == 'get'){
 					$ret['message'] = "Invalid Key for changing password, keys do not match";
 				}else{
 					if(empty($_REQUEST['now'])){
-						LogManager->getInstance()->info("now not defined");
+						LogManager::getInstance()->info("now not defined");
 						header("Location:".CLIENT_BASE_URL."login.php?cp=1&key=".$_REQUEST['key']);
 					}else{
 						if(!empty($_REQUEST['pwd'])){
 							if(strlen($_REQUEST['pwd']) >= 6){
 								$user->password = md5($_REQUEST['pwd']);
 								$user->Save();
-								LogManager->getInstance()->info("user password changed");
+								LogManager::getInstance()->info("user password changed");
 								$ret['status'] = "SUCCESS";
 							}else{
 								$ret['status'] = "ERROR";

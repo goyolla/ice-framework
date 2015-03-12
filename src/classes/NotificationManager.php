@@ -45,7 +45,7 @@ class NotificationManager{
 		
 		$ok = $noti->Save();
 		if(!$ok){
-			LogManager->getInstance()->info("Error adding notification: ".$noti->ErrorMsg());
+			LogManager::getInstance()->info("Error adding notification: ".$noti->ErrorMsg());
 		}
 	}
 	

@@ -904,7 +904,7 @@ class ADODB_Session {
 					$msg = __FILE__ .
 						": Server time for webserver {$_SERVER['HTTP_HOST']} not in synch with database: " .
 						" database=$dbt ($dbts), webserver=$t (diff=". (abs($dbt - $t) / 60) . ' minutes)';
-					LogManager->getInstance()->info($msg);
+					LogManager::getInstance()->info($msg);
 					if ($debug) {
 						ADOConnection::outp("<p>$msg</p>");
 					}

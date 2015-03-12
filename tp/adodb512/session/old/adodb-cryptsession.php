@@ -291,7 +291,7 @@ function adodb_sess_gc($maxlifetime) {
 		if (abs($dbt - $t) >= ADODB_SESSION_SYNCH_SECS) {
 			$msg = 
 			__FILE__.": Server time for webserver {$_SERVER['HTTP_HOST']} not in synch with database: database=$dbt ($dbts), webserver=$t (diff=".(abs($dbt-$t)/3600)." hrs)";
-			LogManager->getInstance()->info($msg);
+			LogManager::getInstance()->info($msg);
 			if ($ADODB_SESS_DEBUG) ADOConnection::outp("
 -- $msg</p>");
 		}

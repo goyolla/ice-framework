@@ -72,7 +72,7 @@ class UsersActionManager extends SubActionManager{
 			
 			$ok = $user->Save();
 			if(!$ok){
-				LogManager->getInstance()->info($user->ErrorMsg()."|".json_encode($user));
+				LogManager::getInstance()->info($user->ErrorMsg()."|".json_encode($user));
 				return new IceResponse(IceResponse::ERROR,"Error occured while saving the user");
 			}
 			$user->password = "";
