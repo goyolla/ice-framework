@@ -1,7 +1,7 @@
 {
 "label":"Profile",
 "menu":"My Account",
-"order":"1",
+"order":"2",
 "icon":"fa-user",
 "user_levels":["Admin","Manager","Profile"],
 

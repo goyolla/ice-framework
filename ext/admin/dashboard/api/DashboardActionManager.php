@@ -26,8 +26,8 @@ class DashboardActionManager extends SubActionManager{
 	
 	public function getInitData($req){
 		$data = array();
-		$employees = new Employee();
-		$data['numberOfProfiles'] = $employees->Count("1 = 1");
+		$profile = new Profile();
+		$data['numberOfProfiles'] = $profile->Count("1 = 1");
 	
 		$user = new User();
 		$data['numberOfUsers'] = $user->Count("1 = 1");
