@@ -3,7 +3,7 @@
 "menu":"Personal Information",
 "order":"1",
 "icon":"fa-desktop",
-"user_levels":["Admin","Manager","Employee"],
+"user_levels":["Admin","Manager","Profile"],
 
 "permissions":
 	{

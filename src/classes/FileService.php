@@ -22,12 +22,12 @@ Developer: Thilina Hasantha (thilina.hasantha[at]gmail.com / facebook.com/thilin
  */
 
 class FileService{
-	public function updateProfileImage($employee){
+	public function updateProfileImage($profile){
 		global $settingsManager;
 		$file = new File();
-		$file->Load('name = ?',array('profile_image_'.$employee->id));
+		$file->Load('name = ?',array('profile_image_'.$profile->id));
 		
-		if($file->name == 'profile_image_'.$employee->id){
+		if($file->name == 'profile_image_'.$profile->id){
 			$uploadFilesToS3 = $settingsManager->getSetting("Files: Upload Files to S3");	
 			if($uploadFilesToS3 == "1"){
 				$uploadFilesToS3Key = $settingsManager->getSetting("Files: Amazon S3 Key for File Upload");
@@ -36,20 +36,20 @@ class FileService{
 				$s3WebUrl = $settingsManager->getSetting("Files: S3 Web Url");
 				$fileUrl = $s3WebUrl.CLIENT_NAME."/".$file->filename;
 				$fileUrl = $s3FileSys->generateExpiringURL($fileUrl);
-				$employee->image = $fileUrl;
+				$profile->image = $fileUrl;
 			}else{
-				$employee->image = CLIENT_BASE_URL.'data/'.$file->filename;
+				$profile->image = CLIENT_BASE_URL.'data/'.$file->filename;
 			}
 			
 		}else{
-			if($employee->gender == 'Female'){
-				$employee->image = BASE_URL."images/user_female.png";			
+			if($profile->gender == 'Female'){
+				$profile->image = BASE_URL."images/user_female.png";			
 			}else{
-				$employee->image = BASE_URL."images/user_male.png";	
+				$profile->image = BASE_URL."images/user_male.png";	
 			}
 		}
 
-		return $employee;
+		return $profile;
 	}
 	
 	public function getFileUrl($fileName){
@@ -72,10 +72,10 @@ class FileService{
 		}
 	}
 	
-	public function deleteProfileImage($employeeId){
+	public function deleteProfileImage($profileId){
 		$file = new File();
-		$file->Load('name = ?',array('profile_image_'.$employeeId));
-		if($file->name == 'profile_image_'.$employeeId){
+		$file->Load('name = ?',array('profile_image_'.$profileId));
+		if($file->name == 'profile_image_'.$profileId){
 			$ok = $file->Delete();	
 			if($ok){
 				LogManager::getInstance()->info("Delete File:".CLIENT_BASE_PATH.$file->filename);

@@ -62,9 +62,9 @@ UserAdapter.method('saveUserFailCallBack', function(callBackData,serverData) {
 
 UserAdapter.method('doCustomValidation', function(params) {
 	var msg = null;
-	if(params['user_level'] != "Admin" && params['employee'] == "NULL"){
-		msg = "For non Admin users, you have to assign an employee when adding or editing the user.<br/>";
-		msg += " You may create a new employee through 'Admin'->'Employees' menu";
+	if(params['user_level'] != "Admin" && params['profile'] == "NULL"){
+		msg = "For non Admin users, you have to assign a profile when adding or editing the user.<br/>";
+		msg += " You may create a new profile through 'Admin'->'Profiless' menu";
 	}
 	return msg;
 });

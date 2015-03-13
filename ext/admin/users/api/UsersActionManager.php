@@ -59,15 +59,15 @@ class UsersActionManager extends SubActionManager{
 			$user->username = $req->username;
 			$password = $this->generateRandomString(6);
 			$user->password = md5($password);
-			$user->employee = (empty($req->employee) || $req->employee == "NULL" )?NULL:$req->employee;
+			$user->profile = (empty($req->profile) || $req->profile == "NULL" )?NULL:$req->profile;
 			$user->user_level = $req->user_level;
 			$user->last_login = date("Y-m-d H:i:s");
 			$user->last_update = date("Y-m-d H:i:s");
 			$user->created = date("Y-m-d H:i:s");
 			
-			$employee = null;
-			if(!empty($user->employee)){
-				$employee = $this->baseService->getElement('Employee',$user->employee,null,true);
+			$profile = null;
+			if(!empty($user->profile)){
+				$profile = $this->baseService->getElement('Profile',$user->profile,null,true);
 			}
 			
 			$ok = $user->Save();
@@ -80,7 +80,7 @@ class UsersActionManager extends SubActionManager{
 			
 			if(!empty($this->emailSender)){
 				$usersEmailSender = new UsersEmailSender($this->emailSender, $this);
-				$usersEmailSender->sendWelcomeUserEmail($user, $password, $employee);
+				$usersEmailSender->sendWelcomeUserEmail($user, $password, $profile);
 			}
 			return new IceResponse(IceResponse::SUCCESS,$user);
 		}

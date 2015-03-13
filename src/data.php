@@ -67,7 +67,8 @@ if(in_array($table, $baseService->userTables) && !$skipProfileRestriction && !$i
 }else{
 	if($isSubOrdinates){
 		$cemp = $baseService->getCurrentProfileId();
-		$subordinate = new Profile();
+		$profileClass = ucfirst(SIGN_IN_ELEMENT_MAPPING_FIELD_NAME);
+		$subordinate = new $profileClass();
 		$subordinates = $subordinate->Find("supervisor = ?",array($cemp));
 		$subordinatesIds = "";
 		foreach($subordinates as $sub){

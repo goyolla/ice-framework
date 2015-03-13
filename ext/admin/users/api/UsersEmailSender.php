@@ -9,11 +9,11 @@ class UsersEmailSender{
 		$this->subActionManager = $subActionManager;	
 	}
 
-	public function sendWelcomeUserEmail($user, $password, $employee = NULL){
+	public function sendWelcomeUserEmail($user, $password, $profile = NULL){
 		
 		$params = array();
-		if(!empty($employee)){
-			$params['name'] = $employee->first_name." ".$employee->last_name;
+		if(!empty($profile)){
+			$params['name'] = $profile->first_name." ".$profile->last_name;
 		}else{
 			$params['name'] = $user->username;
 		}

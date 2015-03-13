@@ -35,7 +35,7 @@ include APP_BASE_PATH.'modulejslibs.inc.php';
 					<h3>
 					People
 					</h3>
-					<p id="numberOfEmployees">
+					<p id="numberOfProfiles">
 					.. Profiles
 					</p>
 				</div>

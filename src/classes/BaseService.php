@@ -141,7 +141,8 @@ class BaseService{
 					$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
 					$list = $obj->Find($signInMappingField." = ?".$query.$orderBy.$limit, $queryData);
 				}else{
-					$subordinate = new Profile();
+					$profileClass = ucfirst(SIGN_IN_ELEMENT_MAPPING_FIELD_NAME);
+					$subordinate = new $profileClass();
 					$subordinates = $subordinate->Find("supervisor = ?",array($cemp));
 					$subordinatesIds = "";
 					foreach($subordinates as $sub){
