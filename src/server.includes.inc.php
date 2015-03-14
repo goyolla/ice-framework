@@ -65,7 +65,7 @@ $baseService->setDB($dbLocal);
 
 $fileService = new FileService();
 $reportHandler = new ReportHandler();
-$settingsManager = new SettingsManager();
+$settingsManager = SettingsManager::getInstance();
 $notificationManager = new NotificationManager();
 
 $baseService->setNotificationManager($notificationManager);
@@ -75,9 +75,9 @@ $notificationManager->setBaseService($baseService);
 
 
 
-$noJSONRequests = $settingsManager->getSetting("System: Do not pass JSON in request");
+$noJSONRequests = SettingsManager::getInstance()->getSetting("System: Do not pass JSON in request");
 
-$debugMode = $settingsManager->getSetting("System: Debug Mode");
+$debugMode = SettingsManager::getInstance()->getSetting("System: Debug Mode");
 if($debugMode == "1"){
 	if(!defined('LOG_LEVEL')){define('LOG_LEVEL',Monolog\Logger::DEBUG);}	
 }else{
@@ -132,8 +132,8 @@ if(file_exists(APP_BASE_PATH.'admin/audit/api/AuditActionManager.php')){
 	$baseService->setAuditManager($auditManager);
 }
 
-$emailEnabled = $settingsManager->getSetting("Email: Enable");
-$emailMode = $settingsManager->getSetting("Email: Mode");
+$emailEnabled = SettingsManager::getInstance()->getSetting("Email: Enable");
+$emailMode = SettingsManager::getInstance()->getSetting("Email: Mode");
 $emailSender = null;
 if($emailEnabled == "1"){
 	if($emailMode == "SMTP"){

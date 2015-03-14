@@ -1,5 +1,20 @@
 <?php
 class SettingsManager{
+	
+	private static $me = null;
+	
+	private function __construct(){
+	
+	}
+	
+	public static function getInstance(){
+		if(empty(self::$me)){
+			self::$me = new SettingsManager();
+		}
+	
+		return self::$me;
+	}
+	
 	public function getSetting($name){
 		
 		if(class_exists("ProVersion")){

@@ -138,11 +138,11 @@ $uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
 $result = $uploader->handleUpload(CLIENT_BASE_PATH.'data/',$saveFileName);
 // to pass data through iframe you will need to encode all html tags
 
-$uploadFilesToS3 = $settingsManager->getSetting("Files: Upload Files to S3");
-$uploadFilesToS3Key = $settingsManager->getSetting("Files: Amazon S3 Key for File Upload");
-$uploadFilesToS3Secret = $settingsManager->getSetting("Files: Amazone S3 Secret for File Upload");
-$s3Bucket = $settingsManager->getSetting("Files: S3 Bucket");
-$s3WebUrl = $settingsManager->getSetting("Files: S3 Web Url");
+$uploadFilesToS3 = SettingsManager::getInstance()->getSetting("Files: Upload Files to S3");
+$uploadFilesToS3Key = SettingsManager::getInstance()->getSetting("Files: Amazon S3 Key for File Upload");
+$uploadFilesToS3Secret = SettingsManager::getInstance()->getSetting("Files: Amazone S3 Secret for File Upload");
+$s3Bucket = SettingsManager::getInstance()->getSetting("Files: S3 Bucket");
+$s3WebUrl = SettingsManager::getInstance()->getSetting("Files: S3 Web Url");
 
 $uploadedToS3 = false;
 

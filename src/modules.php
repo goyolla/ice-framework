@@ -1,7 +1,7 @@
 <?php
 
 //Reset modules if required
-if($settingsManager->getSetting("System: Reset Modules and Permissions") == "1"){
+if(SettingsManager::getInstance()->getSetting("System: Reset Modules and Permissions") == "1"){
 	$permissionTemp = new Permission();
 	$permissions = $permissionTemp->Find("1=1");
 	foreach ($permissions as $permTemp){
@@ -14,13 +14,13 @@ if($settingsManager->getSetting("System: Reset Modules and Permissions") == "1")
 		$moduleTemp->Delete();
 	}
 	
-	$settingsManager->setSetting("System: Reset Modules and Permissions","0");
+	SettingsManager::getInstance()->setSetting("System: Reset Modules and Permissions","0");
 }
 
 $addNewPermissions = false;
-if($settingsManager->getSetting("System: Add New Permissions") == "1"){
+if(SettingsManager::getInstance()->getSetting("System: Add New Permissions") == "1"){
 	$addNewPermissions = true;
-	$settingsManager->setSetting("System: Add New Permissions","0");
+	SettingsManager::getInstance()->setSetting("System: Add New Permissions","0");
 }
 
 function includeModuleManager($type,$name){

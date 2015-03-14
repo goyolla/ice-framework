@@ -48,7 +48,7 @@ if(!file_exists($logoFileName)){
 	$logoFileUrl = BASE_URL."images/logo.png";	
 }
 
-$companyName = $settingsManager->getSetting('Company: Name');
+$companyName = SettingsManager::getInstance()->getSetting('Company: Name');
 
 //Load meta info
 $meta = json_decode(file_get_contents(MODULE_PATH."/meta.json"),true);

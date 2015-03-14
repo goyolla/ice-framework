@@ -23,17 +23,16 @@ Developer: Thilina Hasantha (thilina.hasantha[at]gmail.com / facebook.com/thilin
 
 class FileService{
 	public function updateProfileImage($profile){
-		global $settingsManager;
 		$file = new File();
 		$file->Load('name = ?',array('profile_image_'.$profile->id));
 		
 		if($file->name == 'profile_image_'.$profile->id){
-			$uploadFilesToS3 = $settingsManager->getSetting("Files: Upload Files to S3");	
+			$uploadFilesToS3 = SettingsManager::getInstance()->getSetting("Files: Upload Files to S3");	
 			if($uploadFilesToS3 == "1"){
-				$uploadFilesToS3Key = $settingsManager->getSetting("Files: Amazon S3 Key for File Upload");
-				$uploadFilesToS3Secret = $settingsManager->getSetting("Files: Amazone S3 Secret for File Upload");
+				$uploadFilesToS3Key = SettingsManager::getInstance()->getSetting("Files: Amazon S3 Key for File Upload");
+				$uploadFilesToS3Secret = SettingsManager::getInstance()->getSetting("Files: Amazone S3 Secret for File Upload");
 				$s3FileSys = new S3FileSystem($uploadFilesToS3Key, $uploadFilesToS3Secret);
-				$s3WebUrl = $settingsManager->getSetting("Files: S3 Web Url");
+				$s3WebUrl = SettingsManager::getInstance()->getSetting("Files: S3 Web Url");
 				$fileUrl = $s3WebUrl.CLIENT_NAME."/".$file->filename;
 				$fileUrl = $s3FileSys->generateExpiringURL($fileUrl);
 				$profile->image = $fileUrl;
@@ -53,17 +52,16 @@ class FileService{
 	}
 	
 	public function getFileUrl($fileName){
-		global $settingsManager;
 		$file = new File();
 		$file->Load('name = ?',array($fileName));
 	
-		$uploadFilesToS3 = $settingsManager->getSetting("Files: Upload Files to S3");
+		$uploadFilesToS3 = SettingsManager::getInstance()->getSetting("Files: Upload Files to S3");
 		
 		if($uploadFilesToS3 == "1"){
-			$uploadFilesToS3Key = $settingsManager->getSetting("Files: Amazon S3 Key for File Upload");
-			$uploadFilesToS3Secret = $settingsManager->getSetting("Files: Amazone S3 Secret for File Upload");
+			$uploadFilesToS3Key = SettingsManager::getInstance()->getSetting("Files: Amazon S3 Key for File Upload");
+			$uploadFilesToS3Secret = SettingsManager::getInstance()->getSetting("Files: Amazone S3 Secret for File Upload");
 			$s3FileSys = new S3FileSystem($uploadFilesToS3Key, $uploadFilesToS3Secret);
-			$s3WebUrl = $settingsManager->getSetting("Files: S3 Web Url");
+			$s3WebUrl = SettingsManager::getInstance()->getSetting("Files: S3 Web Url");
 			$fileUrl = $s3WebUrl.CLIENT_NAME."/".$file->filename;
 			$fileUrl = $s3FileSys->generateExpiringURL($fileUrl);
 			return $fileUrl;
@@ -88,19 +86,18 @@ class FileService{
 	}
 	
 	public function deleteFileByField($value, $field){
-		global $settingsManager;
 		LogManager::getInstance()->info("Delete file by field: $field / value: $value");
 		$file = new File();
 		$file->Load("$field = ?",array($value));
 		if($file->$field == $value){
 			$ok = $file->Delete();
 			if($ok){			
-				$uploadFilesToS3 = $settingsManager->getSetting("Files: Upload Files to S3");
+				$uploadFilesToS3 = SettingsManager::getInstance()->getSetting("Files: Upload Files to S3");
 				
 				if($uploadFilesToS3 == "1"){
-					$uploadFilesToS3Key = $settingsManager->getSetting("Files: Amazon S3 Key for File Upload");
-					$uploadFilesToS3Secret = $settingsManager->getSetting("Files: Amazone S3 Secret for File Upload");
-					$s3Bucket = $settingsManager->getSetting("Files: S3 Bucket");
+					$uploadFilesToS3Key = SettingsManager::getInstance()->getSetting("Files: Amazon S3 Key for File Upload");
+					$uploadFilesToS3Secret = SettingsManager::getInstance()->getSetting("Files: Amazone S3 Secret for File Upload");
+					$s3Bucket = SettingsManager::getInstance()->getSetting("Files: S3 Bucket");
 					
 					$uploadname = CLIENT_NAME."/".$file->filename;
 					LogManager::getInstance()->info("Delete from S3:".$uploadname);
