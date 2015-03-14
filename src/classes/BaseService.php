@@ -32,6 +32,7 @@ class BaseService{
 	var $auditManager = null;
 	var $notificationManager = null;
 	var $settingsManager = null;
+	var $fileFields = null;
 	
 	public function get($table,$mappingStr = null, $filterStr = null, $orderBy = null, $limit = null){
 		
@@ -360,7 +361,7 @@ class BaseService{
 	}
 	
 	public function deleteElement($table,$id){
-		global $fileFields;
+		$fileFields = $this->fileFields;
 		global $fileService;
 		$ele = new $table();
 		
@@ -703,6 +704,10 @@ class BaseService{
 	
 	public function setSettingsManager($settingsManager){
 		$this->settingsManager = $settingsManager;
+	}
+	
+	public function setFileFields($fileFields){
+		$this->fileFields = $fileFields;
 	}
 	
 	public function audit($type, $data){

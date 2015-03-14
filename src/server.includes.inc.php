@@ -118,6 +118,8 @@ foreach($moduleManagers as $moduleManagerObj){
 //============= End - Initializing Modules ============
 
 
+$baseService->setFileFields($fileFields);
+
 $baseService->setUserTables($userTables);
 
 $baseService->setSqlErrors($mysqlErrors);
