@@ -63,7 +63,6 @@ $baseService->setNonDeletables("User", "id", 1);
 $baseService->setCurrentUser($user);
 $baseService->setDB($dbLocal);
 
-$fileService = new FileService();
 $reportHandler = new ReportHandler();
 $settingsManager = SettingsManager::getInstance();
 $notificationManager = new NotificationManager();

@@ -362,7 +362,6 @@ class BaseService{
 	
 	public function deleteElement($table,$id){
 		$fileFields = $this->fileFields;
-		global $fileService;
 		$ele = new $table();
 		
 		$ele->Load('id = ?',array($id));
@@ -403,7 +402,7 @@ class BaseService{
 		if(isset($fileFields[$table])){
 			foreach($fileFields[$table] as $k=>$v){
 				if(!empty($ele->$k)){
-					$fileService->deleteFileByField($ele->$k,$v);
+					FileService::getInstance()->deleteFileByField($ele->$k,$v);
 				}
 					
 			}

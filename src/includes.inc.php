@@ -14,7 +14,7 @@ $profileSwitched = null;
 if(!empty($user->profile)){
 	$profileCurrent = $baseService->getElement('Profile',$user->profile, null, true);	
 	if(!empty($profileCurrent)){
-		$profileCurrent = $fileService->updateProfileImage($profileCurrent);
+		$profileCurrent = FileService::getInstance()->updateProfileImage($profileCurrent);
 	}
 }
 if($user->user_level == 'Admin' || $user->user_level == 'Manager'){
@@ -22,7 +22,7 @@ if($user->user_level == 'Admin' || $user->user_level == 'Manager'){
 	if($switchedEmpId != $user->profile && !empty($switchedEmpId)){
 		$profileSwitched = $baseService->getElement('Profile',$switchedEmpId, null, true);
 		if(!empty($profileSwitched)){
-			$profileSwitched = $fileService->updateProfileImage($profileSwitched);
+			$profileSwitched = FileService::getInstance()->updateProfileImage($profileSwitched);
 		}	
 	}
 }

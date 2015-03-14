@@ -22,6 +22,21 @@ Developer: Thilina Hasantha (thilina.hasantha[at]gmail.com / facebook.com/thilin
  */
 
 class FileService{
+	
+	private static $me = null;
+	
+	private function __construct(){
+	
+	}
+	
+	public static function getInstance(){
+		if(empty(self::$me)){
+			self::$me = new FileService();
+		}
+	
+		return self::$me;
+	}
+	
 	public function updateProfileImage($profile){
 		$file = new File();
 		$file->Load('name = ?',array('profile_image_'.$profile->id));
