@@ -24,14 +24,13 @@ if(SettingsManager::getInstance()->getSetting("System: Add New Permissions") == 
 }
 
 function includeModuleManager($type,$name){
-	global $moduleManagers;
 	$moduleCapsName = ucfirst($name);
 	$moduleTypeCapsName = ucfirst($type); // Admin or Modules
 	$incFile = CLIENT_PATH.'/'.$type.'/'.$name.'/api/'.$moduleCapsName.$moduleTypeCapsName."Manager.php";
 	
 	include ($incFile);
 	$moduleManagerClass = $moduleCapsName.$moduleTypeCapsName."Manager";
-	$moduleManagers[] = new $moduleManagerClass();
+	BaseService::getInstance()->addModuleManager(new $moduleManagerClass());
 }
 
 

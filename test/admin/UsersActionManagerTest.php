@@ -11,16 +11,13 @@ class UsersActionManagerTest extends TestTemplate{
 	{
 		parent::setUp();
 		
-		global $baseService;
-		global $emailSender;
-		
 		include APP_BASE_PATH."admin/users/api/UsersEmailSender.php";
 		include APP_BASE_PATH."admin/users/api/UsersActionManager.php";
 		
 		$this->obj = new UsersActionManager();
 		$this->obj->setUser($this->usersArray['admin']);
-		$this->obj->setBaseService($baseService);
-		$this->obj->setEmailSender($emailSender);
+		$this->obj->setBaseService(BaseService::getInstance());
+		$this->obj->setEmailSender(BaseService::getInstance()->getEmailSender());
 	}
 	
 	

@@ -88,11 +88,10 @@ $fileFields = array();
 $mysqlErrors = array();
 //============ Start - Initializing Modules ==========
 if(defined('CLIENT_PATH')){
-$moduleManagers = array();
 include 'modules.php';
 
 
-
+$moduleManagers = BaseService::getInstance()->getModuleManagers();
 
 foreach($moduleManagers as $moduleManagerObj){
 	
@@ -113,6 +112,8 @@ foreach($moduleManagers as $moduleManagerObj){
 }
 }
 //============= End - Initializing Modules ============
+
+
 
 
 BaseService::getInstance()->setFileFields($fileFields);
@@ -143,5 +144,7 @@ if($emailEnabled == "1"){
 		$emailSender = new PHPMailer($settingsManager);	
 	}
 }
+
+BaseService::getInstance()->setEmailSender($emailSender);
 
 ?>

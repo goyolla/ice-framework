@@ -110,8 +110,7 @@ if($action == 'get'){
 		$apiClass = new $cls();
 		$apiClass->setUser($user);
 		$apiClass->setBaseService($baseService);
-		//$apiClass->setEmailTemplates($emailTemplates);
-		$apiClass->setEmailSender($emailSender);
+		$apiClass->setEmailSender($baseService->getEmailSender());
 		
 		if(isset($_REQUEST['req'])){
 			$req = json_decode($_REQUEST['req']);

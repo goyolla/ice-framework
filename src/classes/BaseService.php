@@ -33,6 +33,8 @@ class BaseService{
 	var $notificationManager = null;
 	var $settingsManager = null;
 	var $fileFields = null;
+	var $moduleManagers = null;
+	var $emailSender = null;
 	
 	private static $me = null;
 	
@@ -735,6 +737,25 @@ class BaseService{
 			$json = str_replace("|",'"',$json);
 		}
 		return $json;
+	}
+	
+	public function addModuleManager($moduleManager){
+		if(empty($this->moduleManagers)){
+			$this->moduleManagers = array();
+		}
+		$this->moduleManagers[] = $moduleManager;
+	}
+	
+	public function getModuleManagers(){
+		return $this->moduleManagers;
+	}
+	
+	public function setEmailSender($emailSender){
+		$this->emailSender = $emailSender;
+	}
+	
+	public function getEmailSender(){
+		return $this->emailSender;
 	}
 }
 
