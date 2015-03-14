@@ -12,15 +12,15 @@ $user = SessionUtils::getSessionObject('user');
 $profileCurrent = null;
 $profileSwitched = null;
 if(!empty($user->profile)){
-	$profileCurrent = $baseService->getElement('Profile',$user->profile, null, true);	
+	$profileCurrent = BaseService::getInstance()->getElement('Profile',$user->profile, null, true);	
 	if(!empty($profileCurrent)){
 		$profileCurrent = FileService::getInstance()->updateProfileImage($profileCurrent);
 	}
 }
 if($user->user_level == 'Admin' || $user->user_level == 'Manager'){
-	$switchedEmpId = $baseService->getCurrentProfileId();
+	$switchedEmpId = BaseService::getInstance()->getCurrentProfileId();
 	if($switchedEmpId != $user->profile && !empty($switchedEmpId)){
-		$profileSwitched = $baseService->getElement('Profile',$switchedEmpId, null, true);
+		$profileSwitched = BaseService::getInstance()->getElement('Profile',$switchedEmpId, null, true);
 		if(!empty($profileSwitched)){
 			$profileSwitched = FileService::getInstance()->updateProfileImage($profileSwitched);
 		}	

@@ -90,7 +90,7 @@
 	                <option value="-1">No Profile</option>
 	                -->
 	                <?php 
-	                $profiles = $baseService->get('Profile');
+	                $profiles = BaseService::getInstance()->get('Profile');
 	                foreach($profiles as $empTemp){
 	                ?>
 	                <option value="<?=$empTemp->id?>"><?=$empTemp->first_name." ".$empTemp->last_name?></option>

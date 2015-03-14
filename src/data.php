@@ -13,9 +13,9 @@ if(empty($user)){
 	exit();
 }
 
-$_REQUEST['sm'] = fixJSON($_REQUEST['sm']);
-$_REQUEST['cl'] = fixJSON($_REQUEST['cl']);
-$_REQUEST['ft'] = fixJSON($_REQUEST['ft']);
+$_REQUEST['sm'] = BaseService::getInstance()->fixJSON($_REQUEST['sm']);
+$_REQUEST['cl'] = BaseService::getInstance()->fixJSON($_REQUEST['cl']);
+$_REQUEST['ft'] = BaseService::getInstance()->fixJSON($_REQUEST['ft']);
 
 
 $columns = json_decode($_REQUEST['cl'],true);
@@ -39,7 +39,7 @@ if(isset($_REQUEST['skip']) && $_REQUEST['type']="1"){
 	$skipProfileRestriction = true;
 }
 
-$data = $baseService->getData($_REQUEST['t'],$_REQUEST['sm'],$_REQUEST['ft'],$_REQUEST['ob'],$sLimit, $_REQUEST['cl'], $_REQUEST['sSearch'],$isSubOrdinates,$skipProfileRestriction);
+$data = BaseService::getInstance()->getData($_REQUEST['t'],$_REQUEST['sm'],$_REQUEST['ft'],$_REQUEST['ob'],$sLimit, $_REQUEST['cl'], $_REQUEST['sSearch'],$isSubOrdinates,$skipProfileRestriction);
 
 //Get Total row count
 $totalRows = 0;
@@ -57,8 +57,8 @@ if(!empty($_REQUEST['ft'])){
 }
 
 
-if(in_array($table, $baseService->userTables) && !$skipProfileRestriction && !$isSubOrdinates){
-	$cemp = $baseService->getCurrentProfileId();
+if(in_array($table, BaseService::getInstance()->userTables) && !$skipProfileRestriction && !$isSubOrdinates){
+	$cemp = BaseService::getInstance()->getCurrentProfileId();
 	$sql = "Select count(id) as count from ".$obj->_table." where profile = ? ".$countFilterQuery;
 	array_unshift($countFilterQueryData,$cemp);
 	
@@ -66,7 +66,7 @@ if(in_array($table, $baseService->userTables) && !$skipProfileRestriction && !$i
 			
 }else{
 	if($isSubOrdinates){
-		$cemp = $baseService->getCurrentProfileId();
+		$cemp = BaseService::getInstance()->getCurrentProfileId();
 		$profileClass = ucfirst(SIGN_IN_ELEMENT_MAPPING_FIELD_NAME);
 		$subordinate = new $profileClass();
 		$subordinates = $subordinate->Find("supervisor = ?",array($cemp));
@@ -119,7 +119,7 @@ foreach($data as $item){
 	for ($i=0 ; $i<$colCount;$i++){
 		$row[] = $item->$columns[$i];
 	}
-	$row["_org"] = $baseService->cleanUpAdoDB($item);
+	$row["_org"] = BaseService::getInstance()->cleanUpAdoDB($item);
 	$output['aaData'][] = $row;
 }
 echo json_encode($output);

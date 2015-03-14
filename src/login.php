@@ -20,9 +20,9 @@ if(empty($user)){
 			$suser->last_login = date("Y-m-d H:i:s");
 			$suser->Save();
 			
-			if(!$ssoUserLoaded && !empty($baseService->auditManager)){
-				$baseService->auditManager->user = $user;
-				$baseService->audit(IceConstants::AUDIT_AUTHENTICATION, "User Login");
+			if(!$ssoUserLoaded && !empty(BaseService::getInstance()->auditManager)){
+				BaseService::getInstance()->auditManager->user = $user;
+				BaseService::getInstance()->audit(IceConstants::AUDIT_AUTHENTICATION, "User Login");
 			}
 			
 			if($user->user_level == "Admin"){
@@ -127,7 +127,7 @@ if(!file_exists($logoFileName)){
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', '<?=$baseService->getGAKey()?>', 'gamonoid.com');
+  ga('create', '<?=BaseService::getInstance()->getGAKey()?>', 'gamonoid.com');
   ga('send', 'pageview');
 
   </script>

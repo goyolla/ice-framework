@@ -18,9 +18,9 @@
 				modJsList[prop].initFieldMasterData();
 				modJsList[prop].setBaseUrl('<?=BASE_URL?>');
 				modJsList[prop].setCurrentProfile(<?=json_encode($activeProfile)?>);
-				modJsList[prop].setInstanceId('<?=$baseService->getInstanceId()?>');
+				modJsList[prop].setInstanceId('<?=BaseService::getInstance()->getInstanceId()?>');
 				modJsList[prop].setGoogleAnalytics(ga);
-				modJsList[prop].setNoJSONRequests('<?=$noJSONRequests?>');
+				modJsList[prop].setNoJSONRequests('<?=SettingsManager::getInstance()->getSetting("System: Do not pass JSON in request")?>');
 				
 			}
 			

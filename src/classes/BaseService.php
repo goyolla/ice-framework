@@ -34,6 +34,20 @@ class BaseService{
 	var $settingsManager = null;
 	var $fileFields = null;
 	
+	private static $me = null;
+	
+	private function __construct(){
+	
+	}
+	
+	public static function getInstance(){
+		if(empty(self::$me)){
+			self::$me = new BaseService();
+		}
+	
+		return self::$me;
+	}
+	
 	public function get($table,$mappingStr = null, $filterStr = null, $orderBy = null, $limit = null){
 		
 		if(!empty($mappingStr)){
@@ -713,6 +727,14 @@ class BaseService{
 		if(!empty($this->auditManager)){
 			$this->auditManager->addAudit($type, $data);
 		}
+	}
+	
+	public function fixJSON($json){
+		$noJSONRequests = SettingsManager::getInstance()->getSetting("System: Do not pass JSON in request");
+		if($noJSONRequests."" == "1"){
+			$json = str_replace("|",'"',$json);
+		}
+		return $json;
 	}
 }
 

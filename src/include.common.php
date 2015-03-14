@@ -25,13 +25,3 @@ $dateTimeColomboStr = $dateTimeColombo->format("Y-m-d H:i:s");
 $dateTimeNow = date("Y-m-d H:i:s");
 
 $diffHoursBetweenServerTimezoneWithGMT = (strtotime($dateTimeNow) - (strtotime($dateTimeColomboStr) - 5.5*60*60))/(60*60);
-
-if (!function_exists('fixJSON')) {
-	function fixJSON($json){
-		global $noJSONRequests;
-		if($noJSONRequests."" == "1"){
-			$json = str_replace("|",'"',$json);
-		}
-		return $json;
-	}
-}

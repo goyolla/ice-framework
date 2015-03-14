@@ -56,19 +56,17 @@ Notification::SetDatabaseAdapter($dbLocal);
 
 include (APP_BASE_PATH."model/custom.models.inc.php");
 
-
-
-$baseService = new BaseService();
-$baseService->setNonDeletables("User", "id", 1);
-$baseService->setCurrentUser($user);
-$baseService->setDB($dbLocal);
+$baseService = BaseService::getInstance();
+BaseService::getInstance()->setNonDeletables("User", "id", 1);
+BaseService::getInstance()->setCurrentUser($user);
+BaseService::getInstance()->setDB($dbLocal);
 
 $reportHandler = new ReportHandler();
 $settingsManager = SettingsManager::getInstance();
 $notificationManager = new NotificationManager();
 
-$baseService->setNotificationManager($notificationManager);
-$baseService->setSettingsManager($settingsManager);
+BaseService::getInstance()->setNotificationManager($notificationManager);
+BaseService::getInstance()->setSettingsManager($settingsManager);
 
 $notificationManager->setBaseService($baseService);
 
@@ -117,11 +115,11 @@ foreach($moduleManagers as $moduleManagerObj){
 //============= End - Initializing Modules ============
 
 
-$baseService->setFileFields($fileFields);
+BaseService::getInstance()->setFileFields($fileFields);
 
-$baseService->setUserTables($userTables);
+BaseService::getInstance()->setUserTables($userTables);
 
-$baseService->setSqlErrors($mysqlErrors);
+BaseService::getInstance()->setSqlErrors($mysqlErrors);
 
 include ("includes.com.php");
 
@@ -130,7 +128,7 @@ if(file_exists(APP_BASE_PATH.'admin/audit/api/AuditActionManager.php')){
 	$auditManager = new AuditActionManager();
 	$auditManager->setBaseService($baseService);
 	$auditManager->setUser($user);
-	$baseService->setAuditManager($auditManager);
+	BaseService::getInstance()->setAuditManager($auditManager);
 }
 
 $emailEnabled = SettingsManager::getInstance()->getSetting("Email: Enable");

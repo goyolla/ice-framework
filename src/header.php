@@ -33,7 +33,7 @@ if($user->user_level == "Admin"){
 }
 
 //Check Module Permissions
-$modulePermissions = $baseService->loadModulePermissions($_REQUEST['g'], $_REQUEST['n'],$user->user_level);
+$modulePermissions = BaseService::getInstance()->loadModulePermissions($_REQUEST['g'], $_REQUEST['n'],$user->user_level);
 
 
 if(!in_array($user->user_level, $modulePermissions['user'])){
@@ -139,7 +139,7 @@ UIManager::getInstance()->setHomeLink($homeLink);
 		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 		
-		  ga('create', '<?=$baseService->getGAKey()?>', 'gamonoid.com');
+		  ga('create', '<?=BaseService::getInstance()->getGAKey()?>', 'gamonoid.com');
 		  ga('send', 'pageview');
 	
 	  	</script>

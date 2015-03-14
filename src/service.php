@@ -43,14 +43,14 @@ if($_REQUEST['a'] != "rsp" && $_REQUEST['a'] != "rpc"){
 
 $action = $_REQUEST['a'];
 if($action == 'get'){
-	$_REQUEST['sm'] = fixJSON($_REQUEST['sm']);
-	$_REQUEST['ft'] = fixJSON($_REQUEST['ft']);
-	$ret['object'] = $baseService->get($_REQUEST['t'],$_REQUEST['sm'],$_REQUEST['ft'],$_REQUEST['ob']);
+	$_REQUEST['sm'] = BaseService::getInstance()->fixJSON($_REQUEST['sm']);
+	$_REQUEST['ft'] = BaseService::getInstance()->fixJSON($_REQUEST['ft']);
+	$ret['object'] = BaseService::getInstance()->get($_REQUEST['t'],$_REQUEST['sm'],$_REQUEST['ft'],$_REQUEST['ob']);
 	$ret['status'] = "SUCCESS";
 	
 }else if($action == 'getElement'){
-	$_REQUEST['sm'] = fixJSON($_REQUEST['sm']);
-	$ret['object'] = $baseService->getElement($_REQUEST['t'],$_REQUEST['id'],$_REQUEST['sm']);
+	$_REQUEST['sm'] = BaseService::getInstance()->fixJSON($_REQUEST['sm']);
+	$ret['object'] = BaseService::getInstance()->getElement($_REQUEST['t'],$_REQUEST['id'],$_REQUEST['sm']);
 	if(!empty($ret['object'])){
 		$ret['status'] = "SUCCESS";	
 	}else{
@@ -62,14 +62,14 @@ if($action == 'get'){
 		$ret['status'] = $data[0];
 		$ret['object'] = $data[1];
 	}else{
-		$resp = $baseService->addElement($_REQUEST['t'],$_REQUEST);
+		$resp = BaseService::getInstance()->addElement($_REQUEST['t'],$_REQUEST);
 		$ret['object'] = $resp->getData();
 		$ret['status'] = $resp->getStatus();
 	}
 		
 	
 }else if($action == 'delete'){
-	$ret['object'] = $baseService->deleteElement($_REQUEST['t'],$_REQUEST['id']);
+	$ret['object'] = BaseService::getInstance()->deleteElement($_REQUEST['t'],$_REQUEST['id']);
 	if($ret['object'] == null){
 		$ret['status'] = "SUCCESS";	
 	}else{
@@ -77,7 +77,7 @@ if($action == 'get'){
 	}
 	
 }else if($action == 'getFieldValues'){
-	$ret['data'] = $baseService->getFieldValues($_REQUEST['t'], $_REQUEST['key'], $_REQUEST['value']);
+	$ret['data'] = BaseService::getInstance()->getFieldValues($_REQUEST['t'], $_REQUEST['key'], $_REQUEST['value']);
 	if($ret['data'] != null){	
 		$ret['status'] = "SUCCESS";	
 	}else{
@@ -85,12 +85,12 @@ if($action == 'get'){
 	}
 
 }else if($action == 'setAdminEmp'){
-	$baseService->setCurrentAdminProfile($_REQUEST['empid']);	
+	BaseService::getInstance()->setCurrentAdminProfile($_REQUEST['empid']);	
 	$ret['status'] = "SUCCESS";	
 	
 }else if($action == 'ca'){
 	if(isset($_REQUEST['req'])){
-		$_REQUEST['req'] = fixJSON($_REQUEST['req']);
+		$_REQUEST['req'] = BaseService::getInstance()->fixJSON($_REQUEST['req']);
 	}
 	$mod = $_REQUEST['mod'];
 	$modPath = explode("=", $mod);
