@@ -218,7 +218,7 @@
      depends="copyapp"
      description="Create a release">
 	
-	<zip destfile="${dist}/rc.zip"
+	<zip destfile="${basedir}/build/release/rc.zip"
 	       basedir="${destination}"
 	       excludes="${basedir}/test/**"
 	  />
