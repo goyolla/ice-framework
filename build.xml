@@ -15,7 +15,7 @@
 	
 	
  <target name="build"
-         depends="prepare,lint,phpunit,copyapp"
+         depends="prepare,lint,phpunit,copyapp,release"
          description=""/>
 
  <target name="clean"
@@ -28,6 +28,7 @@
   <delete dir="${basedir}/build/phpdox"/>
   <delete dir="${basedir}/build/test"/>
   <delete dir="${basedir}/build/app"/>
+  <delete dir="${basedir}/build/release"/>
   <property name="clean.done" value="true"/>
  </target>
 
@@ -42,6 +43,7 @@
   <mkdir dir="${basedir}/build/phpdox"/>
   <mkdir dir="${basedir}/build/test"/>
   <mkdir dir="${basedir}/build/app"/>
+  <mkdir dir="${basedir}/build/release"/>
   <mkdir dir="${basedir}/src/lib"/>
  	
  	<copy todir="${basedir}/src/lib">
@@ -211,6 +213,19 @@
 	</copy>
 	
 </target>
+	
+<target name="release"
+     depends="copyapp"
+     description="Create a release">
+	
+	<zip destfile="${dist}/rc.zip"
+	       basedir="${destination}"
+	       excludes="${basedir}/test/**"
+	  />
+	
+</target>
+	
+
 	
 </project>
 
