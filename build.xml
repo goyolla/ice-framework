@@ -4,6 +4,7 @@
  <property name="toolsdir" value=""/>
  <property name="destination" value="${basedir}/build/app"/>
  <property name="origin" value="${basedir}/src"/>
+ <property environment="env"/>
 
  <!-- Uncomment the following when the tools are in ${basedir}/vendor/bin -->
  <!-- <property name="toolsdir" value="${basedir}/vendor/bin/"/> -->
@@ -228,7 +229,7 @@
 		       excludes="${basedir}/test/**"
 		  />
 	
-	<gzip destfile="$${basedir}/build/release/rc_${env.Version}.tar.gz" src="${basedir}/build/release/rc_${env.Version}.tar"/>
+	<gzip destfile="${basedir}/build/release/rc_${env.Version}.tar.gz" src="${basedir}/build/release/rc_${env.Version}.tar"/>
 	
 </target>
 	
