@@ -218,10 +218,17 @@
      depends="copyapp"
      description="Create a release">
 	
-	<zip destfile="${basedir}/build/release/rc.zip"
+	<zip destfile="${basedir}/build/release/rc_${env.Version}.zip"
 	       basedir="${destination}"
 	       excludes="${basedir}/test/**"
 	  />
+	
+	<tar destfile="${basedir}/build/release/rc_${env.Version}.tar"
+		       basedir="${destination}"
+		       excludes="${basedir}/test/**"
+		  />
+	
+	<gzip destfile="$${basedir}/build/release/rc_${env.Version}.tar.gz" src="${basedir}/build/release/rc_${env.Version}.tar"/>
 	
 </target>
 	
