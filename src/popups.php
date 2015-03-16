@@ -90,7 +90,8 @@
 	                <option value="-1">No Profile</option>
 	                -->
 	                <?php 
-	                $profiles = BaseService::getInstance()->get('Profile');
+	                $profileClass = ucfirst(SIGN_IN_ELEMENT_MAPPING_FIELD_NAME);
+	                $profiles = BaseService::getInstance()->get($profileClass);
 	                foreach($profiles as $empTemp){
 	                ?>
 	                <option value="<?=$empTemp->id?>"><?=$empTemp->first_name." ".$empTemp->last_name?></option>

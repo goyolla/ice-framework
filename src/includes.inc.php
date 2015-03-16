@@ -11,8 +11,9 @@ $user = SessionUtils::getSessionObject('user');
 
 $profileCurrent = null;
 $profileSwitched = null;
+$profileClass = ucfirst(SIGN_IN_ELEMENT_MAPPING_FIELD_NAME);
 if(!empty($user->profile)){
-	$profileCurrent = BaseService::getInstance()->getElement('Profile',$user->profile, null, true);	
+	$profileCurrent = BaseService::getInstance()->getElement($profileClass, $user->profile, null, true);	
 	if(!empty($profileCurrent)){
 		$profileCurrent = FileService::getInstance()->updateProfileImage($profileCurrent);
 	}
@@ -20,7 +21,7 @@ if(!empty($user->profile)){
 if($user->user_level == 'Admin' || $user->user_level == 'Manager'){
 	$switchedEmpId = BaseService::getInstance()->getCurrentProfileId();
 	if($switchedEmpId != $user->profile && !empty($switchedEmpId)){
-		$profileSwitched = BaseService::getInstance()->getElement('Profile',$switchedEmpId, null, true);
+		$profileSwitched = BaseService::getInstance()->getElement($profileClass ,$switchedEmpId, null, true);
 		if(!empty($profileSwitched)){
 			$profileSwitched = FileService::getInstance()->updateProfileImage($profileSwitched);
 		}	
