@@ -117,3 +117,19 @@ function randomString(length){
     }
     return str;	
 }
+
+function verifyInstance(key){
+	var object = {};
+	object['a'] = "verifyInstance";
+	object['key'] = key;
+	$.post(this.baseUrl, object, function(data) {
+		if(data.status == "SUCCESS"){
+			$("#verifyModel").hide();
+			$('body').removeClass('modal-open');
+			$('.modal-backdrop').remove();	
+			alert("Success: Instance Verified");
+		}else{
+			alert("Error: "+data.message);
+		}
+	},"json");
+}

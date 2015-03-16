@@ -8,11 +8,12 @@ class NotificationManager{
 	}
 	
 	public function addNotification($toUser, $message, $action, $type){
-		
+		$profileVar = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+		$profileClass = ucfirst(SIGN_IN_ELEMENT_MAPPING_FIELD_NAME);
 		$userEmp = new User();
 		$userEmp->load("profile = ?",array($toUser));
 		
-		if(!empty($userEmp->profile) && $userEmp->profile == $toUser){
+		if(!empty($userEmp->$profileVar) && $userEmp->$profileVar == $toUser){
 			$toUser = $userEmp->id;
 		}else{
 			return;
@@ -21,12 +22,12 @@ class NotificationManager{
 		$noti = new Notification();
 		$user = $this->baseService->getCurrentUser();
 		$noti->fromUser = $user->id;
-		$noti->fromProfile = $user->profile;
+		$noti->fromProfile = $user->$profileVar;
 		$noti->toUser = $toUser;
 		$noti->message = $message;
 		
 		if(!empty($noti->fromProfile)){
-			$profile = $this->baseService->getElement('Profile',$noti->fromProfile,null,true);
+			$profile = $this->baseService->getElement($profileClass,$noti->fromProfile,null,true);
 			if(!empty($profile)){
 				$fs = new FileService();
 				$profile = $fs->updateProfileImage($profile);

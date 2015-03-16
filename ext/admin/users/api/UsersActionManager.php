@@ -39,6 +39,8 @@ class UsersActionManager extends SubActionManager{
 	}
 	
 	public function saveUser($req){
+		$profileVar = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+		$profileClass = ucfirst(SIGN_IN_ELEMENT_MAPPING_FIELD_NAME);
 		if($this->user->user_level == 'Admin'){
 			
 			$user = new User();
@@ -67,7 +69,7 @@ class UsersActionManager extends SubActionManager{
 			
 			$profile = null;
 			if(!empty($user->profile)){
-				$profile = $this->baseService->getElement('Profile',$user->profile,null,true);
+				$profile = $this->baseService->getElement($profileClass,$user->profile,null,true);
 			}
 			
 			$ok = $user->Save();

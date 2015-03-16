@@ -27,6 +27,9 @@ class TestTemplate extends PHPUnit_Framework_TestCase{
 	
 	protected function createNewUsers(){
 		
+		$profileVar = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+		$profileClass = ucfirst(SIGN_IN_ELEMENT_MAPPING_FIELD_NAME);
+		
 		$user = new User();
 		$user->username = 'manager';
 		$user->email = 'manager@icehrm-test.com';

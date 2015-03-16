@@ -13,8 +13,8 @@ $profileCurrent = null;
 $profileSwitched = null;
 $profileClass = ucfirst(SIGN_IN_ELEMENT_MAPPING_FIELD_NAME);
 $profileVar = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
-if(!empty($user->profile)){
-	$profileCurrent = BaseService::getInstance()->getElement($profileClass, $user->profile, null, true);	
+if(!empty($user->$profileVar)){
+	$profileCurrent = BaseService::getInstance()->getElement($profileClass, $user->$profileVar, null, true);	
 	if(!empty($profileCurrent)){
 		$profileCurrent = FileService::getInstance()->updateProfileImage($profileCurrent);
 	}

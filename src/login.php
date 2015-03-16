@@ -28,7 +28,7 @@ if(empty($user)){
 			if($user->user_level == "Admin"){
 				header("Location:".HOME_LINK_ADMIN);	
 			}else{
-				header("Location:".HOME_LINK_OTHER);	
+				header("Location:".HOME_LINK_OTHERS);	
 			}
 		}else{
 			header("Location:".CLIENT_BASE_URL."login.php?f=1");
@@ -38,7 +38,7 @@ if(empty($user)){
 	if($user->user_level == "Admin"){
 		header("Location:".HOME_LINK_ADMIN);	
 	}else{
-		header("Location:".HOME_LINK_OTHER);	
+		header("Location:".HOME_LINK_OTHERS);	
 	}
 	
 }

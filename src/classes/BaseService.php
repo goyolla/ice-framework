@@ -192,6 +192,9 @@ class BaseService{
 	
 	public function populateMapping($list,$map){
 		$listNew = array();
+		if(empty($list)){
+			return $listNew;
+		}
 		foreach($list as $item){
 			$item = $this->populateMappingItem($item, $map);
 			$listNew[] = $item;	
@@ -384,17 +387,17 @@ class BaseService{
 
 		$this->checkSecureAccess("delete",$ele);
 		
-		$nonDeletableTable = $this->nonDeletables[$table];
-		if(!empty($nonDeletableTable)){
-			foreach($nonDeletableTable as $field => $value){
-				if($ele->$field == $value){
-					return "This item can not be deleted";	
-				}	
+		if(isset($this->nonDeletables[$table])){
+			$nonDeletableTable = $this->nonDeletables[$table];
+			if(!empty($nonDeletableTable)){
+				foreach($nonDeletableTable as $field => $value){
+					if($ele->$field == $value){
+						return "This item can not be deleted";
+					}
+				}
 			}	
 		}
-		
-		
-		
+
 		$ok = $ele->Delete();
 		if(!$ok){
 			$error = $ele->ErrorMsg();
@@ -639,8 +642,10 @@ class BaseService{
 			$userOnlyMeAccessRequestField = $object->getUserOnlyMeAccessRequestField();
 			
 			//This will check whether user can access his own records using a value in request
-			if (in_array($type, $accessMatrix) && $_REQUEST[$object->getUserOnlyMeAccessField()] == $this->currentUser->$userOnlyMeAccessRequestField) {
-				return true;
+			if(isset($_REQUEST[$object->getUserOnlyMeAccessField()]) && isset($this->currentUser->$userOnlyMeAccessRequestField)){
+				if (in_array($type, $accessMatrix) && $_REQUEST[$object->getUserOnlyMeAccessField()] == $this->currentUser->$userOnlyMeAccessRequestField) {
+					return true;
+				}
 			}
 			
 			//This will check whether user can access his own records using a value in requested object
@@ -675,13 +680,54 @@ class BaseService{
 		$settings = new Setting();
 		$settings->Load("name = ?",array("Instance : ID"));
 		
-		if($settings->name != "Instance : ID"){
+		if($settings->name != "Instance : ID" || empty($settings->value)){
 			$settings->value = md5(time());
 			$settings->name = "Instance : ID";
 			$settings->Save();
 		}
 		
 		return $settings->value;
+	}
+	
+	public function setInstanceKey($key){
+		$settings = new Setting();
+		$settings->Load("name = ?",array("Instance: Key"));
+		if($settings->name != "Instance: Key"){
+			$settings->name = "Instance: Key";
+			
+		}
+		$settings->value = $key;
+		$settings->Save();
+	}
+	
+	public function getInstanceKey(){
+		$settings = new Setting();
+		$settings->Load("name = ?",array("Instance: Key"));
+		if($settings->name != "Instance: Key"){
+			return null;	
+		}
+		return $settings->value;
+	}
+	
+	public function validateInstance(){
+		$instanceId = $this->getInstanceId();
+		if(empty($instanceId)){
+			return true;
+		}
+	
+		$key = $this->getInstanceKey();
+	
+		if(empty($key)){
+			return false;
+		}
+	
+		$data = AesCtr::decrypt($key, $instanceId, 256);
+		$arr = explode("|",$data);
+		if($arr[0] == KEY_PREFIX && $arr[1] == $instanceId){
+			return true;
+		}
+	
+		return false;
 	}
 	
 	public function loadModulePermissions($group, $name, $userLevel){

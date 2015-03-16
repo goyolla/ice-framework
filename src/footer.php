@@ -109,6 +109,12 @@
 				refId = '<?=$_REQUEST['m']?>';
 				$("[ref = '"+refId+"'] a").first().click();
 			<?php }?>
+
+			<?php if(!isset($proVersion) && isset($moduleName) && $moduleName == 'dashboard' && $user->user_level == 'Admin' && !BaseService::getInstance()->validateInstance()){?>
+			$("#verifyModel").modal({
+				  backdrop: 'static'
+			});
+			<?php }?>
 		});
 		
 	</script>

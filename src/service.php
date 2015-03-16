@@ -245,6 +245,22 @@ if($action == 'get'){
 }else if($action == 'clearNotifications'){	
 	$notificationManager->clearNotifications($user->id);
 	$ret['status'] = "SUCCESS";
+	
+}else if($action == 'verifyInstance'){	
+	$key = $_POST['key'];
+	if(empty($key)){
+		$ret['status'] = "ERROR";
+		$ret['message'] = "Instance key not found";
+	}else{
+		$baseService->setInstanceKey($key);
+		if($baseService->validateInstance()){
+			$ret['status'] = "SUCCESS";
+		}else{
+			$ret['status'] = "ERROR";
+			$ret['message'] = "Error Verifying IceHrm Instance due to invalid key. If you are keep getting this, please contact us through ".CONTACT_EMAIL;
+		}
+	}
+	
 }
 
 echo json_encode($ret);

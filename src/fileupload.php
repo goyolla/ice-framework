@@ -3,6 +3,7 @@
 /**
  * Handle file uploads via XMLHttpRequest
  */
+include ("config.base.php");
 include ("include.common.php");
 include_once ('server.includes.inc.php');
 

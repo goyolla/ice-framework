@@ -91,9 +91,14 @@ if(in_array($table, BaseService::getInstance()->userTables) && !$skipProfileRest
 	
 }
 
-foreach ($rowCount as $cnt) {
-	$totalRows = $cnt['count'];
-}	
+if(is_array($rowCount)){
+	foreach ($rowCount as $cnt) {
+		$totalRows = $cnt['count'];
+	}	
+}else{
+	$totalRows = 0;
+}
+	
 
 /*
  * Output

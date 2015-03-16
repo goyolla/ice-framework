@@ -39,6 +39,7 @@ include (APP_BASE_PATH."classes/UIManager.php");
 include (APP_BASE_PATH."classes/crypt/Aes.php");
 include (APP_BASE_PATH."classes/crypt/AesCtr.php");
 
+include (APP_BASE_PATH."model/models.base.php");
 include (APP_BASE_PATH."model/models.inc.php");
 
 include APP_BASE_PATH.'admin/users/api/UsersAdminManager.php';
