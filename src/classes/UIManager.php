@@ -83,7 +83,7 @@ class UIManager{
 			
 			$this->currentProfileBlock = array(
 					"profileImage"=>BASE_URL."images/user_male.png",
-					"firstName"=>$user->username,
+					"firstName"=>$this->user->username,
 					"lastName"=>""
 			);
 				
@@ -97,7 +97,7 @@ class UIManager{
 
 			$this->currentProfileBlock = array(
 					"profileImage"=>BASE_URL."images/user_male.png",
-					"firstName"=>$user->username,
+					"firstName"=>$this->user->username,
 					"lastName"=>""
 			);
 		}

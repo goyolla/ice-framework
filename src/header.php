@@ -53,8 +53,8 @@ $companyName = SettingsManager::getInstance()->getSetting('Company: Name');
 //Load meta info
 $meta = json_decode(file_get_contents(MODULE_PATH."/meta.json"),true);
 
-UIManager::getInstance()->setProfiles($profileCurrent, $profileSwitched);
 UIManager::getInstance()->setCurrentUser($user);
+UIManager::getInstance()->setProfiles($profileCurrent, $profileSwitched);
 UIManager::getInstance()->setHomeLink($homeLink);
 
 ?><!DOCTYPE html>
