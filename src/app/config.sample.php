@@ -24,9 +24,3 @@ define('MAX_FILE_SIZE_KB', 10 * 1024);
 //Home Links
 define('HOME_LINK_ADMIN', CLIENT_BASE_URL."?g=admin&n=dashboard&m=admin_Admin");
 define('HOME_LINK_OTHERS', CLIENT_BASE_URL."?g=modules&n=dashboard&m=module_My_Account");
-
-//Version
-define('VERSION', '2.0');
-define('VERSION_DATE', '12/03/2015');
-
-if(!defined('SIGN_IN_ELEMENT_MAPPING_FIELD_NAME')){define('SIGN_IN_ELEMENT_MAPPING_FIELD_NAME','profile');}

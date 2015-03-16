@@ -1,6 +1,6 @@
 <?php
+include ("config.base.php");
 include ("include.common.php");
-define('SIGN_IN_ELEMENT_MAPPING_FIELD_NAME','profile');
 if(defined('MODULE_PATH')){
 	SessionUtils::saveSessionObject("modulePath", MODULE_PATH);
 }
