@@ -44,7 +44,8 @@
   <mkdir dir="${basedir}/build/phpdox"/>
   <mkdir dir="${basedir}/build/test"/>
   <mkdir dir="${basedir}/build/app"/>
-  <mkdir dir="${basedir}/build/release"/>
+  <mkdir dir="${basedir}/build/release/data"/>
+  <mkdir dir="${basedir}/build/release/data/${env.appname}_${env.Version}"/>
   <mkdir dir="${basedir}/src/lib"/>
  	
  	<copy todir="${basedir}/src/lib">
@@ -219,17 +220,22 @@
      depends="copyapp"
      description="Create a release">
 	
-	<zip destfile="${basedir}/build/release/rc_${env.Version}.zip"
-	       basedir="${destination}"
-	       excludes="${basedir}/test/**"
+	<copy todir="${basedir}/build/release/data/${env.appname}_${env.Version}">
+		  <fileset dir="${destination}">
+		    <include name="**/*"/>
+		  	<exclude name="test/**"/>
+		  </fileset>
+		</copy>
+	
+	<zip destfile="${basedir}/build/release/${env.appname}_${env.Version}.zip"
+	       basedir="${basedir}/build/release/data"
 	  />
 	
-	<tar destfile="${basedir}/build/release/rc_${env.Version}.tar"
-		       basedir="${destination}"
-		       excludes="${basedir}/test/**"
+	<tar destfile="${basedir}/build/release/${env.appname}_${env.Version}.tar"
+		       basedir="${basedir}/build/release/data"
 		  />
 	
-	<gzip destfile="${basedir}/build/release/rc_${env.Version}.tar.gz" src="${basedir}/build/release/rc_${env.Version}.tar"/>
+	<gzip destfile="${basedir}/build/release/${env.appname}_${env.Version}.tar.gz" src="${basedir}/build/release/${env.appname}_${env.Version}.tar"/>
 	
 </target>
 	
