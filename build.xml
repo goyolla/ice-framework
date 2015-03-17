@@ -48,8 +48,14 @@
   <mkdir dir="${basedir}/build/release/data/${env.appname}_${env.Version}"/>
   <mkdir dir="${basedir}/src/lib"/>
  	
- 	<copy todir="${basedir}/src/lib">
+ 	<copy todir="${basedir}/src/lib" overwrite="true">
 	  <fileset dir="${basedir}/lib">
+	    <include name="**/*"/>
+	  </fileset>
+	</copy>
+ 	
+ 	<copy todir="${basedir}/src" overwrite="true">
+	  <fileset dir="${basedir}/core-ext">
 	    <include name="**/*"/>
 	  </fileset>
 	</copy>
