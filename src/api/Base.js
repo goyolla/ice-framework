@@ -942,7 +942,7 @@ IceHRMBase.method('dataGroupToHtml', function(val, field) {
 	
 	template = field[1]['html'];
 	
-	if(field[1]['sort-function'] != undefined && field[1]['sort-function'] != null){
+	if(data != null && data != undefined && field[1]['sort-function'] != undefined && field[1]['sort-function'] != null){
 		data.sort(field[1]['sort-function']);
 	}
 	
@@ -1364,11 +1364,30 @@ IceHRMBase.method('renderFormField', function(field) {
 
 IceHRMBase.method('renderFormSelectOptions', function(options) {
 	var html = "";
-	for(var i=0;i<options.length;i++){
-		var t = '<option value="_id_">_val_</option>';
-		t = t.replace('_id_', options[i][0]);
-		t = t.replace('_val_', options[i][1]);
+	
+	//Sort options
+	
+	var tuples = [];
+
+	for (var key in options) {
+		tuples.push(options[key]);
+	}
+
+	tuples.sort(function(a, b) {
+	    a = a[1];
+	    b = b[1];
+
+	    return a < b ? -1 : (a > b ? 1 : 0);
+	});
+
+	for (var i = 0; i < tuples.length; i++) {
+	    var prop = tuples[i][0];
+	    var value = tuples[i][1];
+	    var t = '<option value="_id_">_val_</option>';
+		t = t.replace('_id_', prop);
+		t = t.replace('_val_', value);
 		html += t;
+	    
 	}
 	return html;
 	
@@ -1384,12 +1403,33 @@ IceHRMBase.method('renderFormSelectOptionsRemote', function(options,field) {
 		}
 		
 	}
-	for (var prop in options) {
-		var t = '<option value="_id_">_val_</option>';
+	
+	//Sort options
+	
+	var tuples = [];
+
+	for (var key in options) {
+		tuples.push([key, options[key]]);
+	}
+
+	tuples.sort(function(a, b) {
+	    a = a[1];
+	    b = b[1];
+
+	    return a < b ? -1 : (a > b ? 1 : 0);
+	});
+
+	for (var i = 0; i < tuples.length; i++) {
+	    var prop = tuples[i][0];
+	    var value = tuples[i][1];
+
+	    var t = '<option value="_id_">_val_</option>';
 		t = t.replace('_id_', prop);
-		t = t.replace('_val_', options[prop]);
+		t = t.replace('_val_', value);
 		html += t;
 	}
+	
+	
 	return html;
 	
 });

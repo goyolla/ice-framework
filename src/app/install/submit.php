@@ -5,12 +5,14 @@ include(CLIENT_APP_PATH.'../adodb512/adodb.inc.php');
 $isConfigFileExists = file_exists(CLIENT_APP_PATH."config.php");
 $configData = file_get_contents(CLIENT_APP_PATH."config.php");
 
+error_log("isConfigFileExists $isConfigFileExists");
+error_log("configData $configData");
 
 $ret = array();
 
 if(!$isConfigFileExists || $configData != ""){
 	$ret["status"] = "ERROR";
-	$ret["msg"] = "You are trying to install application on an existing installation.";
+	$ret["msg"] = "You are trying to install icehrm on an existing installation.";
 	echo json_encode($ret);	
 	exit();
 }
@@ -23,6 +25,7 @@ if($action == "TEST_DB"){
 	$res = $db->Connect($_REQUEST["APP_HOST"], $_REQUEST["APP_USERNAME"], $_REQUEST["APP_PASSWORD"], $_REQUEST["APP_DB"]);
 	
 	if (!$res){
+		error_log('Could not connect: ' . mysql_error());
 		$ret["status"] = "ERROR";
 		$ret["msg"] = "Incorrect credentials or incorrect DB host";
 		echo json_encode($ret);	
@@ -30,8 +33,10 @@ if($action == "TEST_DB"){
 	}
 	
 	$result = $db->Execute("Show tables");
+	error_log(print_r("Number of tables:".$result->RecordCount(),true));
 	$num_rows = $result->RecordCount();
 	if($num_rows != 0){
+		error_log('Database is not empty: ' . mysql_error());	
 		$ret["status"] = "ERROR";
 		$ret["msg"] = "Database is not empty";
 		echo json_encode($ret);	
@@ -47,6 +52,7 @@ if($action == "TEST_DB"){
 	$config = file_get_contents(CLIENT_APP_PATH."config.sample.php");
 	
 	if(empty($config)){
+		error_log('Sample config file is empty');
 		$ret["status"] = "ERROR";
 		$ret["msg"] = "Sample config file not found";
 		echo json_encode($ret);	
@@ -71,6 +77,7 @@ if($action == "TEST_DB"){
 	
 	
 	if (!$res){
+		error_log('Could not connect: ' . mysql_error());
 		$ret["status"] = "ERROR";
 		$ret["msg"] = "Incorrect credentials or incorrect DB host";
 		echo json_encode($ret);	
@@ -78,8 +85,10 @@ if($action == "TEST_DB"){
 	}
 	
 	$result = $db->Execute("Show tables");
+	error_log(print_r("Number of tables:".$result->RecordCount(),true));
 	$num_rows = $result->RecordCount();
 	if($num_rows != 0){
+		error_log('Database is not empty: ' . mysql_error());	
 		$ret["status"] = "ERROR";
 		$ret["msg"] = "Database is not empty";
 		echo json_encode($ret);	
@@ -115,6 +124,7 @@ if($action == "TEST_DB"){
 		fwrite($file,$config);
 		fclose($file);
 	}else{
+		error_log('Unable to write configurations to file');	
 		$ret["status"] = "ERROR";
 		$ret["msg"] = "Unable to write configurations to file";
 		echo json_encode($ret);	

@@ -227,11 +227,11 @@
      description="Create a release">
 	
 	<copy todir="${basedir}/build/release/data/${env.appname}_${env.Version}">
-		  <fileset dir="${destination}">
-		    <include name="**/*"/>
-		  	<exclude name="test/**"/>
-		  </fileset>
-		</copy>
+	  <fileset dir="${destination}">
+	    <include name="**/*"/>
+	  	<exclude name="test/**"/>
+	  </fileset>
+	</copy>
 	
 	<zip destfile="${basedir}/build/release/${env.appname}_${env.Version}.zip"
 	       basedir="${basedir}/build/release/data"

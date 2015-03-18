@@ -499,8 +499,8 @@ class BaseService{
 			include (APP_BASE_PATH."include.common.php");
 		}
 		$adminEmpId = SessionUtils::getSessionObject('admin_current_profile');
-		if(empty($adminEmpId)){
-			$user = SessionUtils::getSessionObject('user');	
+		$user = SessionUtils::getSessionObject('user');
+		if(empty($adminEmpId) && !empty($user)){
 			$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
 			return $user->$signInMappingField;
 		}

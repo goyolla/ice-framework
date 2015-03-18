@@ -1,4 +1,5 @@
 <?php
+define('CLIENT_PATH',dirname(__FILE__));
 include ("config.base.php");
 include ("include.common.php"); 
 include("server.includes.inc.php");

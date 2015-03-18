@@ -89,28 +89,28 @@ $fileFields = array();
 $mysqlErrors = array();
 //============ Start - Initializing Modules ==========
 if(defined('CLIENT_PATH')){
-include 'modules.php';
-
-
-$moduleManagers = BaseService::getInstance()->getModuleManagers();
-
-foreach($moduleManagers as $moduleManagerObj){
+	include 'modules.php';
 	
-	$moduleManagerObj->setupModuleClassDefinitions();
-	$moduleManagerObj->initializeUserClasses();
-	$moduleManagerObj->initializeFieldMappings();
-	$moduleManagerObj->initializeDatabaseErrorMappings();
 	
-	$moduleManagerObj->setupUserClasses($userTables);
-	$moduleManagerObj->setupFileFieldMappings($fileFields);
-	$moduleManagerObj->setupErrorMappings($mysqlErrors);
+	$moduleManagers = BaseService::getInstance()->getModuleManagers();
 	
-	$modelClassList = $moduleManagerObj->getModelClasses();
-	
-	foreach($modelClassList as $modelClass){
-		$modelClass::SetDatabaseAdapter($dbLocal);
+	foreach($moduleManagers as $moduleManagerObj){
+		
+		$moduleManagerObj->setupModuleClassDefinitions();
+		$moduleManagerObj->initializeUserClasses();
+		$moduleManagerObj->initializeFieldMappings();
+		$moduleManagerObj->initializeDatabaseErrorMappings();
+		
+		$moduleManagerObj->setupUserClasses($userTables);
+		$moduleManagerObj->setupFileFieldMappings($fileFields);
+		$moduleManagerObj->setupErrorMappings($mysqlErrors);
+		
+		$modelClassList = $moduleManagerObj->getModelClasses();
+		
+		foreach($modelClassList as $modelClass){
+			$modelClass::SetDatabaseAdapter($dbLocal);
+		}
 	}
-}
 }
 //============= End - Initializing Modules ============
 

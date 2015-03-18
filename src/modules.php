@@ -273,22 +273,24 @@ foreach($userModulesTemp as $k=>$v){
 }
 
 //Remove modules having no permissions
-
-foreach($adminModules as $fk => $menu){
-	foreach ($menu['menu'] as $key => $item){
-		if(!in_array($user->user_level,$item['user_levels'])){
-			//unset($menu['menu'][$key]);
-			unset($adminModules[$fk]['menu'][$key]);
+if(!empty($user)){
+	foreach($adminModules as $fk => $menu){
+		foreach ($menu['menu'] as $key => $item){
+			if(!in_array($user->user_level,$item['user_levels'])){
+				//unset($menu['menu'][$key]);
+				unset($adminModules[$fk]['menu'][$key]);
+			}
 		}
 	}
+	
+	foreach($userModules as $fk => $menu){
+		foreach ($menu['menu'] as $key => $item){
+			if(!in_array($user->user_level,$item['user_levels'])){
+				//unset($menu['menu'][$key]);
+				unset($userModules[$fk]['menu'][$key]);
+			}
+		}
+	}	
 }
 
-foreach($userModules as $fk => $menu){
-	foreach ($menu['menu'] as $key => $item){
-		if(!in_array($user->user_level,$item['user_levels'])){
-			//unset($menu['menu'][$key]);
-			unset($userModules[$fk]['menu'][$key]);
-		}	
-	}
-}
 
