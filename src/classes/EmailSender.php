@@ -13,7 +13,7 @@ abstract class EmailSender{
 		$this->settings	= $settings;
 	}
 
-	public function sendEmail($subject, $toEmail, $template, $params){
+	public function sendEmail($subject, $toEmail, $template, $params, $ccList = array(), $bccList = array()){
 
 		$body = $template;
 
@@ -43,10 +43,10 @@ abstract class EmailSender{
 		$emailBody = str_replace("#_adminEmail_#", $user->email, $emailBody);
 		$emailBody = str_replace("#_url_#", CLIENT_BASE_URL, $emailBody);
 
-		$this->sendMail($subject, $emailBody, $toEmail, $fromEmail, $user->email);
+		$this->sendMail($subject, $emailBody, $toEmail, $fromEmail, $user->email, $ccList, $bccList);
 	}
 
-	protected  abstract function sendMail($subject, $body, $toEmail, $fromEmail, $replyToEmail = null);
+	protected  abstract function sendMail($subject, $body, $toEmail, $fromEmail, $replyToEmail = null, $ccList = array(), $bccList = array());
 
 	public function sendResetPasswordEmail($emailOrUserId){
 		$user = new User();
@@ -96,7 +96,7 @@ class SNSEmailSender extends EmailSender{
 		$this->ses = SesClient::factory($arr);
 	}
 
-	protected  function sendMail($subject, $body, $toEmail, $fromEmail, $replyToEmail = null) {
+	protected  function sendMail($subject, $body, $toEmail, $fromEmail, $replyToEmail = null, $ccList = array(), $bccList = array()) {
 
 		if(empty($replyToEmail)){
 			$replyToEmail = $fromEmail;
@@ -105,8 +105,8 @@ class SNSEmailSender extends EmailSender{
 		LogManager::getInstance()->info("Sending email to: ".$toEmail."/ from: ".$fromEmail);
 
 		$toArray = array('ToAddresses' => array($toEmail),
-				'CcAddresses' => array(),
-				'BccAddresses' => array());
+				'CcAddresses' => $ccList,
+				'BccAddresses' => $bccList);
 		$message = array(
 				'Subject' => array(
 						'Data' => $subject,
@@ -145,7 +145,7 @@ class SMTPEmailSender extends EmailSender{
 		parent::__construct($settings);
 	}
 
-	protected  function sendMail($subject, $body, $toEmail, $fromEmail, $replyToEmail = null) {
+	protected  function sendMail($subject, $body, $toEmail, $fromEmail, $replyToEmail = null, $ccList = array(), $bccList = array()) {
 
 		if(empty($replyToEmail)){
 			$replyToEmail = $fromEmail;
@@ -199,7 +199,7 @@ class PHPMailer extends EmailSender{
 		parent::__construct($settings);
 	}
 
-	protected  function sendMail($subject, $body, $toEmail, $fromEmail, $replyToEmail = null) {
+	protected  function sendMail($subject, $body, $toEmail, $fromEmail, $replyToEmail = null, $ccList = array(), $bccList = array()) {
 
 		if(empty($replyToEmail)){
 			$replyToEmail = $fromEmail;
