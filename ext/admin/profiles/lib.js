@@ -43,7 +43,7 @@ ProfileAdapter.method('getFormFields', function() {
 	        [ "address2", {"label":"Address Line 2","type":"text","validation":"none"}],
 	        [ "city", {"label":"City","type":"text","validation":"none"}],
 	        [ "country", {"label":"Country","type":"select2","remote-source":["Country","code","name"]}],
-	        [ "province", {"label":"Province","type":"select2","allow-null":true,"remote-source":["Province","id","name"]}],
+	        [ "province", {"label":"Province","type":"select2multi","allow-null":true,"remote-source":["Province","id","name"]}],
 	        [ "postal_code", {"label":"Postal/Zip Code","type":"text","validation":"none"}],
 	        [ "home_phone", {"label":"Home Phone","type":"text","validation":"none"}],
 	        [ "mobile_phone", {"label":"Mobile Phone","type":"text","validation":"none"}],

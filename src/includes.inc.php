@@ -44,6 +44,7 @@ $fieldTemplates['text'] = file_get_contents(CLIENT_PATH.'/templates/fields/text.
 $fieldTemplates['textarea'] = file_get_contents(CLIENT_PATH.'/templates/fields/textarea.html');
 $fieldTemplates['select'] = file_get_contents(CLIENT_PATH.'/templates/fields/select.html');
 $fieldTemplates['select2'] = file_get_contents(CLIENT_PATH.'/templates/fields/select2.html');
+$fieldTemplates['select2multi'] = file_get_contents(CLIENT_PATH.'/templates/fields/select2multi.html');
 $fieldTemplates['date'] = file_get_contents(CLIENT_PATH.'/templates/fields/date.html');
 $fieldTemplates['datetime'] = file_get_contents(CLIENT_PATH.'/templates/fields/datetime.html');
 $fieldTemplates['time'] = file_get_contents(CLIENT_PATH.'/templates/fields/time.html');

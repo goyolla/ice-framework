@@ -181,6 +181,12 @@ FormValidation.method('checkValues' , function(options) {
 	    				inputValue = "";
 	    			}
 	    			
+	    		}else if(inputObject.hasClass('select2Multi')){
+	    			if($('#'+id).select2('data') != null && $('#'+id).select2('data') != undefined){
+	    				inputValue = $('#'+id).select2('data');
+	    			}else{
+	    				inputValue = "";
+	    			}	
 	    		}else{
 	    			inputValue = inputObject.val();
 	    		}
