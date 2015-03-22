@@ -34,7 +34,7 @@ function FormValidation(formId,validateAll,options) {
 	
 	this.settings = jQuery.extend(this.settings,options);
 	
-	this.inputTypes = new Array( "text",  "radio",  "checkbox",  "file", "password",  "select-one",  "textarea","fileupload");
+	this.inputTypes = new Array( "text",  "radio",  "checkbox",  "file", "password",  "select-one","select-multi",  "textarea","fileupload");
 
 	this.validator = {
 			
