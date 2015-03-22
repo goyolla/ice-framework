@@ -173,7 +173,7 @@ FormValidation.method('checkValues' , function(options) {
 	    		
 	    		inputValue = null;
 	    		if(type == "radio" || type == "checkbox"){
-	    			inputValue = $("input[name='" + name + "']:checked").val()
+	    			inputValue = $("input[name='" + name + "']:checked").val();
 	    		}else if(inputObject.hasClass('select2Field')){
 	    			if($('#'+id).select2('data') != null && $('#'+id).select2('data') != undefined){
 	    				inputValue = $('#'+id).select2('data').id;
@@ -183,7 +183,12 @@ FormValidation.method('checkValues' , function(options) {
 	    			
 	    		}else if(inputObject.hasClass('select2Multi')){
 	    			if($('#'+id).select2('data') != null && $('#'+id).select2('data') != undefined){
-	    				inputValue = $('#'+id).select2('data');
+	    				inputValueObjects = $('#'+id).select2('data');
+	    				inputValue = [];
+	    				for(var i=0;i<inputValueObjects.length;i++){
+	    					inputValue.push(inputValueObjects[i].id);
+	    				}
+	    				inputValue = JSON.stringify(inputValue);
 	    			}else{
 	    				inputValue = "";
 	    			}	

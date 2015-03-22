@@ -1296,7 +1296,15 @@ IceHRMBase.method('fillForm', function(object, formId, fields) {
 			if(object[fields[i][0]] == undefined || object[fields[i][0]] == null || object[fields[i][0]] == ""){
 				object[fields[i][0]] = "NULL";
 			}
-			$(formId + ' #'+fields[i][0]).select2('val',object[fields[i][0]]);
+			
+			var msVal = [];
+			if(object[fields[i][0]] != undefined && object[fields[i][0]] != null && object[fields[i][0]] != ""){
+				try{
+					msVal = JSON.parse(object[fields[i][0]]);
+				}catch(e){}
+			}
+			
+			$(formId + ' #'+fields[i][0]).select2('val',msVal);
 		
 		}else if(fields[i][1].type == 'datagroup'){
 			var html = this.dataGroupToHtml(object[fields[i][0]],fields[i]);
