@@ -38,7 +38,7 @@ ProfileAdapter.method('getFormFields', function() {
 	        [ "nationality", {"label":"Nationality","type":"select2","remote-source":["Nationality","id","name"]}],
 	        [ "birthday", {"label":"Date of Birth","type":"date","validation":""}],
 	        [ "gender", {"label":"Gender","type":"select","source":[["Male","Male"],["Female","Female"]]}],
-	        [ "marital_status", {"label":"Marital Status","type":"select2multi","source":[["Married","Married"],["Single","Single"],["Divorced","Divorced"],["Widowed","Widowed"],["Other","Other"]]}],
+	        [ "marital_status", {"label":"Marital Status","type":"select","source":[["Married","Married"],["Single","Single"],["Divorced","Divorced"],["Widowed","Widowed"],["Other","Other"]]}],
 	        [ "address1", {"label":"Address Line 1","type":"text","validation":"none"}],
 	        [ "address2", {"label":"Address Line 2","type":"text","validation":"none"}],
 	        [ "city", {"label":"City","type":"text","validation":"none"}],

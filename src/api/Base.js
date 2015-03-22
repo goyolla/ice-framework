@@ -791,11 +791,10 @@ IceHRMBase.method('showFilters', function(object) {
 	});
 	
 	$tempDomObj.find('.select2Multi').each(function() {
-		$(this).select2();
-		$tempDomObj.find(".select2-container-multi .select2-choices").on('click',function(){
-			var pid = $(this).parent().attr('id');
-			pid = pid.replace('s2id','field');
-			$("#"+pid).height(parseInt($(this).height) + 5);
+		$(this).select2().on("change",function(e){
+			var parentRow = $(this).parents(".row");
+			var height = parentRow.find(".select2-choices").height();
+			parentRow.height(parseInt(height));
 		});
 	});
 
@@ -883,7 +882,11 @@ IceHRMBase.method('renderForm', function(object) {
 	});
 	
 	$tempDomObj.find('.select2Multi').each(function() {
-		$(this).select2();
+		$(this).select2().on("change",function(e){
+			var parentRow = $(this).parents(".row");
+			var height = parentRow.find(".select2-choices").height();
+			parentRow.height(parseInt(height));
+		});
 		
 	});
 	
@@ -1041,7 +1044,11 @@ IceHRMBase.method('showDataGroup', function(field, object) {
 
 	
 	$tempDomObj.find('.select2Multi').each(function() {
-		$(this).select2();
+		$(this).select2().on("change",function(e){
+			var parentRow = $(this).parents(".row");
+			var height = parentRow.find(".select2-choices").height();
+			parentRow.height(parseInt(height));
+		});
 	});
 
 	
