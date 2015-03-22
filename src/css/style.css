@@ -425,6 +425,11 @@ background-image: none !important;
 	padding:3px !important;
 }
 
+.select2-container-multi{
+	padding:0px !important;
+	border:none;
+}
+
 .select2-arrow{
 background-image: none !important;
 background: #FFF !important;

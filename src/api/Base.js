@@ -792,6 +792,11 @@ IceHRMBase.method('showFilters', function(object) {
 	
 	$tempDomObj.find('.select2Multi').each(function() {
 		$(this).select2();
+		$tempDomObj.find(".select2-container-multi .select2-choices").on('click',function(){
+			var pid = $(this).parent().attr('id');
+			pid = pid.replace('s2id','field');
+			$("#"+pid).height(parseInt($(this).height) + 5);
+		});
 	});
 
 	//var tHtml = $tempDomObj.wrap('<div>').parent().html();
