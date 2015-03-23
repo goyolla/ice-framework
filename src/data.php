@@ -59,7 +59,7 @@ if(!empty($_REQUEST['ft'])){
 
 if(in_array($table, BaseService::getInstance()->userTables) && !$skipProfileRestriction && !$isSubOrdinates){
 	$cemp = BaseService::getInstance()->getCurrentProfileId();
-	$sql = "Select count(id) as count from ".$obj->_table." where profile = ? ".$countFilterQuery;
+	$sql = "Select count(id) as count from ".$obj->_table." where ".SIGN_IN_ELEMENT_MAPPING_FIELD_NAME." = ? ".$countFilterQuery;
 	array_unshift($countFilterQueryData,$cemp);
 	
 	$rowCount = $obj->DB()->Execute($sql, $countFilterQueryData);
@@ -78,7 +78,7 @@ if(in_array($table, BaseService::getInstance()->userTables) && !$skipProfileRest
 			$subordinatesIds.=$sub->id;
 		}
 		$subordinatesIds.="";
-		$sql = "Select count(id) as count from ".$obj->_table." where profile in (".$subordinatesIds.") ".$countFilterQuery;
+		$sql = "Select count(id) as count from ".$obj->_table." where ".SIGN_IN_ELEMENT_MAPPING_FIELD_NAME." in (".$subordinatesIds.") ".$countFilterQuery;
 		$rowCount = $obj->DB()->Execute($sql,$countFilterQueryData);
 	}else{
 		$sql = "Select count(id) as count from ".$obj->_table;
