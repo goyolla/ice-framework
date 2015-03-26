@@ -430,13 +430,18 @@ class BaseService{
 		return null;
 	}
 	
-	public function getFieldValues($table,$key,$value){
+	public function getFieldValues($table,$key,$value,$method){
 		
 		$values = explode("+", $value);
 		
 		$ret = array();
 		$ele = new $table();
-		$list = $ele->Find('1 = 1',array());
+		if(!empty($method) && method_exists($ele,$method)){
+			$list = $ele->$method();
+		}else{
+			$list = $ele->Find('1 = 1',array());
+		}
+		
 		foreach($list as $obj){
 			if(count($values) == 1){
 				$ret[$obj->$key] = $obj->$value;	

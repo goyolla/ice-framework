@@ -294,7 +294,11 @@ AdapterBase.method('getTableName', function() {
 
 AdapterBase.method('getFieldValues', function(fieldMaster,callBackData) {
 	var that = this;
-	$.post(this.moduleRelativeURL, {'t':fieldMaster[0],'key':fieldMaster[1],'value':fieldMaster[2],'a':'getFieldValues'}, function(data) {
+	var method =  "";
+	if(fieldMaster[3] != undefined && fieldMaster[3] != null){
+		method = fieldMaster[3]; 
+	}
+	$.post(this.moduleRelativeURL, {'t':fieldMaster[0],'key':fieldMaster[1],'value':fieldMaster[2],'method':method,'a':'getFieldValues'}, function(data) {
 		if(data.status == "SUCCESS"){
 			callBackData['callBackData'].push(data.data);
 			if(callBackData['callBackSuccess'] != null && callBackData['callBackSuccess'] != undefined){

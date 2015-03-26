@@ -77,7 +77,7 @@ if($action == 'get'){
 	}
 	
 }else if($action == 'getFieldValues'){
-	$ret['data'] = BaseService::getInstance()->getFieldValues($_REQUEST['t'], $_REQUEST['key'], $_REQUEST['value']);
+	$ret['data'] = BaseService::getInstance()->getFieldValues($_REQUEST['t'], $_REQUEST['key'], $_REQUEST['value'],$_REQUEST['method']);
 	if($ret['data'] != null){	
 		$ret['status'] = "SUCCESS";	
 	}else{
