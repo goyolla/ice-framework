@@ -61,6 +61,8 @@ if(in_array($table, BaseService::getInstance()->userTables) && !$skipProfileRest
 	$cemp = BaseService::getInstance()->getCurrentProfileId();
 	$sql = "Select count(id) as count from ".$obj->_table." where ".SIGN_IN_ELEMENT_MAPPING_FIELD_NAME." = ? ".$countFilterQuery;
 	array_unshift($countFilterQueryData,$cemp);
+	LogManager::getInstance()->debug("Cpunt Filter Query 1:".$sql);
+	LogManager::getInstance()->debug("Cpunt Filter Query Data 1:".json_encode($countFilterQueryData));
 	
 	$rowCount = $obj->DB()->Execute($sql, $countFilterQueryData);
 			
@@ -79,13 +81,16 @@ if(in_array($table, BaseService::getInstance()->userTables) && !$skipProfileRest
 		}
 		$subordinatesIds.="";
 		$sql = "Select count(id) as count from ".$obj->_table." where ".SIGN_IN_ELEMENT_MAPPING_FIELD_NAME." in (".$subordinatesIds.") ".$countFilterQuery;
+		LogManager::getInstance()->debug("Cpunt Filter Query 2:".$sql);
+		LogManager::getInstance()->debug("Cpunt Filter Query Data 2:".json_encode($countFilterQueryData));
 		$rowCount = $obj->DB()->Execute($sql,$countFilterQueryData);
 	}else{
 		$sql = "Select count(id) as count from ".$obj->_table;
 		if(!empty($countFilterQuery)){
 			$sql.=" where 1=1 ".$countFilterQuery;
 		}
-		
+		LogManager::getInstance()->debug("Cpunt Filter Query 3:".$sql);
+		LogManager::getInstance()->debug("Cpunt Filter Query Data 3:".json_encode($countFilterQueryData));
 		$rowCount = $obj->DB()->Execute($sql,$countFilterQueryData);
 	}
 	
