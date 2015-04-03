@@ -11,7 +11,8 @@ title:            Ice Framework
 tagline:          ''
 description:      'ice-framework is a starter platform for start building php and js based web applications'
 url:              http://thilinah.github.com/ice-framework
-baseurl:          /ice-framework
+baseurl:          /ice-framework/
+baseurlnoslash:   /ice-framework
 
 author:
   name:           'Thilina Hasantha'
