@@ -3,8 +3,6 @@ layout: post
 title: Introduction to Ice-Framework
 ---
 
-#Ice Framework - Getting Started
-
 ## What is Ice-framework?
 Ice-framework is a starter platform for building PHP and JavaScript based web applications. It provides developers with a fully working web application which can 
 be turned into a domain sepecific web application by creating few modules. Framework makes it really easy for developers to create modules while leaving the freedom

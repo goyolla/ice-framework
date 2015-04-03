@@ -19,7 +19,7 @@ author:
   url:            https://twitter.com/thilina84
   image:		  http://graph.facebook.com/thilinah/picture?width=140&height=140
 
-paginate:         5
+paginate:         1
 
 # Custom vars
 version:          2.1.0
