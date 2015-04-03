@@ -1,7 +1,6 @@
 ---
 layout: page
-title: About
-id: 2
+title: Getting Started
 ---
 
 <p class="message">
