@@ -30,7 +30,7 @@ class ProfilesActionManager extends SubActionManager{
 		$subordinates = $subordinate->Find("supervisor = ?",array($profile->id));
 		$profile->subordinates = $subordinates;
 		
-		$fs = new FileService();
+		$fs = FileService::getInstance();
 		$profile = $fs->updateProfileImage($profile);
 		
 		if(!empty($profile->birthday)){
@@ -45,7 +45,7 @@ class ProfilesActionManager extends SubActionManager{
 	
 	public function deleteProfileImage($req){
 		if($this->user->user_level == 'Admin' || $this->user->profile == $req->id){
-			$fs = new FileService();
+			$fs = FileService::getInstance();
 			$res = $fs->deleteProfileImage($req->id);
 			return new IceResponse(IceResponse::SUCCESS,$res);	
 		}
