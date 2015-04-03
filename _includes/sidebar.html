@@ -20,6 +20,10 @@
     <nav class="sidebar-nav">
       <a class="sidebar-nav-item{% if page.url == site.baseurl %} active{% endif %}" href="{{ site.baseurl }}">Home</a>
       
+      	  {% for p in site.docs %}
+		      <a class="sidebar-nav-item" at="{{page.url}}" href="{{p.url}}">{{ p.title }}</a>
+
+		  {% endfor %}
       
       {% for page in site.data.docs %}
 		  {% assign item_url = page |prepend:"docs/"| append:"/" %}
@@ -29,7 +33,7 @@
 		      <a class="sidebar-nav-item" href="{{item_url}}">{{ p.title }}</a>
 		    {% endif %}
 
-		{% endfor %}
+		  {% endfor %}
       {% endfor %}
       
     </nav>
