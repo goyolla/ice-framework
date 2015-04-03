@@ -22,7 +22,7 @@
          description=""/>
 	
 <target name="buildlocal"
-         depends="prepare,copyapp,release"
+         depends="prepare,copyapp"
          description="">
 </target>
 
