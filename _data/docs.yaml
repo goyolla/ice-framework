@@ -1,4 +1,3 @@
-- title: Getting Started
-	docs:
-		- getting-started
-		- about
+docs:
+ - getting-started
+ - about

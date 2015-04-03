@@ -21,17 +21,13 @@
       <a class="sidebar-nav-item{% if page.url == site.baseurl %} active{% endif %}" href="{{ site.baseurl }}">Home</a>
       
       
-      {% for section in site.data.docs %}
-    	<h4>{{ section.title }}</h4>
-    	
-    	{% for item in section.docs %}
-		  {% assign item_url = item |prepend:"docs/"| prepend:site.baseurl | append:"/" %}
+      {% for page in site.data.docs %}
+		  {% assign item_url = page |prepend:"docs/"| append:"/" %}
 		
 		  {% for p in site.docs %}
 		    {% if p.url == item_url %}
-		      <a class="sidebar-nav-item{% if page.url == item_url %} active{% endif %}" href="{{item_url}}">{{ p.title }}</a>
+		      <a class="sidebar-nav-item" href="{{item_url}}">{{ p.title }}</a>
 		    {% endif %}
-		 {% endfor %}
 
 		{% endfor %}
       {% endfor %}
