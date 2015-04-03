@@ -4,19 +4,13 @@
       
 	
       <h3>
-        <a href="{{ site.baseurl }}">
           {{ site.title }}
-        </a>
       </h3>
-      
-      
-      
-      <p class="lead" style="font-size: 0.8rem;">{{ site.description }}</p>
+
     </div>
 
     <nav class="sidebar-nav">
-      <a class="sidebar-nav-item{% if page.url == site.baseurl %} active{% endif %}" href="{{ site.baseurl }}">Home</a>
-
+     
       {% comment %}
         The code below dynamically generates a sidebar nav of pages with
         `layout: page` in the front-matter. See readme for usage.
