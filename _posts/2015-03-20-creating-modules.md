@@ -7,30 +7,32 @@ There are two types of modules in IceFramework.
 	- **admin**: modules which are accessible by Admins and sometimes Managers
 	- **modules** modules which can be accessed by all user levels. Any user how doesn't have a Profile attached to them won't have access to these modules
 
-##Module folder structure
+##Module directory structure
+
+Lets assume the module is an admin module (so it should be inside ext/admin directory) and module name (and directory name) is **projects**
 
 ```
 .
-+-- _config.yml
-+-- _drafts
-|   +-- begin-with-the-crazy-ideas.textile
-|   +-- on-simplicity-in-technology.markdown
-+-- _includes
-|   +-- footer.html
-|   +-- header.html
-+-- _layouts
-|   +-- default.html
-|   +-- post.html
-+-- _posts
-|   +-- 2007-10-29-why-every-programmer-should-play-nethack.textile
-|   +-- 2009-04-26-barcamp-boston-4-roundup.textile
-+-- _data
-|   +-- members.yml
-+-- _site
-+-- index.html
++-- meta.json
++-- api
+|   +-- ProjectsAdminManager.php
+|   +-- ProjectActionManager.php (optional)
++-- index.php
++-- lib.js
 ```
 
 
 ##meta.json
 
 {% gist 8b8aa02c917aadf6a6be %}
+
+**label** is the name of the menu item
+**menu** is the name of the group of menus that this module will belong to
+**order** is the order of the menu item inside group menu
+**icon** is the font awesome icon of this menu. FA latest version is already added to ice-framework
+**user_levels** is users with which roles have access to this modules
+**permissions** this section defines types o permissions for each user role and default values. Values for these permissions can be updated in **System->Permissions** module. Each module will get injected with these permissions and module should decide how to handle each permission.
+
+##ProjectsAdminManager.php
+
+{% gist a4835dd626b8e59a7475 %}
