@@ -9,6 +9,7 @@ There are two types of modules in IceFramework.
 
 ##Module folder structure
 
+<pre>
 +-- _config.yml
 +-- _drafts
 |   +-- begin-with-the-crazy-ideas.textile
@@ -26,6 +27,7 @@ There are two types of modules in IceFramework.
 |   +-- members.yml
 +-- _site
 +-- index.html
+</pre>
 
 ##meta.json
 
