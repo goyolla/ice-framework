@@ -39,9 +39,9 @@ Lets assume the module is an admin module (so it should be inside ext/admin dire
 
 This file defines model classes and other controlling aspects for the module. Ice-framework uses AdoDB Active record as the ORM layer. So all model classes should extend **ICEHRM_Record** class which extends the **ADOdb_Active_Record** class.
 
-In this case we have two modle classes for this module. "Client" and "Project" model classes are mapped to "Clients" and "Projects" tables respectively using **$_table** variable in each class (e.g. var $_table = 'Clients';).
+In this case we have two model classes for this module. "Client" and "Project" model classes are mapped to "Clients" and "Projects" tables respectively using **$_table** variable in each class (e.g. var $_table = 'Clients';).
 
-If you dig deeper you would see that **ICEHRM_Record** is providing some functionalities related to security validation and per-processing also.
+If you dig deeper you would see that **ICEHRM_Record** is providing some functionalities related to security, validation and per-processing also.
 
 
 
