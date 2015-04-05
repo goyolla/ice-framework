@@ -416,7 +416,7 @@
         {
             "file": "src\\api\\Base.js",
             "line": 113,
-            "description": "If this method returned false the action buttons in data table for modules will not be displayed\nOverride this method in module lib.js to change behaviour",
+            "description": "If this method returned false the action buttons in data table for modules will not be displayed.\nOverride this method in module lib.js to hide action buttons",
             "itemtype": "method",
             "name": "showActionButtons",
             "params": [
@@ -463,6 +463,534 @@
             "example": [
                 "\n\tReportAdapter.method('renderForm', function(object) {\n\t\tvar that = this;\n\t\tthis.processFormFieldsWithObject(object);\n\t\tvar cb = function(){\n\t\t\tthat.uber('renderForm',object);\n\t\t};\n\t\tthis.initFieldMasterData(cb);\n     });"
             ],
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 241,
+            "description": "Pass true to this method after creating module JS object to open new/edit entry form for the module on a popup.",
+            "itemtype": "method",
+            "name": "setShowFormOnPopup",
+            "params": [
+                {
+                    "name": "val",
+                    "description": "",
+                    "type": "Boolean"
+                }
+            ],
+            "example": [
+                "\n\tmodJs.subModJsList['tabCandidateApplication'] = new CandidateApplicationAdapter('Application','CandidateApplication',{\"candidate\":data.id});\n\tmodJs.subModJsList['tabCandidateApplication'].setShowFormOnPopup(true);"
+            ],
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 254,
+            "description": "Set this to true to if you need the datatable to load data page by page instead of loading all data at once.",
+            "itemtype": "method",
+            "name": "setRemoteTable",
+            "params": [
+                {
+                    "name": "val",
+                    "description": "",
+                    "type": "Boolean"
+                }
+            ],
+            "example": [
+                "\n\tmodJs.subModJsList['tabCandidateApplication'] = new CandidateApplicationAdapter('Application','CandidateApplication',{\"candidate\":data.id});\n\tmodJs.subModJsList['tabCandidateApplication'].setRemoteTable(true);"
+            ],
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 428,
+            "description": "Create the data table on provided element id",
+            "itemtype": "method",
+            "name": "createTable",
+            "params": [
+                {
+                    "name": "val",
+                    "description": "",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 509,
+            "description": "Create a data table on provided element id which loads data page by page",
+            "itemtype": "method",
+            "name": "createTableServer",
+            "params": [
+                {
+                    "name": "val",
+                    "description": "",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 581,
+            "description": "This should be overridden in module lib.js classes to return module headers which are used to create the data table.",
+            "itemtype": "method",
+            "name": "getHeaders",
+            "example": [
+                "\n\tSettingAdapter.method('getHeaders', function() {\n \t\treturn [\n\t\t\t{ \"sTitle\": \"ID\" ,\"bVisible\":false},\n\t\t\t{ \"sTitle\": \"Name\" },\n\t\t\t{ \"sTitle\": \"Value\"},\n\t\t\t{ \"sTitle\": \"Details\"}\n\t\t];\n\t\t});"
+            ],
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 599,
+            "description": "This should be overridden in module lib.js classes to return module field values which are used to create the data table.",
+            "itemtype": "method",
+            "name": "getDataMapping",
+            "example": [
+                "\n\tSettingAdapter.method('getDataMapping', function() {\n\treturn [\n\t        \"id\",\n\t        \"name\",\n\t        \"value\",\n\t        \"description\"\n\t];\n\t});"
+            ],
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 617,
+            "description": "This should be overridden in module lib.js classes to return module from fields which are used to create the add/edit form and also used for initializing select box values in form.",
+            "itemtype": "method",
+            "name": "getFormFields",
+            "example": [
+                "\n\tSettingAdapter.method('getFormFields', function() {\n\treturn [\n\t        [ \"id\", {\"label\":\"ID\",\"type\":\"hidden\"}],\n\t        [ \"value\", {\"label\":\"Value\",\"type\":\"text\",\"validation\":\"none\"}]\n\t];\n\t});"
+            ],
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 636,
+            "description": "This can be overridden in module lib.js classes inorder to show a filter form",
+            "itemtype": "method",
+            "name": "getFilters",
+            "example": [
+                "\n\tEmployeeAdapter.method('getFilters', function() {\n\t\treturn [\n\t\t        [ \"job_title\", {\"label\":\"Job Title\",\"type\":\"select2\",\"allow-null\":true,\"null-label\":\"All Job Titles\",\"remote-source\":[\"JobTitle\",\"id\",\"name\"]}],\n\t\t        [ \"department\", {\"label\":\"Department\",\"type\":\"select2\",\"allow-null\":true,\"null-label\":\"All Departments\",\"remote-source\":[\"CompanyStructure\",\"id\",\"title\"]}],\n\t\t        [ \"supervisor\", {\"label\":\"Supervisor\",\"type\":\"select2\",\"allow-null\":true,\"null-label\":\"Anyone\",\"remote-source\":[\"Employee\",\"id\",\"first_name+last_name\"]}]\n\t\t];\n\t});"
+            ],
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 652,
+            "description": "Show the edit form for an item",
+            "itemtype": "method",
+            "name": "edit",
+            "params": [
+                {
+                    "name": "id",
+                    "description": "id of the item to edit",
+                    "type": "Int"
+                }
+            ],
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 685,
+            "description": "Delete an item",
+            "itemtype": "method",
+            "name": "deleteRow",
+            "params": [
+                {
+                    "name": "id",
+                    "description": "id of the item to edit",
+                    "type": "Int"
+                }
+            ],
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 698,
+            "description": "Show a popup with message",
+            "itemtype": "method",
+            "name": "showMessage",
+            "params": [
+                {
+                    "name": "title",
+                    "description": "title of the message box",
+                    "type": "String"
+                },
+                {
+                    "name": "message",
+                    "description": "message",
+                    "type": "String"
+                },
+                {
+                    "name": "closeCallback",
+                    "description": "this will be called once the dialog is closed (optional)",
+                    "type": "Function"
+                },
+                {
+                    "name": "closeCallback",
+                    "description": "data to pass to close callback (optional)",
+                    "type": "Function"
+                },
+                {
+                    "name": "isPlain",
+                    "description": "if true buttons are not shown (optional / default = true)",
+                    "type": "Boolean"
+                }
+            ],
+            "example": [
+                "\n\tthis.showMessage(\"Error Occured while Applying Leave\", callBackData);"
+            ],
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 776,
+            "description": "Create or edit an element",
+            "itemtype": "method",
+            "name": "save",
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 801,
+            "description": "Override this method to inject attitional parameters or modify existing parameters retrived from add/edit form before sending to the server",
+            "itemtype": "method",
+            "name": "forceInjectValuesBeforeSave",
+            "params": [
+                {
+                    "name": "params",
+                    "description": "keys and values in form",
+                    "type": "Array"
+                }
+            ],
+            "return": {
+                "description": "modified parameters",
+                "type": "Array"
+            },
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 811,
+            "description": "Override this method to do custom validations at client side",
+            "itemtype": "method",
+            "name": "doCustomValidation",
+            "params": [
+                {
+                    "name": "params",
+                    "description": "keys and values in form",
+                    "type": "Array"
+                }
+            ],
+            "return": {
+                "description": "return null if validation success, returns error message if unsuccessful",
+                "type": "Null or String"
+            },
+            "example": [
+                "\n\tEmployeeLeaveAdapter.method('doCustomValidation', function(params) {\n\t\ttry{\n\t\t\tif(params['date_start'] != params['date_end']){\n\t\t\t\tvar ds = new Date(params['date_start']);\n\t\t\t\tvar de = new Date(params['date_end']);\n\t\t\t\tif(de < ds){\n\t\t\t\t\treturn \"Start date should be earlier than end date of the leave period\";\n\t\t\t\t}\n\t\t\t}\n\t\t}catch(e){\n\t\t\t\n\t\t}\n\treturn null;\n});"
+            ],
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 924,
+            "description": "Override this method to do custom validations at client side for values selected in filters",
+            "itemtype": "method",
+            "name": "doCustomFilterValidation",
+            "params": [
+                {
+                    "name": "params",
+                    "description": "keys and values in form",
+                    "type": "Array"
+                }
+            ],
+            "return": {
+                "description": "return null if validation success, returns error message if unsuccessful",
+                "type": "Null or String"
+            },
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 935,
+            "description": "Reset selected filters",
+            "itemtype": "method",
+            "name": "resetFilters",
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 1024,
+            "description": "Override this method in your module class to make changes to data fo the form before showing the form",
+            "itemtype": "method",
+            "name": "preRenderForm",
+            "params": [
+                {
+                    "name": "object",
+                    "description": "keys value list for populating form",
+                    "type": "Array"
+                }
+            ],
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 1034,
+            "description": "Create the form",
+            "itemtype": "method",
+            "name": "renderForm",
+            "params": [
+                {
+                    "name": "object",
+                    "description": "keys value list for populating form",
+                    "type": "Array"
+                }
+            ],
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 1164,
+            "description": "Override this method in your module class to make changes to data fo the form after showing it",
+            "itemtype": "method",
+            "name": "postRenderForm",
+            "params": [
+                {
+                    "name": "object",
+                    "description": "keys value list for populating form",
+                    "type": "Array"
+                },
+                {
+                    "name": "$tempDomObj",
+                    "description": "a DOM element for the form",
+                    "type": "DOM"
+                }
+            ],
+            "example": [
+                "\n\tUserAdapter.method('postRenderForm', function(object, $tempDomObj) {\n\t\tif(object == null || object == undefined){\n\t\t\t$tempDomObj.find(\"#changePasswordBtn\").remove();\n\t\t}\n\t});\t\t\t"
+            ],
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 1181,
+            "description": "Convert data group field to HTML",
+            "itemtype": "method",
+            "name": "dataGroupToHtml",
+            "params": [
+                {
+                    "name": "val",
+                    "description": "value in the field",
+                    "type": "String"
+                },
+                {
+                    "name": "field",
+                    "description": "field meta data",
+                    "type": "Array"
+                }
+            ],
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 1234,
+            "description": "Reset the DataGroup for a given field",
+            "itemtype": "method",
+            "name": "resetDataGroup",
+            "params": [
+                {
+                    "name": "field",
+                    "description": "field meta data",
+                    "type": "Array"
+                }
+            ],
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 1473,
+            "description": "Fill a form with required values after showing it",
+            "itemtype": "method",
+            "name": "fillForm",
+            "params": [
+                {
+                    "name": "object",
+                    "description": "form data",
+                    "type": "Array"
+                },
+                {
+                    "name": "formId",
+                    "description": "id of the form",
+                    "type": "String"
+                },
+                {
+                    "name": "formId",
+                    "description": "field meta data",
+                    "type": "Array"
+                }
+            ],
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 1575,
+            "description": "Cancel edit or add new on modules",
+            "itemtype": "method",
+            "name": "cancel",
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 1757,
+            "description": "Override this method to change add new button label",
+            "itemtype": "method",
+            "name": "getAddNewLabel",
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 1766,
+            "description": "Used to set whether to show the add new button for a module",
+            "itemtype": "method",
+            "name": "setShowAddNew",
+            "params": [
+                {
+                    "name": "showAddNew",
+                    "description": "value",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 1776,
+            "description": "Used to set whether to show delete button for each entry in module",
+            "itemtype": "method",
+            "name": "setShowDelete",
+            "params": [
+                {
+                    "name": "val",
+                    "description": "value",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 1786,
+            "description": "Used to set whether to show edit button for each entry in module",
+            "itemtype": "method",
+            "name": "setShowEdit",
+            "params": [
+                {
+                    "name": "val",
+                    "description": "value",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 1796,
+            "description": "Used to set whether to show save button in form",
+            "itemtype": "method",
+            "name": "setShowSave",
+            "params": [
+                {
+                    "name": "val",
+                    "description": "value",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 1808,
+            "description": "Used to set whether to show cancel button in form",
+            "itemtype": "method",
+            "name": "setShowCancel",
+            "params": [
+                {
+                    "name": "val",
+                    "description": "value",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 1818,
+            "description": "Datatable option array will be extended with associative array provided here",
+            "itemtype": "method",
+            "name": "getCustomTableParams",
+            "params": [
+                {
+                    "name": "val",
+                    "description": "value",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 1834,
+            "description": "This return html for action buttons in each row. Override this method if you need to make changes to action buttons.",
+            "itemtype": "method",
+            "name": "getActionButtonsHtml",
+            "params": [
+                {
+                    "name": "id",
+                    "description": "id of the row",
+                    "type": "Int"
+                },
+                {
+                    "name": "data",
+                    "description": "data for the row",
+                    "type": "Array"
+                }
+            ],
+            "return": {
+                "description": "html for action buttons",
+                "type": "String"
+            },
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 1865,
+            "description": "Generates a random string",
+            "itemtype": "method",
+            "name": "generateRandom",
+            "params": [
+                {
+                    "name": "length",
+                    "description": "required length of the string",
+                    "type": "Int"
+                }
+            ],
+            "return": {
+                "description": "random string",
+                "type": "String"
+            },
+            "class": "Base.js"
+        },
+        {
+            "file": "src\\api\\Base.js",
+            "line": 1939,
+            "description": "Override this method in a module to provide the help link for the module. Help link of the module on frontend will get updated with this.",
+            "itemtype": "method",
+            "name": "getHelpLink",
+            "return": {
+                "description": "help link",
+                "type": "String"
+            },
             "class": "Base.js"
         },
         {
@@ -949,6 +1477,30 @@
         {
             "message": "replacing incorrect tag: returns with return",
             "line": " src\\api\\Base.js:148"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\api\\Base.js:801"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\api\\Base.js:811"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\api\\Base.js:924"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\api\\Base.js:1834"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\api\\Base.js:1865"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\api\\Base.js:1939"
         },
         {
             "message": "Missing item type\nAuthor: Thilina Hasantha",

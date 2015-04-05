@@ -193,8 +193,8 @@ IceHRMBase.method(&#x27;setGoogleAnalytics&#x27; , function(ga) {
 });
 
 /**
- * If this method returned false the action buttons in data table for modules will not be displayed
- * Override this method in module lib.js to change behaviour
+ * If this method returned false the action buttons in data table for modules will not be displayed.
+ * Override this method in module lib.js to hide action buttons
  * @method showActionButtons
  * @param permission {String}
  * @example
@@ -320,9 +320,27 @@ IceHRMBase.method(&#x27;initFieldMasterData&#x27; , function(callback, loadAllCa
 	}
 });
 
+/**
+ * Pass true to this method after creating module JS object to open new/edit entry form for the module on a popup.
+ * @method setShowFormOnPopup
+ * @param val {Boolean}
+ * @example
+ * 	modJs.subModJsList[&#x27;tabCandidateApplication&#x27;] = new CandidateApplicationAdapter(&#x27;Application&#x27;,&#x27;CandidateApplication&#x27;,{&quot;candidate&quot;:data.id});
+ *	modJs.subModJsList[&#x27;tabCandidateApplication&#x27;].setShowFormOnPopup(true);
+ */
+
 IceHRMBase.method(&#x27;setShowFormOnPopup&#x27; , function(val) {
 	this.showFormOnPopup = val;
 });
+
+/**
+ * Set this to true to if you need the datatable to load data page by page instead of loading all data at once.
+ * @method setRemoteTable
+ * @param val {Boolean}
+ * @example
+ * 	modJs.subModJsList[&#x27;tabCandidateApplication&#x27;] = new CandidateApplicationAdapter(&#x27;Application&#x27;,&#x27;CandidateApplication&#x27;,{&quot;candidate&quot;:data.id});
+ *	modJs.subModJsList[&#x27;tabCandidateApplication&#x27;].setRemoteTable(true);
+ */
 
 IceHRMBase.method(&#x27;setRemoteTable&#x27; , function(val) {
 	this.createRemoteTable = val;
@@ -489,6 +507,12 @@ IceHRMBase.method(&#x27;getTableTopButtonHtml&#x27;, function() {
 	return html;
 });
 
+/**
+ * Create the data table on provided element id
+ * @method createTable
+ * @param val {Boolean}
+ */
+
 IceHRMBase.method(&#x27;createTable&#x27;, function(elementId) {
 	
 	if(this.getRemoteTable()){
@@ -564,6 +588,12 @@ IceHRMBase.method(&#x27;createTable&#x27;, function(elementId) {
 	$(&#x27;.tableActionButton&#x27;).tooltip();
 });
 
+/**
+ * Create a data table on provided element id which loads data page by page
+ * @method createTableServer
+ * @param val {Boolean}
+ */
+
 IceHRMBase.method(&#x27;createTableServer&#x27;, function(elementId) {
 	var that = this;
 	var headers = this.getHeaders();
@@ -630,7 +660,54 @@ IceHRMBase.method(&#x27;createTableServer&#x27;, function(elementId) {
 	$(&#x27;.tableActionButton&#x27;).tooltip();
 });
 
+/**
+ * This should be overridden in module lib.js classes to return module headers which are used to create the data table.
+ * @method getHeaders
+ * @example
+	SettingAdapter.method(&#x27;getHeaders&#x27;, function() {
+  		return [
+			{ &quot;sTitle&quot;: &quot;ID&quot; ,&quot;bVisible&quot;:false},
+			{ &quot;sTitle&quot;: &quot;Name&quot; },
+			{ &quot;sTitle&quot;: &quot;Value&quot;},
+			{ &quot;sTitle&quot;: &quot;Details&quot;}
+		];
+		});
+ */
 IceHRMBase.method(&#x27;getHeaders&#x27;, function() {
+	
+});
+
+
+/**
+ * This should be overridden in module lib.js classes to return module field values which are used to create the data table.
+ * @method getDataMapping
+ * @example
+	SettingAdapter.method(&#x27;getDataMapping&#x27;, function() {
+	return [
+	        &quot;id&quot;,
+	        &quot;name&quot;,
+	        &quot;value&quot;,
+	        &quot;description&quot;
+	];
+	});
+ */
+
+IceHRMBase.method(&#x27;getDataMapping&#x27;, function() {
+
+});
+
+/**
+ * This should be overridden in module lib.js classes to return module from fields which are used to create the add/edit form and also used for initializing select box values in form.
+ * @method getFormFields
+ * @example
+	SettingAdapter.method(&#x27;getFormFields&#x27;, function() {
+	return [
+	        [ &quot;id&quot;, {&quot;label&quot;:&quot;ID&quot;,&quot;type&quot;:&quot;hidden&quot;}],
+	        [ &quot;value&quot;, {&quot;label&quot;:&quot;Value&quot;,&quot;type&quot;:&quot;text&quot;,&quot;validation&quot;:&quot;none&quot;}]
+	];
+	});
+ */
+IceHRMBase.method(&#x27;getFormFields&#x27;, function() {
 	
 });
 
@@ -638,14 +715,27 @@ IceHRMBase.method(&#x27;getTableData&#x27;, function() {
 	
 });
 
-IceHRMBase.method(&#x27;getFormFields&#x27;, function() {
-	
-});
-
+/**
+ * This can be overridden in module lib.js classes inorder to show a filter form
+ * @method getFilters
+ * @example
+	EmployeeAdapter.method(&#x27;getFilters&#x27;, function() {
+		return [
+		        [ &quot;job_title&quot;, {&quot;label&quot;:&quot;Job Title&quot;,&quot;type&quot;:&quot;select2&quot;,&quot;allow-null&quot;:true,&quot;null-label&quot;:&quot;All Job Titles&quot;,&quot;remote-source&quot;:[&quot;JobTitle&quot;,&quot;id&quot;,&quot;name&quot;]}],
+		        [ &quot;department&quot;, {&quot;label&quot;:&quot;Department&quot;,&quot;type&quot;:&quot;select2&quot;,&quot;allow-null&quot;:true,&quot;null-label&quot;:&quot;All Departments&quot;,&quot;remote-source&quot;:[&quot;CompanyStructure&quot;,&quot;id&quot;,&quot;title&quot;]}],
+		        [ &quot;supervisor&quot;, {&quot;label&quot;:&quot;Supervisor&quot;,&quot;type&quot;:&quot;select2&quot;,&quot;allow-null&quot;:true,&quot;null-label&quot;:&quot;Anyone&quot;,&quot;remote-source&quot;:[&quot;Employee&quot;,&quot;id&quot;,&quot;first_name+last_name&quot;]}]
+		];
+	});
+ */
 IceHRMBase.method(&#x27;getFilters&#x27;, function() {
 	return null;
 });
 
+/**
+ * Show the edit form for an item
+ * @method edit
+ * @param id {int} id of the item to edit
+ */
 IceHRMBase.method(&#x27;edit&#x27;, function(id) {
 	this.currentId = id;
 	this.getElement(id,[]);
@@ -674,6 +764,12 @@ IceHRMBase.method(&#x27;renderModelFromDom&#x27;, function(id,header,element) {
 	$(&#x27;#&#x27;+id+&#x27;ModelBody&#x27;).append(element);
 });
 
+/**
+ * Delete an item
+ * @method deleteRow
+ * @param id {int} id of the item to edit
+ */
+
 IceHRMBase.method(&#x27;deleteRow&#x27;, function(id) {
 	this.deleteParams[&#x27;id&#x27;] = id;
 	this.renderModel(&#x27;delete&#x27;,&quot;Confirm Deletion&quot;,&quot;Are you sure you want to delete this item ?&quot;);
@@ -681,6 +777,17 @@ IceHRMBase.method(&#x27;deleteRow&#x27;, function(id) {
 	
 });
 
+/**
+ * Show a popup with message
+ * @method showMessage
+ * @param title {String} title of the message box
+ * @param message {String} message
+ * @param closeCallback {Function} this will be called once the dialog is closed (optional)
+ * @param closeCallback {Function} data to pass to close callback (optional)
+ * @param isPlain {Boolean} if true buttons are not shown (optional / default = true)
+ * @example
+ * 	this.showMessage(&quot;Error Occured while Applying Leave&quot;, callBackData);
+ */
 IceHRMBase.method(&#x27;showMessage&#x27;, function(title,message,closeCallback,closeCallbackData, isPlain) {
 	var that = this;
 	var modelId = &quot;&quot;;
@@ -747,6 +854,12 @@ IceHRMBase.method(&#x27;closePlainMessage&#x27;, function() {
 	$(&#x27;#plainMessageModel&#x27;).modal(&#x27;hide&#x27;);
 });
 
+
+/**
+ * Create or edit an element 
+ * @method save
+ */
+
 IceHRMBase.method(&#x27;save&#x27;, function() {
 	var validator = new FormValidation(this.getTableName()+&quot;_submit&quot;,true,{&#x27;ShowPopup&#x27;:false,&quot;LabelErrorClass&quot;:&quot;error&quot;});
 	if(validator.checkValues()){
@@ -767,8 +880,39 @@ IceHRMBase.method(&#x27;save&#x27;, function() {
 	}
 });
 
+/**
+ * Override this method to inject attitional parameters or modify existing parameters retrived from add/edit form before sending to the server
+ * @method forceInjectValuesBeforeSave
+ * @param params {Array} keys and values in form
+ * @returns {Array} modified parameters
+ */
 IceHRMBase.method(&#x27;forceInjectValuesBeforeSave&#x27;, function(params) {
 	return params;
+});
+
+/**
+ * Override this method to do custom validations at client side
+ * @method doCustomValidation
+ * @param params {Array} keys and values in form
+ * @returns {Null or String} return null if validation success, returns error message if unsuccessful
+ * @example
+ 	EmployeeLeaveAdapter.method(&#x27;doCustomValidation&#x27;, function(params) {
+		try{
+			if(params[&#x27;date_start&#x27;] != params[&#x27;date_end&#x27;]){
+				var ds = new Date(params[&#x27;date_start&#x27;]);
+				var de = new Date(params[&#x27;date_end&#x27;]);
+				if(de &lt; ds){
+					return &quot;Start date should be earlier than end date of the leave period&quot;;
+				}
+			}
+		}catch(e){
+			
+		}
+	return null;
+});
+ */
+IceHRMBase.method(&#x27;doCustomValidation&#x27;, function(params) {
+	return null;
 });
 
 IceHRMBase.method(&#x27;filterQuery&#x27;, function() {
@@ -859,9 +1003,21 @@ IceHRMBase.method(&#x27;getFilterString&#x27;, function(filters) {
 	return str;
 });
 
+/**
+ * Override this method to do custom validations at client side for values selected in filters
+ * @method doCustomFilterValidation
+ * @param params {Array} keys and values in form
+ * @returns {Null or String} return null if validation success, returns error message if unsuccessful
+ */
 IceHRMBase.method(&#x27;doCustomFilterValidation&#x27;, function(params) {
 	return true;
 });
+
+
+/**
+ * Reset selected filters
+ * @method resetFilters
+ */
 
 IceHRMBase.method(&#x27;resetFilters&#x27;, function() {
 	this.filter = this.origFilter;
@@ -871,9 +1027,7 @@ IceHRMBase.method(&#x27;resetFilters&#x27;, function() {
 	this.get([]);
 });
 
-IceHRMBase.method(&#x27;doCustomValidation&#x27;, function(params) {
-	return null;
-});
+
 
 
 IceHRMBase.method(&#x27;showFilters&#x27;, function(object) {
@@ -949,11 +1103,21 @@ IceHRMBase.method(&#x27;showFilters&#x27;, function(object) {
 });
 
 
-
+/**
+ * Override this method in your module class to make changes to data fo the form before showing the form
+ * @method preRenderForm
+ * @param object {Array} keys value list for populating form		
+ */
 
 IceHRMBase.method(&#x27;preRenderForm&#x27;, function(object) {
 
 });
+
+/**
+ * Create the form
+ * @method renderForm
+ * @param object {Array} keys value list for populating form		
+ */
 
 IceHRMBase.method(&#x27;renderForm&#x27;, function(object) {
 	
@@ -1079,6 +1243,29 @@ IceHRMBase.method(&#x27;renderForm&#x27;, function(object) {
 	
 });
 
+/**
+ * Override this method in your module class to make changes to data fo the form after showing it
+ * @method postRenderForm
+ * @param object {Array} keys value list for populating form
+ * @param $tempDomObj {DOM} a DOM element for the form
+ * @example
+ * 	UserAdapter.method(&#x27;postRenderForm&#x27;, function(object, $tempDomObj) {
+		if(object == null || object == undefined){
+			$tempDomObj.find(&quot;#changePasswordBtn&quot;).remove();
+		}
+	});			
+ */
+
+IceHRMBase.method(&#x27;postRenderForm&#x27;, function(object, $tempDomObj) {
+
+});
+
+/**
+ * Convert data group field to HTML
+ * @method dataGroupToHtml
+ * @param val {String} value in the field
+ * @param field {Array} field meta data			
+ */
 
 IceHRMBase.method(&#x27;dataGroupToHtml&#x27;, function(val, field) {
 	var data = JSON.parse(val),
@@ -1126,7 +1313,11 @@ IceHRMBase.method(&#x27;dataGroupToHtml&#x27;, function(val, field) {
 	return html.wrap(&#x27;&lt;div&gt;&#x27;).parent().html();
 });
 
-
+/**
+ * Reset the DataGroup for a given field
+ * @method resetDataGroup
+ * @param field {Array} field meta data		
+ */
 IceHRMBase.method(&#x27;resetDataGroup&#x27;, function(field) {
 	$(&quot;#&quot;+field[0]).val(&quot;&quot;);
 	$(&quot;#&quot;+field[0]+&quot;_div&quot;).html(&quot;&quot;);
@@ -1361,9 +1552,13 @@ IceHRMBase.method(&#x27;deleteDataGroupItem&#x27;, function(id) {
 });
 
 
-IceHRMBase.method(&#x27;postRenderForm&#x27;, function(object, $tempDomObj) {
-
-});
+/**
+ * Fill a form with required values after showing it
+ * @method fillForm
+ * @param object {Array} form data		
+ * @param formId {String} id of the form
+ * @param formId {Array} field meta data
+ */
 
 IceHRMBase.method(&#x27;fillForm&#x27;, function(object, formId, fields) {
 	var placeHolderVal;
@@ -1458,6 +1653,11 @@ IceHRMBase.method(&#x27;fillForm&#x27;, function(object, formId, fields) {
 	    
 	}
 });
+
+/**
+ * Cancel edit or add new on modules
+ * @method cancel
+ */
 
 IceHRMBase.method(&#x27;cancel&#x27;, function() {
 	$(&quot;#&quot;+this.getTableName()+&#x27;Form&#x27;).hide();
@@ -1623,9 +1823,6 @@ IceHRMBase.method(&#x27;setFieldTemplates&#x27;, function(templates) {
 	this.fieldTemplates = templates;
 });
 
-IceHRMBase.method(&#x27;getDataMapping&#x27;, function() {
-
-});
 
 IceHRMBase.method(&#x27;getMetaFieldForRendering&#x27;, function(fieldName) {
 	return &quot;&quot;;
@@ -1639,29 +1836,73 @@ IceHRMBase.method(&#x27;getShowAddNew&#x27;, function() {
 	return this.showAddNew;
 });
 
+/**
+ * Override this method to change add new button label
+ * @method getAddNewLabel
+ */
+
 IceHRMBase.method(&#x27;getAddNewLabel&#x27;, function() {
 	return &quot;Add New&quot;;
 });
+
+/**
+ * Used to set whether to show the add new button for a module
+ * @method setShowAddNew
+ * @param showAddNew {Boolean} value
+ */
 
 IceHRMBase.method(&#x27;setShowAddNew&#x27;, function(showAddNew) {
 	this.showAddNew = showAddNew;
 });
 
+/**
+ * Used to set whether to show delete button for each entry in module
+ * @method setShowDelete
+ * @param val {Boolean} value
+ */
 IceHRMBase.method(&#x27;setShowDelete&#x27;, function(val) {
 	this.showDelete = val;
 });
+
+
+/**
+ * Used to set whether to show edit button for each entry in module
+ * @method setShowEdit
+ * @param val {Boolean} value
+ */
 
 IceHRMBase.method(&#x27;setShowEdit&#x27;, function(val) {
 	this.showEdit = val;
 });
 
+/**
+ * Used to set whether to show save button in form
+ * @method setShowSave
+ * @param val {Boolean} value
+ */
+
+
 IceHRMBase.method(&#x27;setShowSave&#x27;, function(val) {
 	this.showSave = val;
 });
 
+
+/**
+ * Used to set whether to show cancel button in form
+ * @method setShowCancel
+ * @param val {Boolean} value
+ */
+
 IceHRMBase.method(&#x27;setShowCancel&#x27;, function(val) {
 	this.showCancel = val;
 });
+
+/**
+ * Datatable option array will be extended with associative array provided here
+ * @method getCustomTableParams
+ * @param val {Boolean} value
+ */
+
 
 IceHRMBase.method(&#x27;getCustomTableParams&#x27;, function() {
 	return {};
@@ -1670,6 +1911,15 @@ IceHRMBase.method(&#x27;getCustomTableParams&#x27;, function() {
 IceHRMBase.method(&#x27;getActionButtons&#x27;, function(obj) {
 	return modJs.getActionButtonsHtml(obj.aData[0],obj.aData);
 });
+
+
+/**
+ * This return html for action buttons in each row. Override this method if you need to make changes to action buttons.
+ * @method getActionButtonsHtml
+ * @param id {int} id of the row
+ * @param data {Array} data for the row
+ * @returns {String} html for action buttons
+ */
 
 IceHRMBase.method(&#x27;getActionButtonsHtml&#x27;, function(id,data) {	
 	var editButton = &#x27;&lt;img class=&quot;tableActionButton&quot; src=&quot;_BASE_images/edit.png&quot; style=&quot;cursor:pointer;&quot; rel=&quot;tooltip&quot; title=&quot;Edit&quot; onclick=&quot;modJs.edit(_id_);return false;&quot;&gt;&lt;/img&gt;&#x27;;
@@ -1693,6 +1943,13 @@ IceHRMBase.method(&#x27;getActionButtonsHtml&#x27;, function(id,data) {
 	return html;
 });
 
+
+/**
+ * Generates a random string
+ * @method generateRandom
+ * @param length {int} required length of the string
+ * @returns {String} random string
+ */
 
 IceHRMBase.method(&#x27;generateRandom&#x27;, function(length) {
 	var d = new Date();
@@ -1760,6 +2017,12 @@ IceHRMBase.method(&#x27;getClientGMTOffset&#x27;, function () {
 	return std_time_offset;
 	
 });
+
+/**
+ * Override this method in a module to provide the help link for the module. Help link of the module on frontend will get updated with this.
+ * @method getHelpLink
+ * @returns {String} help link
+ */
 
 IceHRMBase.method(&#x27;getHelpLink&#x27;, function () {
 
