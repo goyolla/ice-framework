@@ -11,6 +11,6 @@
               "./src/api","./src/utils","./src/classes","./ext","./src/model"
     ],
     "extension": ".js,.php",
-    "outdir": "./output"
+    "outdir": "./build/app/docs"
   }
 }

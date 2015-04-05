@@ -18,7 +18,7 @@
 	
 	
  <target name="build"
-         depends="prepare,lint,phpunit,copyapp,release"
+         depends="prepare,lint,phpunit,yuidoc,copyapp,release"
          description=""/>
 	
 <target name="buildlocal"
@@ -206,11 +206,13 @@
 <target name="phpdox"
          depends=""
          description="Generate project documentation using phpDox">
-  <exec executable="${toolsdir}phpdox"/>
-	<exclude mask="**adodb512**" />
-	<exclude mask="**composer**" />
  </target>
 	
+<target name="yuidoc"
+         depends=""
+         description="Generate project documentation using yuidoc">
+ </target>
+
 
 
 <target name="copyapp"
