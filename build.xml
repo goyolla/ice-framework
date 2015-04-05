@@ -211,6 +211,8 @@
 <target name="yuidoc"
          depends=""
          description="Generate project documentation using yuidoc">
+	<exec executable="yuidoc">
+	</exec>
  </target>
 
 
