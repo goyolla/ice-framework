@@ -20,6 +20,12 @@ Original work Copyright (c) 2012 [Gamonoid Media Pvt. Ltd]
 Developer: Thilina Hasantha (thilina.hasantha[at]gmail.com / facebook.com/thilinah)
  */
 
+
+
+/**
+ * The base class for providing core functions to all module classes.
+ * @class Base.js
+ */
 function IceHRMBase() {
 	this.deleteParams = {};
 	this.createRemoteTable = false;
@@ -51,11 +57,15 @@ this.permissions = {};
 
 this.baseUrl = null;
 
-
 IceHRMBase.method('init' , function(appName, currentView, dataUrl, permissions) {
 	
 });
 
+/**
+ * Some browsers do not support sending JSON in get parameters. Set this to true to avoid sending JSON
+ * @method setNoJSONRequests
+ * @param val {Boolean}
+ */
 IceHRMBase.method('setNoJSONRequests' , function(val) {
 	this.noJSONRequests = val;
 });
@@ -65,6 +75,13 @@ IceHRMBase.method('setPermissions' , function(permissions) {
 	this.permissions = permissions;
 });
 
+/**
+ * Check if the current user has a permission
+ * @method checkPermission
+ * @param permission {String}
+ * @example
+ * 	this.checkPermission("Upload/Delete Profile Image")
+ */
 IceHRMBase.method('checkPermission' , function(permission) {
 	if(this.permissions[permission] == undefined || this.permissions[permission] == null || this.permissions[permission] == "Yes"){
 		return "Yes";
@@ -93,6 +110,16 @@ IceHRMBase.method('setGoogleAnalytics' , function(ga) {
 	this.ga = ga;
 });
 
+/**
+ * If this method returned false the action buttons in data table for modules will not be displayed.
+ * Override this method in module lib.js to hide action buttons
+ * @method showActionButtons
+ * @param permission {String}
+ * @example
+ * 	EmployeeLeaveEntitlementAdapter.method('showActionButtons' , function() {
+ *  	return false;
+ *	});
+ */
 IceHRMBase.method('showActionButtons' , function() {
 	return true;
 });
@@ -113,15 +140,36 @@ IceHRMBase.method('trackEvent' , function(action, label, value) {
 	
 });
 
+
 IceHRMBase.method('setCurrentProfile' , function(currentProfile) {
 	this.currentProfile = currentProfile;
 });
+
+/**
+ * Get the current profile
+ * @method getCurrentProfile
+ * @returns Profile of the current user if the profile is not switched if not switched profile
+ */
 
 IceHRMBase.method('getCurrentProfile' , function() {
 	return this.currentProfile;
 });
 
-
+/**
+ * Retrive data required to create select boxes for add new /edit forms for a given module. This is called when loading the module
+ * @method initFieldMasterData
+ * @param callback {Function} call this once loading completed
+ * @param callback {Function} call this once all field loading completed. This indicate that the form can be displayed saftly
+ * @example
+ * 	ReportAdapter.method('renderForm', function(object) {
+ *		var that = this;
+ *		this.processFormFieldsWithObject(object);
+ *		var cb = function(){
+ *			that.uber('renderForm',object);
+ *		};
+ *		this.initFieldMasterData(cb);
+ *      });
+ */
 IceHRMBase.method('initFieldMasterData' , function(callback, loadAllCallback) {
 	var values;
 	if(this.showAddNew == undefined || this.showAddNew == null){

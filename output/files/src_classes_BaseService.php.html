@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src\classes\BaseService.php - ice-framework</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="icon" href="../assets/favicon.ico">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+                <h1><img src="http://ice-framework.gamonoid.com/logo.png" title="ice-framework"></h1>
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 1.0</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+                    <h2 class="off-left">APIs</h2>
+                    <div id="api-tabview" class="tabview">
+                        <ul class="tabs">
+                            <li><a href="#api-classes">Classes</a></li>
+                            <li><a href="#api-modules">Modules</a></li>
+                        </ul>
+                
+                        <div id="api-tabview-filter">
+                            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                        </div>
+                
+                        <div id="api-tabview-panel">
+                            <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/Base.js.html">Base.js</a></li>
+                                <li><a href="../classes/BaseService.html">BaseService</a></li>
+                            </ul>
+                
+                            <ul id="api-modules" class="apis modules">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+                    Show:
+                    <label for="api-show-inherited">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </div>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<h1 class="file-heading">File: src\classes\BaseService.php</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&lt;?php
+
+/*
+This file is part of Ice Framework.
+
+Ice Framework is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Ice Framework is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Ice Framework. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+
+------------------------------------------------------------------
+
+Original work Copyright (c) 2012 [Gamonoid Media Pvt. Ltd]  
+Developer: Thilina Hasantha (thilina.hasantha[at]gmail.com / facebook.com/thilinah)
+ */
+
+
+/**
+ * BaseService class serves as the core logic for managing the application and for handling most 
+ * of the tasks related to retriving and saving data. This can be referred within any module using
+ * BaseService::getInstance()
+ * 
+ @class BaseService
+ */
+
+class BaseService{
+	
+	var $nonDeletables = array();
+	var $errros = array();
+	public $userTables = array();
+	var $currentUser = null;
+	var $db = null;
+	var $auditManager = null;
+	var $notificationManager = null;
+	var $settingsManager = null;
+	var $fileFields = null;
+	var $moduleManagers = null;
+	var $emailSender = null;
+	
+	private static $me = null;
+	
+	private function __construct(){
+	
+	}
+	
+	/**
+	 * Get the only instance created for BaseService
+	 * @method getInstance
+	 * @return {BaseService} BaseService object
+	 */
+	
+	public static function getInstance(){
+		if(empty(self::$me)){
+			self::$me = new BaseService();
+		}
+
+		return self::$me;
+	}
+	
+	/**
+	 * Get an array of objects from database
+	 * @method get
+	 * @param $table {String} model class name of the table to retive data (e.g for Users table model class name is User)
+	 * @param $mappingStr {String} a JSON string to specify fields of the $table should be mapped to other tables (e.g {&quot;profile&quot;:[&quot;Profile&quot;,&quot;id&quot;,&quot;first_name+last_name&quot;]} : this is how the profile field in Users table is mapped to Profile table. In this case users profile field will get filled by Profile first name and last name. The original value in User-&gt;profile field will get moved to User-&gt;profile_id)
+	 * @param $filterStr {String} a JSON string to specify the ordering of the items (e.g {&quot;job_title&quot;:&quot;2&quot;,&quot;department&quot;:&quot;2&quot;}  - this will select only items having job_title = 2 and department = 2)
+	 * @param $orderBy {String} a string to specify the ordering (e.g in_time desc)
+	 * @param string $limit {String} a string to specify the limit (e.g limit 2)
+	 * @return {Array} an array of objects of type $table
+	 */
+	public function get($table,$mappingStr = null, $filterStr = null, $orderBy = null, $limit = null){
+		
+		if(!empty($mappingStr)){
+		$map = json_decode($mappingStr);
+		}
+		$obj = new $table();
+		
+		$this-&gt;checkSecureAccess(&quot;get&quot;,$obj);
+		
+		$query = &quot;&quot;;
+		$queryData = array();
+		if(!empty($filterStr)){
+			$filter = json_decode($filterStr, true);
+			
+			if(!empty($filter)){
+				foreach($filter as $k=&gt;$v){
+					LogManager::getInstance()-&gt;info($filterStr);
+					if($v == &#x27;__myid__&#x27;){
+						$v = $this-&gt;getCurrentProfileId();
+					}
+					$query.=&quot; and &quot;.$k.&quot;=?&quot;;
+					$queryData[] = $v;
+				}	
+			}	
+		}
+		
+		if(empty($orderBy)){
+			$orderBy = &quot;&quot;;
+		}else{
+			$orderBy = &quot; ORDER BY &quot;.$orderBy;
+		}
+		
+		
+		if(in_array($table, $this-&gt;userTables)){
+			$cemp = $this-&gt;getCurrentProfileId();
+			if(!empty($cemp)){
+				$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+				$list = $obj-&gt;Find($signInMappingField.&quot; = ?&quot;.$query.$orderBy, array_merge(array($cemp),$queryData));	
+			}else{
+				$list = array();
+			}
+					
+		}else{
+			$list = $obj-&gt;Find(&quot;1=1&quot;.$query.$orderBy,$queryData);	
+		}	
+		
+		if(!empty($mappingStr) &amp;&amp; count($map)&gt;0){
+			$list = $this-&gt;populateMapping($list, $map);
+		}
+
+		return $list;
+	}
+	
+	/**
+	 * An extention of get method for the use of data tables with ability to search
+	 * @method getData
+	 * @param $table {String} model class name of the table to retive data (e.g for Users table model class name is User)
+	 * @param $mappingStr {String} a JSON string to specify fields of the $table should be mapped to other tables (e.g {&quot;profile&quot;:[&quot;Profile&quot;,&quot;id&quot;,&quot;first_name+last_name&quot;]} : this is how the profile field in Users table is mapped to Profile table. In this case users profile field will get filled by Profile first name and last name. The original value in User-&gt;profile field will get moved to User-&gt;profile_id)
+	 * @param $filterStr {String} a JSON string to specify the ordering of the items (e.g {&quot;job_title&quot;:&quot;2&quot;,&quot;department&quot;:&quot;2&quot;}  - this will select only items having job_title = 2 and department = 2)
+	 * @param $orderBy {String} a string to specify the ordering (e.g in_time desc)
+	 * @param string $limit {String} a string to specify the limit (e.g limit 2)
+	 * @param string $searchColumns {String} a JSON string to specify names of searchable fields (e.g [&quot;id&quot;,&quot;employee_id&quot;,&quot;first_name&quot;,&quot;last_name&quot;,&quot;mobile_phone&quot;,&quot;department&quot;,&quot;gender&quot;,&quot;supervisor&quot;])
+	 * @param string $searchTerm {String} a string to specify term to search
+	 * @param string $isSubOrdinates {Boolean} a Boolean to specify if we only need to retive subordinates. Any item is a subordinate item if the item has &quot;profile&quot; field defined and the value of &quot;profile&quot; field is equal to id of one of the subordinates of currenly logged in profile id. (Any Profile is a subordinate of curently logged in Profile if the supervisor field of a Profile is set to the id of currently logged in Profile)
+	 * @param string $skipProfileRestriction {Boolean} default if false - TODO - I&#x27;ll explain this later
+	 * @return {Array} an array of objects of type $table
+	 */
+	public function getData($table,$mappingStr = null, $filterStr = null, $orderBy = null, $limit = null, $searchColumns = null, $searchTerm = null, $isSubOrdinates = false, $skipProfileRestriction = false){
+		if(!empty($mappingStr)){
+		$map = json_decode($mappingStr);
+		}
+		$obj = new $table();
+		$this-&gt;checkSecureAccess(&quot;get&quot;,$obj);
+		$query = &quot;&quot;;
+		$queryData = array();
+		if(!empty($filterStr)){
+			$filter = json_decode($filterStr);
+			if(!empty($filter)){
+				foreach($filter as $k=&gt;$v){
+					$query.=&quot; and &quot;.$k.&quot;=?&quot;;
+					$queryData[] = $v;
+				}	
+			}	
+		}
+		
+		
+		if(!empty($searchTerm) &amp;&amp; !empty($searchColumns)){
+			$searchColumnList = json_decode($searchColumns);
+			$tempQuery = &quot; and (&quot;;
+			foreach($searchColumnList as $col){
+				
+				if($tempQuery != &quot; and (&quot;){
+					$tempQuery.=&quot; or &quot;;	
+				}
+				$tempQuery.=$col.&quot; like ?&quot;;
+				$queryData[] = &quot;%&quot;.$searchTerm.&quot;%&quot;;
+			}	
+			$query.= $tempQuery.&quot;)&quot;;	
+		}
+		
+		if(empty($orderBy)){
+			$orderBy = &quot;&quot;;
+		}else{
+			$orderBy = &quot; ORDER BY &quot;.$orderBy;
+		}
+		
+		if(empty($limit)){
+			$limit = &quot;&quot;;	
+		}
+		
+		
+		
+		if(in_array($table, $this-&gt;userTables) &amp;&amp; !$skipProfileRestriction){
+			
+			$cemp = $this-&gt;getCurrentProfileId();
+			if(!empty($cemp)){
+				if(!$isSubOrdinates){
+					array_unshift($queryData, $cemp);
+					$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+					$list = $obj-&gt;Find($signInMappingField.&quot; = ?&quot;.$query.$orderBy.$limit, $queryData);
+				}else{
+					$profileClass = ucfirst(SIGN_IN_ELEMENT_MAPPING_FIELD_NAME);
+					$subordinate = new $profileClass();
+					$subordinates = $subordinate-&gt;Find(&quot;supervisor = ?&quot;,array($cemp));
+					$subordinatesIds = &quot;&quot;;
+					foreach($subordinates as $sub){
+						if($subordinatesIds != &quot;&quot;){
+							$subordinatesIds.=&quot;,&quot;;
+						}
+						$subordinatesIds.=$sub-&gt;id;
+					}
+					$subordinatesIds.=&quot;&quot;;
+					$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+					$list = $obj-&gt;Find($signInMappingField.&quot; in (&quot;.$subordinatesIds.&quot;) &quot;.$query.$orderBy.$limit, $queryData);
+				}
+					
+			}else{
+				$list = array();
+			}
+					
+		}else{
+			$list = $obj-&gt;Find(&quot;1=1&quot;.$query.$orderBy.$limit,$queryData);
+		}	
+
+		
+		if(!empty($mappingStr) &amp;&amp; count($map)&gt;0){
+			$list = $this-&gt;populateMapping($list, $map);
+		}
+		
+		
+		return $list;
+	}
+	
+	
+	/**
+	 * Propulate field mappings for a given set of objects
+	 * @method populateMapping
+	 * @param $list {Array} array of model objects
+	 * @param $map {Array} an associative array of Mappings (e.g {&quot;profile&quot;:[&quot;Profile&quot;,&quot;id&quot;,&quot;first_name+last_name&quot;]})
+	 * @return {Array} array of populated objects
+	 */
+	
+	public function populateMapping($list,$map){
+		$listNew = array();
+		if(empty($list)){
+			return $listNew;
+		}
+		foreach($list as $item){
+			$item = $this-&gt;populateMappingItem($item, $map);
+			$listNew[] = $item;	
+		}
+		return 	$listNew;
+	}
+	
+	public function populateMappingItem($item,$map){
+		foreach($map as $k=&gt;$v){
+			$fTable = $v[0];
+			$tObj = new $fTable();
+			$tObj-&gt;Load($v[1].&quot;= ?&quot;,array($item-&gt;$k));
+			
+			if($tObj-&gt;$v[1] == $item-&gt;$k){
+				$v[2] = str_replace(&quot;+&quot;,&quot; &quot;,$v[2]);
+				$values = explode(&quot; &quot;, $v[2]);
+				if(count($values) == 1){
+					$idField = $k.&quot;_id&quot;;
+					$item-&gt;$idField = $item-&gt;$k;
+					$item-&gt;$k = $tObj-&gt;$v[2];	
+					
+				}else{
+					$objVal = &quot;&quot;;
+					foreach($values as $v){
+						if($objVal != &quot;&quot;){
+							$objVal .= &quot; &quot;;	
+						}
+						$objVal .= $tObj-&gt;$v;
+					}
+					$idField = $k.&quot;_id&quot;;
+					$item-&gt;$idField = $item-&gt;$k;
+					$item-&gt;$k = $objVal;
+				}
+			}	
+		}
+		return 	$item;
+	}
+	
+	/**
+	 * Retive one element from db
+	 * @method getElement
+	 * @param $table {String} model class name of the table to get data (e.g for Users table model class name is User)
+	 * @param $table {Integer} id of the item to get from $table 
+	 * @param $mappingStr {String} a JSON string to specify fields of the $table should be mapped to other tables (e.g {&quot;profile&quot;:[&quot;Profile&quot;,&quot;id&quot;,&quot;first_name+last_name&quot;]} : this is how the profile field in Users table is mapped to Profile table. In this case users profile field will get filled by Profile first name and last name. The original value in User-&gt;profile field will get moved to User-&gt;profile_id)
+	 * @param $skipSecurityCheck {Boolean} if true won&#x27;t check whether the user has access to that object
+	 * @return {Object} an object of type $table
+	 */
+	
+	public function getElement($table,$id,$mappingStr = null, $skipSecurityCheck = false){
+		$obj = new $table();
+		
+		
+		if(in_array($table, $this-&gt;userTables)){
+			$cemp = $this-&gt;getCurrentProfileId();
+			if(!empty($cemp)){
+				$obj-&gt;Load(&quot;id = ?&quot;, array($id));	
+			}else{
+			}
+					
+		}else{
+			$obj-&gt;Load(&quot;id = ?&quot;,array($id));
+		}
+		
+		if(!$skipSecurityCheck){
+			$this-&gt;checkSecureAccess(&quot;element&quot;,$obj);
+		}
+		
+		if(!empty($mappingStr)){
+			$map = json_decode($mappingStr);	
+		}
+		if($obj-&gt;id == $id){
+			if(!empty($mappingStr)){
+				foreach($map as $k=&gt;$v){
+					$fTable = $v[0];
+					$tObj = new $fTable();
+					$tObj-&gt;Load($v[1].&quot;= ?&quot;,array($obj-&gt;$k));
+					if($tObj-&gt;$v[1] == $obj-&gt;$k){
+						$name = $k.&quot;_Name&quot;;
+						$values = explode(&quot;+&quot;, $v[2]);
+						if(count($values) == 1){
+							$idField = $name.&quot;_id&quot;;
+							$obj-&gt;$idField = $obj-&gt;$name;
+							$obj-&gt;$name = $tObj-&gt;$v[2];	
+						}else{
+							$objVal = &quot;&quot;;
+							foreach($values as $v){
+								if($objVal != &quot;&quot;){
+									$objVal .= &quot; &quot;;	
+								}
+								$objVal .= $tObj-&gt;$v;
+							}
+							$idField = $name.&quot;_id&quot;;
+							$obj-&gt;$idField = $obj-&gt;$name;
+							$obj-&gt;$name = $objVal;
+						}
+					}	
+				}
+			}
+			return 	$obj;
+		}
+		return null;
+	}
+	
+	/**
+	 * Add an element to a given table
+	 * @method addElement
+	 * @param $table {String} model class name of the table to add data (e.g for Users table model class name is User)
+	 * @param $obj {Array} an associative array with field names and values for the new object. If the object id is not empty an existing object will be updated
+	 * @return {Object} newly added or updated element of type $table
+	 */
+	
+	public function addElement($table,$obj){
+		$isAdd = true;
+		$ele = new $table();
+		if(class_exists(&quot;ProVersion&quot;)){
+			$pro = new ProVersion();
+			$subscriptionTables = $pro-&gt;getSubscriptionTables();
+			if(in_array($table,$subscriptionTables)){
+				$resp = $pro-&gt;subscriptionCheck($obj);
+				if($resp-&gt;getStatus() != IceResponse::SUCCESS){
+					return $resp;
+				}
+			}
+		}
+		
+		if(!empty($obj[&#x27;id&#x27;])){
+			$isAdd = false;
+			$ele-&gt;Load(&#x27;id = ?&#x27;,array($obj[&#x27;id&#x27;]));	
+		}
+		
+		foreach($obj as $k=&gt;$v){
+			if($k == &#x27;id&#x27; || $k == &#x27;t&#x27; || $k == &#x27;a&#x27;){
+				continue;	
+			}
+			if($v == &quot;NULL&quot;){
+				$v = null;	
+			}
+			$ele-&gt;$k = $v;	
+		}
+		
+		
+		if(empty($obj[&#x27;id&#x27;])){	
+			if(in_array($table, $this-&gt;userTables)){
+				$cemp = $this-&gt;getCurrentProfileId();
+				if(!empty($cemp)){
+					$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+					$ele-&gt;$signInMappingField = $cemp;	
+				}else{
+					return new IceResponse(IceResponse::ERROR,&quot;Profile id is not set&quot;);
+				}		
+			}
+		}
+		
+		$this-&gt;checkSecureAccess(&quot;save&quot;,$ele);
+		
+		$resp =$ele-&gt;validateSave($ele);
+		if($resp-&gt;getStatus() != IceResponse::SUCCESS){
+			return $resp;
+		}
+		
+		if($isAdd){
+			if(empty($ele-&gt;created)){
+				$ele-&gt;created = date(&quot;Y-m-d H:i:s&quot;);
+			}
+		}
+		
+		if(empty($ele-&gt;updated)){
+			$ele-&gt;updated = date(&quot;Y-m-d H:i:s&quot;);
+		}
+		if($isAdd){
+			$ele = $ele-&gt;executePreSaveActions($ele)-&gt;getData();
+		}else{
+			$ele = $ele-&gt;executePreUpdateActions($ele)-&gt;getData();
+		}
+		
+		
+		$ok = $ele-&gt;Save();
+		if(!$ok){
+			
+			$error = $ele-&gt;ErrorMsg();
+			
+			LogManager::getInstance()-&gt;info($error);
+			
+			if($isAdd){
+				$this-&gt;audit(IceConstants::AUDIT_ERROR, &quot;Error occured while adding an object to &quot;.$table.&quot; \ Error: &quot;.$error);
+			}else{
+				$this-&gt;audit(IceConstants::AUDIT_ERROR, &quot;Error occured while editing an object in &quot;.$table.&quot; [id:&quot;.$ele-&gt;id.&quot;] \ Error: &quot;.$error);
+			}
+			return new IceResponse(IceResponse::ERROR,$this-&gt;findError($error));		
+		}
+		
+		if($isAdd){
+			$ele-&gt;executePostSaveActions($ele);
+			$this-&gt;audit(IceConstants::AUDIT_ADD, &quot;Added an object to &quot;.$table.&quot; [id:&quot;.$ele-&gt;id.&quot;]&quot;);
+		}else{
+			$ele-&gt;executePostUpdateActions($ele);
+			$this-&gt;audit(IceConstants::AUDIT_EDIT, &quot;Edited an object in &quot;.$table.&quot; [id:&quot;.$ele-&gt;id.&quot;]&quot;);
+		}
+		
+		return new IceResponse(IceResponse::SUCCESS,$ele);
+	}
+	
+	/**
+	 * Delete an element if not the $table and $id is defined as a non deletable
+	 * @method deleteElement
+	 * @param $table {String} model class name of the table to delete data (e.g for Users table model class name is User)
+	 * @param $id {Integer} id of the item to delete
+	 * @return NULL
+	 */
+	public function deleteElement($table,$id){
+		$fileFields = $this-&gt;fileFields;
+		$ele = new $table();
+		
+		$ele-&gt;Load(&#x27;id = ?&#x27;,array($id));
+
+		$this-&gt;checkSecureAccess(&quot;delete&quot;,$ele);
+		
+		if(isset($this-&gt;nonDeletables[$table])){
+			$nonDeletableTable = $this-&gt;nonDeletables[$table];
+			if(!empty($nonDeletableTable)){
+				foreach($nonDeletableTable as $field =&gt; $value){
+					if($ele-&gt;$field == $value){
+						return &quot;This item can not be deleted&quot;;
+					}
+				}
+			}	
+		}
+
+		$ok = $ele-&gt;Delete();
+		if(!$ok){
+			$error = $ele-&gt;ErrorMsg();
+			LogManager::getInstance()-&gt;info($error);
+			return $this-&gt;findError($error);	
+		}else{
+			//Backup
+			if($table == &quot;Profile&quot;){
+				$newObj = $this-&gt;cleanUpAdoDB($ele);
+				$dataEntryBackup = new DataEntryBackup();
+				$dataEntryBackup-&gt;tableType = $table;
+				$dataEntryBackup-&gt;data = json_encode($newObj);
+				$dataEntryBackup-&gt;Save();
+			}
+			
+			$this-&gt;audit(IceConstants::AUDIT_DELETE, &quot;Deleted an object in &quot;.$table.&quot; [id:&quot;.$ele-&gt;id.&quot;]&quot;);
+		}
+		
+		
+		
+		if(isset($fileFields[$table])){
+			foreach($fileFields[$table] as $k=&gt;$v){
+				if(!empty($ele-&gt;$k)){
+					FileService::getInstance()-&gt;deleteFileByField($ele-&gt;$k,$v);
+				}
+					
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Get associative array of by retriving data from $table using $key field ans key and $value field as value. Mainly used for getting data for populating option lists of select boxes when adding and editing items
+	 * @method getFieldValues
+	 * @param $table {String} model class name of the table to get data (e.g for Users table model class name is User)
+	 * @param $key {String} key field name
+	 * @param $value {String} value field name (multiple fileds cam be concatinated using +) - e.g first_name+last_name
+	 * @param $method {String} if not empty, use this menthod to get only a selected set of objects from db instead of retriving all objects. This method should be defined in class $table and should return an array of objects of type $table
+	 * @return {Array} associative array
+	 */
+	
+	public function getFieldValues($table,$key,$value,$method){
+		
+		$values = explode(&quot;+&quot;, $value);
+		
+		$ret = array();
+		$ele = new $table();
+		if(!empty($method) &amp;&amp; method_exists($ele,$method)){
+			$list = $ele-&gt;$method();
+		}else{
+			$list = $ele-&gt;Find(&#x27;1 = 1&#x27;,array());
+		}
+		
+		foreach($list as $obj){
+			if(count($values) == 1){
+				$ret[$obj-&gt;$key] = $obj-&gt;$value;	
+			}else{
+				$objVal = &quot;&quot;;
+				foreach($values as $v){
+					if($objVal != &quot;&quot;){
+						$objVal .= &quot; &quot;;	
+					}
+					$objVal .= $obj-&gt;$v;
+				}
+				$ret[$obj-&gt;$key] = $objVal;
+			}
+		}	
+		return $ret;
+	}
+	
+	public function setNonDeletables($table, $field, $value){
+		if(!isset($this-&gt;nonDeletables[$table])){
+			$this-&gt;nonDeletables[$table] = array();	
+		}
+		$this-&gt;nonDeletables[$table][$field] = $value;
+	}
+	
+	public function setSqlErrors($errros){
+		$this-&gt;errros = $errros;	
+	}
+	
+	public function setUserTables($userTables){
+		$this-&gt;userTables = $userTables;	
+	}
+	
+	/**
+	 * Set the current logged in user
+	 * @method setCurrentUser
+	 * @param $currentUser {User} the current logged in user
+	 * @return None
+	 */
+	
+	public function setCurrentUser($currentUser){
+		$this-&gt;currentUser = $currentUser;	
+	}
+	
+	public function findError($error){
+		foreach($this-&gt;errros as $k=&gt;$v){
+			if(strstr($error, $k)){
+				return $v;
+			}else{
+				$keyParts = explode(&quot;|&quot;, $k);
+				if(count($keyParts) &gt;= 2){
+					if(strstr($error, $keyParts[0]) &amp;&amp; strstr($error, $keyParts[1])){
+						return $v;
+					}
+				}
+			}
+		}	
+		return $error;
+	}
+	
+	/**
+	 * Get the currently logged in user from session
+	 * @method getCurrentUser
+	 * @return {User} currently logged in user from session
+	 */
+	
+	public function getCurrentUser(){
+		$user = SessionUtils::getSessionObject(&#x27;user&#x27;);
+		return $user;
+	}
+	
+	/**
+	 * Get the Profile id attached to currently logged in user. if the user is switched, this will return the id of switched Profile instead of currently logged in users Prifile id
+	 * @method getCurrentProfileId
+	 * @return {Integer}
+	 */
+	public function getCurrentProfileId(){
+		if (!class_exists(&#x27;SessionUtils&#x27;)) {
+			include (APP_BASE_PATH.&quot;include.common.php&quot;);
+		}
+		$adminEmpId = SessionUtils::getSessionObject(&#x27;admin_current_profile&#x27;);
+		$user = SessionUtils::getSessionObject(&#x27;user&#x27;);
+		if(empty($adminEmpId) &amp;&amp; !empty($user)){
+			$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+			return $user-&gt;$signInMappingField;
+		}
+		return $adminEmpId;
+	}
+	
+	/**
+	 * Get User by profile id
+	 * @method getUserFromProfileId
+	 * @param $profileId {Integer} profile id
+	 * @return {User} user object
+	 */
+	
+	public function getUserFromProfileId($profileId){
+		$user = new User();
+		$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+		$user-&gt;load($signInMappingField.&quot; = ?&quot;,array($profileId));
+		if($user-&gt;$signInMappingField == $profileId){
+			return $user;
+		}
+		return null;
+	}
+
+	
+	public function setCurrentAdminProfile($profileId){
+		if (!class_exists(&#x27;SessionUtils&#x27;)) {
+			include (APP_BASE_PATH.&quot;include.common.php&quot;);
+		}
+		
+		if($profileId == &quot;-1&quot;){
+			SessionUtils::saveSessionObject(&#x27;admin_current_profile&#x27;,null);
+			return;
+		}
+		
+		if($this-&gt;currentUser-&gt;user_level == &#x27;Admin&#x27;){
+			SessionUtils::saveSessionObject(&#x27;admin_current_profile&#x27;,$profileId);
+					
+		}else if($this-&gt;currentUser-&gt;user_level == &#x27;Manager&#x27;){
+			$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+			$signInMappingFieldTable = ucfirst($signInMappingField);
+			$subordinate = new $signInMappingFieldTable();
+			$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+			$subordinates = $subordinate-&gt;Find(&quot;supervisor = ?&quot;,array($this-&gt;currentUser-&gt;$signInMappingField));
+			$subFound = false;
+			foreach($subordinates as $sub){
+				if($sub-&gt;id == $profileId){
+					$subFound = true;
+					break;
+				}
+			}
+			
+			if(!$subFound){
+				return;	
+			}
+			
+			SessionUtils::saveSessionObject(&#x27;admin_current_profile&#x27;,$profileId);
+			
+		}
+	}
+	
+	public function cleanUpAdoDB($obj){
+		unset($obj-&gt;_table);	
+		unset($obj-&gt;_dbat);	
+		unset($obj-&gt;_tableat);	
+		unset($obj-&gt;_where);	
+		unset($obj-&gt;_saved);	
+		unset($obj-&gt;_lasterr);	
+		unset($obj-&gt;_original);	
+		unset($obj-&gt;foreignName);	
+		
+		return $obj;
+	}
+	
+	public function setDB($db){
+		$this-&gt;db = $db;
+	}
+	
+	public function getDB(){
+		return $this-&gt;db;
+	}
+	
+	public function checkSecureAccessOld($type,$object){
+		
+		$accessMatrix = array();
+		if($this-&gt;currentUser-&gt;user_level == &#x27;Admin&#x27;){
+			$accessMatrix = $object-&gt;getAdminAccess();
+			if (in_array($type, $accessMatrix)) {
+				return true;
+			}
+		}else if($this-&gt;currentUser-&gt;user_level == &#x27;Manager&#x27;){
+			$accessMatrix = $object-&gt;getManagerAccess();
+			if (in_array($type, $accessMatrix)) {
+				return true;
+			}else{
+				$accessMatrix = $object-&gt;getUserOnlyMeAccess();
+				$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+				if (in_array($type, $accessMatrix) &amp;&amp; $_REQUEST[$object-&gt;getUserOnlyMeAccessField()] == $this-&gt;currentUser-&gt;$signInMappingField) {
+					return true;	
+				}
+				
+				if (in_array($type, $accessMatrix)) {
+					
+					$field = $object-&gt;getUserOnlyMeAccessField();
+					$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+					if($this-&gt;currentUser-&gt;$signInMappingField.&quot;&quot; == $object-&gt;$field){
+						return true;
+					}
+					
+				}
+			}
+			
+		}else{
+			$accessMatrix = $object-&gt;getUserAccess();
+			if (in_array($type, $accessMatrix)) {
+				return true;
+			}else{
+				$accessMatrix = $object-&gt;getUserOnlyMeAccess();
+				$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+				if (in_array($type, $accessMatrix) &amp;&amp; $_REQUEST[$object-&gt;getUserOnlyMeAccessField()] == $this-&gt;currentUser-&gt;$signInMappingField) {
+					return true;	
+				}
+				
+				if (in_array($type, $accessMatrix)) {
+					
+					$field = $object-&gt;getUserOnlyMeAccessField();
+					$signInMappingField = SIGN_IN_ELEMENT_MAPPING_FIELD_NAME;
+					if($this-&gt;currentUser-&gt;$signInMappingField.&quot;&quot; == $object-&gt;$field){
+						return true;
+					}
+					
+				}
+			}
+		}
+		
+		$ret[&#x27;status&#x27;] = &quot;ERROR&quot;;
+		$ret[&#x27;message&#x27;] = &quot;Access violation&quot;;
+		echo json_encode($ret);
+		exit();
+	}
+	
+	/**
+	 * Use user level security functions defined in model classes to check whether a given action type is allowed to be executed by the current user on a given object
+	 * @method checkSecureAccess
+	 * @param $type {String} Action type
+	 * @param $object {Object} object to test access
+	 * @return {Boolen} true or exit
+	 */
+	
+	public function checkSecureAccess($type,$object){
+		
+		$accessMatrix = array();
+		
+		//Construct permission method
+		$permMethod = &quot;get&quot;.$this-&gt;currentUser-&gt;user_level.&quot;Access&quot;;
+		$accessMatrix = $object-&gt;$permMethod();
+		if (in_array($type, $accessMatrix)) {
+			//The user has required permission, so return true
+			return true;
+		}else{
+			//Now we need to check whther the user has access to his own records
+			$accessMatrix = $object-&gt;getUserOnlyMeAccess();
+			
+			$userOnlyMeAccessRequestField = $object-&gt;getUserOnlyMeAccessRequestField();
+			
+			//This will check whether user can access his own records using a value in request
+			if(isset($_REQUEST[$object-&gt;getUserOnlyMeAccessField()]) &amp;&amp; isset($this-&gt;currentUser-&gt;$userOnlyMeAccessRequestField)){
+				if (in_array($type, $accessMatrix) &amp;&amp; $_REQUEST[$object-&gt;getUserOnlyMeAccessField()] == $this-&gt;currentUser-&gt;$userOnlyMeAccessRequestField) {
+					return true;
+				}
+			}
+			
+			//This will check whether user can access his own records using a value in requested object
+			if (in_array($type, $accessMatrix)) {
+				$field = $object-&gt;getUserOnlyMeAccessField();
+				if($this-&gt;currentUser-&gt;$userOnlyMeAccessRequestField == $object-&gt;$field){
+					return true;
+				}
+			
+			}
+		}
+		
+		$ret[&#x27;status&#x27;] = &quot;ERROR&quot;;
+		$ret[&#x27;message&#x27;] = &quot;Access violation&quot;;
+		echo json_encode($ret);
+		exit();
+	}
+	
+	
+	
+	public function getInstanceId(){
+		$settings = new Setting();
+		$settings-&gt;Load(&quot;name = ?&quot;,array(&quot;Instance : ID&quot;));
+		
+		if($settings-&gt;name != &quot;Instance : ID&quot; || empty($settings-&gt;value)){
+			$settings-&gt;value = md5(time());
+			$settings-&gt;name = &quot;Instance : ID&quot;;
+			$settings-&gt;Save();
+		}
+		
+		return $settings-&gt;value;
+	}
+	
+	public function setInstanceKey($key){
+		$settings = new Setting();
+		$settings-&gt;Load(&quot;name = ?&quot;,array(&quot;Instance: Key&quot;));
+		if($settings-&gt;name != &quot;Instance: Key&quot;){
+			$settings-&gt;name = &quot;Instance: Key&quot;;
+			
+		}
+		$settings-&gt;value = $key;
+		$settings-&gt;Save();
+	}
+	
+	public function getInstanceKey(){
+		$settings = new Setting();
+		$settings-&gt;Load(&quot;name = ?&quot;,array(&quot;Instance: Key&quot;));
+		if($settings-&gt;name != &quot;Instance: Key&quot;){
+			return null;	
+		}
+		return $settings-&gt;value;
+	}
+	
+	public function validateInstance(){
+		$instanceId = $this-&gt;getInstanceId();
+		if(empty($instanceId)){
+			return true;
+		}
+	
+		$key = $this-&gt;getInstanceKey();
+	
+		if(empty($key)){
+			return false;
+		}
+	
+		$data = AesCtr::decrypt($key, $instanceId, 256);
+		$arr = explode(&quot;|&quot;,$data);
+		if($arr[0] == KEY_PREFIX &amp;&amp; $arr[1] == $instanceId){
+			return true;
+		}
+	
+		return false;
+	}
+	
+	public function loadModulePermissions($group, $name, $userLevel){
+		$module = new Module();
+		$module-&gt;Load(&quot;update_path = ?&quot;,array($group.&quot;&gt;&quot;.$name));
+		$arr = array();
+		$arr[&#x27;user&#x27;] = json_decode($module-&gt;user_levels,true);
+
+		
+		$permission = new Permission();
+		$modulePerms = $permission-&gt;Find(&quot;module_id = ? and user_level = ?&quot;,array($module-&gt;id,$userLevel));
+
+		
+		$perms = array();
+		foreach($modulePerms as $p){
+			$perms[$p-&gt;permission] = $p-&gt;value;
+		}
+		
+		$arr[&#x27;perm&#x27;] = $perms;
+		
+		return $arr;
+	}
+	
+	public function getGAKey(){
+		return &quot;&quot;;
+	}
+	
+	/**
+	 * Set the audit manager
+	 * @method setAuditManager
+	 * @param $auditManager {AuditManager}
+	 */
+	
+	public function setAuditManager($auditManager){
+		$this-&gt;auditManager = $auditManager;
+	}
+	
+	/**
+	 * Set the NotificationManager
+	 * @method setNotificationManager
+	 * @param $notificationManager {NotificationManager}
+	 */
+	
+	public function setNotificationManager($notificationManager){
+		$this-&gt;notificationManager = $notificationManager;
+	}
+	
+	/**
+	 * Set the SettingsManager
+	 * @method setSettingsManager
+	 * @param $settingsManager {SettingsManager}
+	 */
+	
+	public function setSettingsManager($settingsManager){
+		$this-&gt;settingsManager = $settingsManager;
+	}
+	
+	public function setFileFields($fileFields){
+		$this-&gt;fileFields = $fileFields;
+	}
+	
+	public function audit($type, $data){
+		if(!empty($this-&gt;auditManager)){
+			$this-&gt;auditManager-&gt;addAudit($type, $data);
+		}
+	}
+	
+	public function fixJSON($json){
+		$noJSONRequests = SettingsManager::getInstance()-&gt;getSetting(&quot;System: Do not pass JSON in request&quot;);
+		if($noJSONRequests.&quot;&quot; == &quot;1&quot;){
+			$json = str_replace(&quot;|&quot;,&#x27;&quot;&#x27;,$json);
+		}
+		return $json;
+	}
+	
+	public function addModuleManager($moduleManager){
+		if(empty($this-&gt;moduleManagers)){
+			$this-&gt;moduleManagers = array();
+		}
+		$this-&gt;moduleManagers[] = $moduleManager;
+	}
+	
+	public function getModuleManagers(){
+		return $this-&gt;moduleManagers;
+	}
+	
+	public function setEmailSender($emailSender){
+		$this-&gt;emailSender = $emailSender;
+	}
+	
+	public function getEmailSender(){
+		return $this-&gt;emailSender;
+	}
+}
+
+class IceConstants{
+	const AUDIT_AUTHENTICATION = &quot;Authentication&quot;;
+	const AUDIT_ADD = &quot;Add&quot;;
+	const AUDIT_EDIT = &quot;Edit&quot;;
+	const AUDIT_DELETE = &quot;Delete&quot;;
+	const AUDIT_ERROR = &quot;Error&quot;;
+	const AUDIT_ACTION = &quot;User Action&quot;;
+	
+	const NOTIFICATION_LEAVE = &quot;Leave Module&quot;;
+	const NOTIFICATION_TIMESHEET = &quot;Time Module&quot;;
+}
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

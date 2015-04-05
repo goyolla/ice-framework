@@ -207,6 +207,8 @@
          depends=""
          description="Generate project documentation using phpDox">
   <exec executable="${toolsdir}phpdox"/>
+	<exclude mask="**adodb512**" />
+	<exclude mask="**composer**" />
  </target>
 	
 

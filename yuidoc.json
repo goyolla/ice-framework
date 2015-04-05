@@ -1,0 +1,16 @@
+{
+  "name": "ice-framework",
+  "description": "ice-framework",
+  "version": "1.0",
+  "url": "http://ice-framework.gamonoid.com/doc/",
+  "logo": "http://ice-framework.gamonoid.com/logo.png",
+  "options": {
+    "linkNatives": "true",
+    "attributesEmit": "true",
+    "paths": [
+              "./src/api","./src/utils","./src/classes","./ext","./src/model"
+    ],
+    "extension": ".js,.php",
+    "outdir": "./output"
+  }
+}
