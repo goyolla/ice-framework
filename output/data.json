@@ -79,6 +79,15 @@
             "fors": {},
             "namespaces": {}
         },
+        "src\\classes\\AbstractModuleManager.php": {
+            "name": "src\\classes\\AbstractModuleManager.php",
+            "modules": {},
+            "classes": {
+                "AbstractModuleManager": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "src\\classes\\BaseService.php": {
             "name": "src\\classes\\BaseService.php",
             "modules": {},
@@ -103,6 +112,19 @@
             "file": "src\\api\\Base.js",
             "line": 25,
             "description": "The base class for providing core functions to all module classes."
+        },
+        "AbstractModuleManager": {
+            "name": "AbstractModuleManager",
+            "shortname": "AbstractModuleManager",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "namespace": "",
+            "file": "src\\classes\\AbstractModuleManager.php",
+            "line": 2,
+            "description": "The base class for module manager classes. ModuleManager classes which extend this class provide core backend functionality\nto each module such as defining models, error handliing and other configuration details"
         },
         "BaseService": {
             "name": "BaseService",
@@ -1010,7 +1032,7 @@
             "return": {
                 "description": "ciphertext as byte-array (16 bytes)"
             },
-            "class": "BaseService"
+            "class": "AbstractModuleManager"
         },
         {
             "file": "src\\classes\\crypt\\Aes.php",
@@ -1025,7 +1047,7 @@
             "return": {
                 "description": "key schedule as 2D byte-array (Nr+1 x Nb bytes)"
             },
-            "class": "BaseService"
+            "class": "AbstractModuleManager"
         },
         {
             "file": "src\\classes\\crypt\\AesCtr.php",
@@ -1048,7 +1070,7 @@
             "return": {
                 "description": "encrypted text"
             },
-            "class": "BaseService"
+            "class": "AbstractModuleManager"
         },
         {
             "file": "src\\classes\\crypt\\AesCtr.php",
@@ -1071,7 +1093,51 @@
             "return": {
                 "description": "decrypted text"
             },
-            "class": "BaseService"
+            "class": "AbstractModuleManager"
+        },
+        {
+            "file": "src\\classes\\AbstractModuleManager.php",
+            "line": 14,
+            "description": "Override this method in module manager class to define user classes. \nA user class is a class that is mapped to a table having a field named profile. The profile field is mapped to the id of a Profile element.\nWhen a user is saving this type of an object in db, profile field will be set to the id of the Profile of currently logged in or switched user.\nWhen a user is retriving this type of records, only the records having profile field set to currently logged in users profile id will be released.",
+            "itemtype": "method",
+            "name": "initializeUserClasses",
+            "example": [
+                "\n\t  \tpublic function initializeUserClasses(){\n\t\t\t$this->addUserClass(\"EmployeeDocument\");\n\t\t}\n "
+            ],
+            "class": "AbstractModuleManager"
+        },
+        {
+            "file": "src\\classes\\AbstractModuleManager.php",
+            "line": 28,
+            "description": "Override this method in module manager class to define file field mappings. If you have a table field that stores a name of a file which need to be\ndeleted from the disk when the record is deleted a file field mapping should be added.",
+            "itemtype": "method",
+            "name": "initializeFieldMappings",
+            "example": [
+                "\n\t\t public function initializeFieldMappings(){\n\t\t\t$this->addFileFieldMapping('EmployeeDocument', 'attachment', 'name');\n\t\t }"
+            ],
+            "class": "AbstractModuleManager"
+        },
+        {
+            "file": "src\\classes\\AbstractModuleManager.php",
+            "line": 40,
+            "description": "Override this method in module manager class to define DB error mappings. Some actions to your model classes trigger database errors.\nThese errors need to be translated to user friendly texts using DB error mappings",
+            "itemtype": "method",
+            "name": "initializeDatabaseErrorMappings",
+            "example": [
+                "\n\t \tpublic function initializeDatabaseErrorMappings(){\n\t\t\t$this->addDatabaseErrorMapping('CONSTRAINT `Fk_User_Employee` FOREIGN KEY',\"Can not delete Employee, please delete the User for this employee first.\");\n\t\t\t$this->addDatabaseErrorMapping(\"Duplicate entry|for key 'employee'\",\"A duplicate entry found\");\n\t\t}"
+            ],
+            "class": "AbstractModuleManager"
+        },
+        {
+            "file": "src\\classes\\AbstractModuleManager.php",
+            "line": 52,
+            "description": "Override this method in module manager class to add model classes to this module. All the model classes defind for the module should be added here",
+            "itemtype": "method",
+            "name": "setupModuleClassDefinitions",
+            "example": [
+                "\n\t\tpublic function setupModuleClassDefinitions(){\n\t\t\t$this->addModelClass('Employee');\n\t\t\t$this->addModelClass('EmploymentStatus');\n\t\t}"
+            ],
+            "class": "AbstractModuleManager"
         },
         {
             "file": "src\\classes\\BaseService.php",
