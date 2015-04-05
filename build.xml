@@ -34,6 +34,7 @@
   <delete dir="${basedir}/build/logs"/>
   <delete dir="${basedir}/build/pdepend"/>
   <delete dir="${basedir}/build/phpdox"/>
+  <delete dir="${basedir}/build/yuidoc"/>
   <delete dir="${basedir}/build/test"/>
   <delete dir="${basedir}/build/app"/>
   <delete dir="${basedir}/build/release"/>
@@ -49,6 +50,7 @@
   <mkdir dir="${basedir}/build/logs"/>
   <mkdir dir="${basedir}/build/pdepend"/>
   <mkdir dir="${basedir}/build/phpdox"/>
+  <mkdir dir="${basedir}/build/yuidoc"/>
   <mkdir dir="${basedir}/build/test"/>
   <mkdir dir="${basedir}/build/app"/>
   <mkdir dir="${basedir}/build/release/data"/>
