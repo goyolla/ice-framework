@@ -1355,6 +1355,10 @@ IceHRMBase.method('addDataGroup', function() {
 		params['id'] = field[0]+"_"+this.dataGroupGetNextAutoIncrementId(data);
 		data.push(params);
 		
+		if(field[1]['sort-function'] != undefined && field[1]['sort-function'] != null){
+			data.sort(field[1]['sort-function']);
+		}
+		
 		val = JSON.stringify(data);
 		$("#"+field[0]).val(val);
 		
@@ -1397,6 +1401,10 @@ IceHRMBase.method('editDataGroup', function() {
 			
 			params['id'] = editVal.id;
 			newVals.push(params);
+			
+			if(field[1]['sort-function'] != undefined && field[1]['sort-function'] != null){
+				newVals.sort(field[1]['sort-function']);
+			}
 			
 			val = JSON.stringify(newVals);
 			$("#"+field[0]).val(val);
