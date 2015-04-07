@@ -776,9 +776,11 @@ IceHRMBase.method('closePlainMessage', function() {
 /**
  * Create or edit an element 
  * @method save
+ * @param getFunctionCallBackData {Array} once a success is returned call get() function for this module with these parameters
+ * @param successCallback {Function} this will get called after success response
  */
 
-IceHRMBase.method('save', function() {
+IceHRMBase.method('save', function(callGetFunction, successCallback) {
 	var validator = new FormValidation(this.getTableName()+"_submit",true,{'ShowPopup':false,"LabelErrorClass":"error"});
 	if(validator.checkValues()){
 		var params = validator.getFormParameters();
@@ -789,7 +791,7 @@ IceHRMBase.method('save', function() {
 			if(id != null && id != undefined && id != ""){
 				$(params).attr('id',id);
 			}
-			this.add(params,[]);
+			this.add(params,[],callGetFunction, successCallback);
 		}else{
 			$("#"+this.getTableName()+'Form .label').html(msg);
 			$("#"+this.getTableName()+'Form .label').show();

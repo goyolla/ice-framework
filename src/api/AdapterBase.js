@@ -78,23 +78,39 @@ AdapterBase.method('getOrderBy', function() {
 	return this.orderBy;
 });
 
-AdapterBase.method('add', function(object,callBackData) {
+/**
+ * @method add
+ * @param object {Array} object data to be added to database
+ * @param getFunctionCallBackData {Array} once a success is returned call get() function for this module with these parameters
+ * @param callGetFunction {Boolean} if false the get function of the module will not be called (default: true)
+ * @param successCallback {Function} this will get called after success response
+ */
+
+AdapterBase.method('add', function(object,getFunctionCallBackData,callGetFunction,successCallback) {
 	var that = this;
+	if(callGetFunction == undefined || callGetFunction == null){
+		callGetFunction = true;
+	}
 	$(object).attr('a','add');
 	$(object).attr('t',this.table);
 	$.post(this.moduleRelativeURL, object, function(data) {
 		if(data.status == "SUCCESS"){
-			that.addSuccessCallBack(callBackData,data.object);
+			that.addSuccessCallBack(getFunctionCallBackData,data.object, callGetFunction, successCallback, that);
 		}else{
-			that.addFailCallBack(callBackData,data.object);
+			that.addFailCallBack(getFunctionCallBackData,data.object);
 		}
 	},"json");
 	this.trackEvent("add",this.tab,this.table);
 });
 
-AdapterBase.method('addSuccessCallBack', function(callBackData,serverData) {
-	this.get(callBackData);
+AdapterBase.method('addSuccessCallBack', function(callBackData,serverData, callGetFunction, successCallback, thisObject) {
+	if(callGetFunction){
+		this.get(callBackData);
+	}
 	this.initFieldMasterData();
+	if(successCallback != undefined && successCallback != null){
+		successCallback.apply(thisObject,[serverData]);
+	}
 	this.trackEvent("addSuccess",this.tab,this.table);
 });
 
