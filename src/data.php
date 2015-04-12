@@ -49,20 +49,29 @@ $countFilterQueryData = array();
 if(!empty($_REQUEST['ft'])){
 	$filter = json_decode($_REQUEST['ft']);
 	if(!empty($filter)){
-		foreach($filter as $k=>$v){
-			$countFilterQuery.=" and ".$k."=?";
-			$countFilterQueryData[] = $v;
+		if(method_exists($obj,'getCustomFilterQuery')){
+			$response = $obj->getCustomFilterQuery($filter);
+			$countFilterQuery = $response[0];
+			$countFilterQueryData = $response[1];
+		}else{
+			
+			$defaultFilterResp = $this->buildDefaultFilterQuery($filter);
+			$countFilterQuery = $defaultFilterResp[0];
+			$countFilterQueryData = $defaultFilterResp[1];
 		}
 	}
 }
+
+LogManager::getInstance()->debug("Row Count Filter Query:".$countFilterQuery);
+LogManager::getInstance()->debug("Row Count Filter Query Data:".json_encode($countFilterQueryData));
 
 
 if(in_array($table, BaseService::getInstance()->userTables) && !$skipProfileRestriction && !$isSubOrdinates){
 	$cemp = BaseService::getInstance()->getCurrentProfileId();
 	$sql = "Select count(id) as count from ".$obj->_table." where ".SIGN_IN_ELEMENT_MAPPING_FIELD_NAME." = ? ".$countFilterQuery;
 	array_unshift($countFilterQueryData,$cemp);
-	LogManager::getInstance()->debug("Cpunt Filter Query 1:".$sql);
-	LogManager::getInstance()->debug("Cpunt Filter Query Data 1:".json_encode($countFilterQueryData));
+	LogManager::getInstance()->debug("Count Filter Query 1:".$sql);
+	LogManager::getInstance()->debug("Count Filter Query Data 1:".json_encode($countFilterQueryData));
 	
 	$rowCount = $obj->DB()->Execute($sql, $countFilterQueryData);
 			
@@ -81,16 +90,16 @@ if(in_array($table, BaseService::getInstance()->userTables) && !$skipProfileRest
 		}
 		$subordinatesIds.="";
 		$sql = "Select count(id) as count from ".$obj->_table." where ".SIGN_IN_ELEMENT_MAPPING_FIELD_NAME." in (".$subordinatesIds.") ".$countFilterQuery;
-		LogManager::getInstance()->debug("Cpunt Filter Query 2:".$sql);
-		LogManager::getInstance()->debug("Cpunt Filter Query Data 2:".json_encode($countFilterQueryData));
+		LogManager::getInstance()->debug("Count Filter Query 2:".$sql);
+		LogManager::getInstance()->debug("Count Filter Query Data 2:".json_encode($countFilterQueryData));
 		$rowCount = $obj->DB()->Execute($sql,$countFilterQueryData);
 	}else{
 		$sql = "Select count(id) as count from ".$obj->_table;
 		if(!empty($countFilterQuery)){
 			$sql.=" where 1=1 ".$countFilterQuery;
 		}
-		LogManager::getInstance()->debug("Cpunt Filter Query 3:".$sql);
-		LogManager::getInstance()->debug("Cpunt Filter Query Data 3:".json_encode($countFilterQueryData));
+		LogManager::getInstance()->debug("Count Filter Query 3:".$sql);
+		LogManager::getInstance()->debug("Count Filter Query Data 3:".json_encode($countFilterQueryData));
 		$rowCount = $obj->DB()->Execute($sql,$countFilterQueryData);
 	}
 	

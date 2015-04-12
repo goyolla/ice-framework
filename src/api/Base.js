@@ -867,46 +867,50 @@ IceHRMBase.method('filterQuery', function() {
 IceHRMBase.method('getFilterString', function(filters) {
 
 	var str = '';
-	var rmf, source, values;
+	var rmf, source, values, select2MVal, value, valueOrig;
 	
 	var filterFields = this.getFilters();
 	
+	
+	if(values == null){
+		values = [];
+	}
+	
 	for (var prop in filters) {
 		if(filters.hasOwnProperty(prop)){
-			
-			if(str != ''){
-				str += " | ";
-			}
-			
 			values = this.getMetaFieldValues(prop,filterFields);
+			value = "";
+			valueOrig = null;
 			
-			str += values['label']+" = ";
-			if((values['type'] == 'select' || values['type'] == 'select2' || values['type'] == 'select2multi')){
+			if((values['type'] == 'select' || values['type'] == 'select2')){
 				
 				if(values['remote-source']!= undefined && values['remote-source']!= null){
 					rmf = values['remote-source'];
 					if(filters[prop] == "NULL"){
 						if(values['null-label'] != undefined && values['null-label'] != null){
-							str += values['null-label'];
+							value = values['null-label'];
 						}else{
-							str += "Not Selected";
+							value = "Not Selected";
 						}
 					}else{
-						str += this.fieldMasterData[rmf[0]+"_"+rmf[1]+"_"+rmf[2]][filters[prop]];
+						value = this.fieldMasterData[rmf[0]+"_"+rmf[1]+"_"+rmf[2]][filters[prop]];
+						valueOrig = value;
 					}
+					
 					
 				}else{
 					source = values['source'][0];
 					if(filters[prop] == "NULL"){
 						if(values['null-label'] != undefined && values['null-label'] != null){
-							str += values['null-label'];
+							value = values['null-label'];
 						}else{
-							str += "Not Selected";
+							value = "Not Selected";
 						}
 					}else{
 						for(var i=0; i<source.length; i++){
-							if(filters[prop] == source[i]){
-								str += values['source'][1][i];
+							if(filters[prop] == values['source'][i][0]){
+								value = values['source'][i][1];
+								valueOrig = value;
 								break;
 							}
 						}
@@ -914,8 +918,34 @@ IceHRMBase.method('getFilterString', function(filters) {
 					
 					
 				}
+				
+			}else if (values['type'] == 'select2multi'){
+				select2MVal = [];
+				try{
+					select2MVal = JSON.parse(filters[prop]);
+					
+				}catch(e){
+					
+				}
+				
+				value = select2MVal.join(",");
+				if(value != ""){
+					valueOrig = value;
+				}
+				
 			}else{
-				str += filters[prop];
+				value = filters[prop];
+				if(value != ""){
+					valueOrig = value;
+				}
+			}
+			
+			if(valueOrig != null){
+				if(str != ''){
+					str += " | ";
+				}
+				
+				str += values['label']+" = "+value;
 			}
 		}
 	}
@@ -1572,9 +1602,11 @@ IceHRMBase.method('fillForm', function(object, formId, fields) {
 			$(formId + ' #'+fields[i][0]).select2('val',msVal);
 		
 		}else if(fields[i][1].type == 'datagroup'){
-			var html = this.dataGroupToHtml(object[fields[i][0]],fields[i]);
-			$(formId + ' #'+fields[i][0]).val(object[fields[i][0]]);
-			$(formId + ' #'+fields[i][0]+"_div").html(html);
+			try{
+				var html = this.dataGroupToHtml(object[fields[i][0]],fields[i]);
+				$(formId + ' #'+fields[i][0]).val(object[fields[i][0]]);
+				$(formId + ' #'+fields[i][0]+"_div").html(html);
+			}catch(e){}
 		}else{
 			$(formId + ' #'+fields[i][0]).val(object[fields[i][0]]);
 		}
@@ -1598,7 +1630,7 @@ IceHRMBase.method('renderFormField', function(field) {
 		return "";
 	}
 	var t = this.fieldTemplates[field[1].type];
-	if(field[1].validation != "none" &&  field[1].validation != "emailOrEmpty" && field[1].type != "placeholder" && field[1].label.indexOf('*') < 0){
+	if(field[1].validation != "none" &&  field[1].validation != "emailOrEmpty" && field[1].validation != "numberOrEmpty" && field[1].type != "placeholder" && field[1].label.indexOf('*') < 0){
 		field[1].label = field[1].label + '<font class="redFont">*</font>';
 	}
 	if(field[1].type == 'text' || field[1].type == 'textarea' || field[1].type == 'hidden' || field[1].type == 'label' || field[1].type == 'placeholder'){
@@ -1609,7 +1641,7 @@ IceHRMBase.method('renderFormField', function(field) {
 		t = t.replace(/_id_/g,field[0]);
 		t = t.replace(/_label_/g,field[1].label);
 		if(field[1]['source'] != undefined && field[1]['source'] != null ){
-			t = t.replace('_options_',this.renderFormSelectOptions(field[1].source));
+			t = t.replace('_options_',this.renderFormSelectOptions(field[1].source, field));
 		}else if(field[1]['remote-source'] != undefined && field[1]['remote-source'] != null ){
 			var key = field[1]['remote-source'][0]+"_"+field[1]['remote-source'][1]+"_"+field[1]['remote-source'][2];
 			t = t.replace('_options_',this.renderFormSelectOptionsRemote(this.fieldMasterData[key],field));
@@ -1659,8 +1691,20 @@ IceHRMBase.method('renderFormField', function(field) {
 	return t;
 });
 
-IceHRMBase.method('renderFormSelectOptions', function(options) {
+IceHRMBase.method('renderFormSelectOptions', function(options, field) {
 	var html = "";
+	
+	if(field != null && field != undefined){
+		if(field[1]['allow-null'] == true){
+			if(field[1]['null-label'] != undefined && field[1]['null-label'] != null){
+				html += '<option value="NULL">'+field[1]['null-label']+'</option>';
+			}else{
+				html += '<option value="NULL">Select</option>';
+			}
+			
+		}
+	}
+	
 	
 	//Sort options
 	

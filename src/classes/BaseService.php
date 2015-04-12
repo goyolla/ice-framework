@@ -128,6 +128,48 @@ class BaseService{
 		return $list;
 	}
 	
+	public function buildDefaultFilterQuery($filter){
+		$query = "";
+		$queryData = [];
+		foreach($filter as $k=>$v){
+			if(empty($v)){
+				continue;
+			}
+			$vArr = json_decode($v);
+			if(is_array($vArr)){
+				if(empty($vArr)){
+					continue;
+				}
+				$v = $vArr;
+				$length = count();
+				for($i=0; $i<$length; $i++){
+					$query.=$k." like ?";
+					
+					if($i == 0){
+						$query.=" and (";
+					}
+					
+					if($i < $length -1){
+						$query.=" or ";
+					}else{
+						$query.=")";
+					}
+					$queryData[] = "%".$v[$i]."%";
+				}
+					
+			}else{
+				if(!empty($v) && $v != 'NULL'){
+					$query.=" and ".$k."=?";
+					$queryData[] = $v;
+				}
+					
+			}
+				
+		}
+
+		return array($query, $queryData);
+	}
+	
 	/**
 	 * An extention of get method for the use of data tables with ability to search
 	 * @method getData
@@ -153,11 +195,24 @@ class BaseService{
 		if(!empty($filterStr)){
 			$filter = json_decode($filterStr);
 			if(!empty($filter)){
-				foreach($filter as $k=>$v){
-					$query.=" and ".$k."=?";
-					$queryData[] = $v;
-				}	
-			}	
+				LogManager::getInstance()->debug("Building filter query");
+				if(method_exists($obj,'getCustomFilterQuery')){
+					LogManager::getInstance()->debug("Method: getCustomFilterQuery exists");
+					$response = $obj->getCustomFilterQuery($filter);
+					$query = $response[0];
+					$queryData = $response[1];
+				}else{
+					LogManager::getInstance()->debug("Method: getCustomFilterQuery not found");
+					$defaultFilterResp = $this->buildDefaultFilterQuery($filter);	
+					$query = $defaultFilterResp[0];
+					$queryData = $defaultFilterResp[1];
+				}
+				
+				
+			}
+
+			LogManager::getInstance()->debug("Filter Query:".$query);
+			LogManager::getInstance()->debug("Filter Query Data:".json_encode($queryData));
 		}
 		
 		
@@ -219,6 +274,9 @@ class BaseService{
 			$list = $obj->Find("1=1".$query.$orderBy.$limit,$queryData);
 		}	
 
+		
+		LogManager::getInstance()->debug("Data Load Query:"."1=1".$query.$orderBy.$limit);
+		LogManager::getInstance()->debug("Data Load Query Data:".json_encode($queryData));
 		
 		if(!empty($mappingStr) && count($map)>0){
 			$list = $this->populateMapping($list, $map);
