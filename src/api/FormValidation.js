@@ -56,6 +56,17 @@ function FormValidation(formId,validateAll,options) {
 			 	}
 			},
 			
+			numberOrEmpty: function (str) {
+				if(str == ""){
+					return true;
+				}
+				var numstr = /^[0-9]+$/;
+				if (str != null && str.match(numstr)) {
+			   		return true;
+			 	} else {
+			 		return false;
+			 	}
+			},
 			
 			email: function (str) {   
 				var emailPattern = /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/;  
