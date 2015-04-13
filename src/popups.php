@@ -44,8 +44,7 @@
 	<div class="modal-header" style="border-bottom:none;/*background-color: #3c8dbc;*/">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="margin-top:-10px;"><li class="fa fa-times"/></button>
 	</div>
-	<div class="modal-body">
-		<p id="plainMessageModelBody"></p>
+	<div class="modal-body" id="plainMessageModelBody">
 	</div>
 </div>
 </div>
