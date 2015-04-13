@@ -311,10 +311,15 @@ AdapterBase.method('getTableName', function() {
 AdapterBase.method('getFieldValues', function(fieldMaster,callBackData) {
 	var that = this;
 	var method =  "";
+	var methodParams =  "";
 	if(fieldMaster[3] != undefined && fieldMaster[3] != null){
 		method = fieldMaster[3]; 
 	}
-	$.post(this.moduleRelativeURL, {'t':fieldMaster[0],'key':fieldMaster[1],'value':fieldMaster[2],'method':method,'a':'getFieldValues'}, function(data) {
+	
+	if(fieldMaster[4] != undefined && fieldMaster[4] != null){
+		methodParams = JSON.stringify(fieldMaster[4]); 
+	}
+	$.post(this.moduleRelativeURL, {'t':fieldMaster[0],'key':fieldMaster[1],'value':fieldMaster[2],'method':method,'methodParams':methodParams,'a':'getFieldValues'}, function(data) {
 		if(data.status == "SUCCESS"){
 			callBackData['callBackData'].push(data.data);
 			if(callBackData['callBackSuccess'] != null && callBackData['callBackSuccess'] != undefined){
@@ -382,4 +387,66 @@ AdapterBase.method('getClientDataUrl', function() {
 
 AdapterBase.method('getCustomUrl', function(str) {
 	return this.moduleRelativeURL.replace("service.php",str);
+});
+
+
+
+/**
+ * @class SubAdapterBase
+ * @param endPoint
+ * @param tab
+ * @param filter
+ * @param orderBy
+ * @returns
+ */
+
+
+function SubAdapterBase(endPoint,tab,filter,orderBy) {
+	this.initAdapter(endPoint,tab,filter,orderBy);
+}
+
+SubAdapterBase.inherits(AdapterBase);
+
+SubAdapterBase.method('deleteRow', function(id) {
+	this.deleteParams['id'] = id;
+	this.confirmDelete();
+});
+
+SubAdapterBase.method('createTable', function(elementId) {
+	var item, itemHtml,itemDelete,itemEdit;
+	var data = this.getTableData();
+	
+	var deleteButton = '<button id="#_id_#_delete" onclick="modJs.subModJsList[\'tab'+elementId+'\'].deleteRow(\'_id_\');return false;" type="button" style="position: absolute;bottom: 5px;right: 5px;font-size: 13px;" tooltip="Delete"><li class="fa fa-times"></li></button>';
+	var editButton = '<button id="#_id_#_edit" onclick="modJs.subModJsList[\'tab'+elementId+'\'].edit(\'_id_\');return false;" type="button" style="position: absolute;bottom: 5px;right: 35px;font-size: 13px;" tooltip="Edit"><li class="fa fa-edit"></li></button>';
+
+	var table = $('<div class="list-group"></div>');
+	
+	//add Header
+	var header = this.getSubHeader();
+	table.append(header);
+	if(data.length == 0){
+		table.append('<a href="#" class="list-group-item">'+this.getNoDataMessage()+'</a>');
+	}else{
+		for(var i=0;i<data.length;i++){
+			item = data[i];
+			itemDelete = deleteButton.replace(/_id_/g,item[0]);
+			itemEdit = editButton.replace(/_id_/g,item[0]);
+			itemHtml = this.getSubItemHtml(item,itemDelete,itemEdit);
+			table.append(itemHtml);
+		}
+		
+	}
+	$("#"+elementId).html("");
+	$("#"+elementId).append(table);
+	$('#plainMessageModel').modal('hide');
+	
+});
+
+SubAdapterBase.method('getNoDataMessage', function() {
+	return "No data found";
+});
+
+SubAdapterBase.method('getSubHeader', function() {
+	var header = $('<a href="#" onclick="return false;" class="list-group-item" style="background:#eee;"><h4 class="list-group-item-heading">'+this.getSubHeaderTitle()+'</h4></a>');
+	return header;
 });
