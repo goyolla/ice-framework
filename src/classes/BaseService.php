@@ -570,14 +570,26 @@ class BaseService{
 	 * @return {Array} associative array
 	 */
 	
-	public function getFieldValues($table,$key,$value,$method){
+	public function getFieldValues($table,$key,$value,$method,$methodParams = NULL){
 		
 		$values = explode("+", $value);
 		
 		$ret = array();
 		$ele = new $table();
-		if(!empty($method) && method_exists($ele,$method)){
-			$list = $ele->$method();
+		if(!empty($method)){
+			LogManager::getInstance()->debug("Call method for getFieldValues:".$method);
+			LogManager::getInstance()->debug("Call method params for getFieldValues:".json_decode($methodParams));
+			if(method_exists($ele,$method)){
+				if(!empty($methodParams)){
+					$list = $ele->$method(json_decode($methodParams));
+				}else{
+					$list = $ele->$method(array());
+				}
+			}else{
+				LogManager::getInstance()->debug("Could not find method:".$method." in Class:".$table);
+				$list = $ele->Find('1 = 1',array());
+			}
+			
 		}else{
 			$list = $ele->Find('1 = 1',array());
 		}
