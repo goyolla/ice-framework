@@ -42,6 +42,10 @@ class IceResponse{
 		return $this->data;
 	}
 	
+	public function getObject(){
+		return $this->data;
+	}
+	
 	public function getJsonArray(){
 		return array("status"=>$this->status,"data"=>$this->data);
 	}
