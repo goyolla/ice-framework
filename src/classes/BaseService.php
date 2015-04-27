@@ -637,6 +637,7 @@ class BaseService{
 		$this->currentUser = $currentUser;	
 	}
 	
+
 	public function findError($error){
 		foreach($this->errros as $k=>$v){
 			if(strstr($error, $k)){

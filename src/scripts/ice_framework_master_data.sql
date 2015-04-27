@@ -685,7 +685,8 @@ INSERT INTO `Settings` (`name`, `value`, `description`, `meta`) VALUES
 ('Files: Amazon S3 Key for File Upload', '', 'Please provide S3 Key for uploading files',''),
 ('Files: Amazone S3 Secret for File Upload', '',  'Please provide S3 Secret for uploading files',''),
 ('Files: S3 Bucket', '',  'Please provide S3 Bucket name for uploading files',''),
-('Files: S3 Web Url', '',  'Please provide Url to the s3 bucket','');
+('Files: S3 Web Url', '',  'Please provide Url to the s3 bucket',''),
+('Api: REST Api Enabled', '0',  '','["value", {"label":"Value","type":"select","source":[["0","No"],["1","Yes"]]}]');
 
 
 

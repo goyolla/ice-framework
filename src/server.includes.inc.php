@@ -36,6 +36,7 @@ include (APP_BASE_PATH."classes/ReportHandler.php");
 include (APP_BASE_PATH."classes/NotificationManager.php");
 include (APP_BASE_PATH."classes/S3FileSystem.php");
 include (APP_BASE_PATH."classes/UIManager.php");
+include (APP_BASE_PATH."classes/RestApiManager.php");
 include (APP_BASE_PATH."classes/crypt/Aes.php");
 include (APP_BASE_PATH."classes/crypt/AesCtr.php");
 
@@ -54,6 +55,7 @@ Report::SetDatabaseAdapter($dbLocal);
 DataEntryBackup::SetDatabaseAdapter($dbLocal);
 Audit::SetDatabaseAdapter($dbLocal);
 Notification::SetDatabaseAdapter($dbLocal);
+RestAccessToken::SetDatabaseAdapter($dbLocal);
 
 include (APP_BASE_PATH."model/custom.models.inc.php");
 
@@ -104,6 +106,7 @@ if(defined('CLIENT_PATH')){
 		$moduleManagerObj->setupUserClasses($userTables);
 		$moduleManagerObj->setupFileFieldMappings($fileFields);
 		$moduleManagerObj->setupErrorMappings($mysqlErrors);
+		$moduleManagerObj->setupRestEndPoints();
 		
 		$modelClassList = $moduleManagerObj->getModelClasses();
 		

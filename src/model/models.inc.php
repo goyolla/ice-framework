@@ -79,5 +79,9 @@ class Notification extends ICEHRM_Record {
 	var $_table = 'Notifications';
 }
 
+class RestAccessToken extends ICEHRM_Record {
+	var $_table = 'RestAccessTokens';
+}
+
 
 

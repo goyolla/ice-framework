@@ -60,6 +60,11 @@ abstract class AbstractModuleManager{
 	 */
 	public abstract function setupModuleClassDefinitions();
 	
+	
+	public function setupRestEndPoints(){
+		
+	}
+	
 	public function setupFileFieldMappings(&$fileFields){
 		foreach ($this->fileFieldMappings as $mapping){
 			if(empty($fileFields[$mapping[0]])){
