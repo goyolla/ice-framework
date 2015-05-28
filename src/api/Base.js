@@ -1,19 +1,23 @@
 /*
+This file is part of Ice Framework.
 
-Copyright [2015] [Thilina Hasantha (thilina.hasantha[at]gmail.com)]
+Ice Framework is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+Ice Framework is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-   http://www.apache.org/licenses/LICENSE-2.0
+You should have received a copy of the GNU General Public License
+along with Ice Framework. If not, see <http://www.gnu.org/licenses/>.
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+------------------------------------------------------------------
 
+Original work Copyright (c) 2012 [Gamonoid Media Pvt. Ltd]  
+Developer: Thilina Hasantha (thilina.hasantha[at]gmail.com / facebook.com/thilinah)
  */
 
 
@@ -166,7 +170,7 @@ IceHRMBase.method('getCurrentProfile' , function() {
  *		this.initFieldMasterData(cb);
  *      });
  */
-IceHRMBase.method('initFieldMasterData' , function(callback, loadAllCallback) {
+IceHRMBase.method('initFieldMasterData' , function(callback, loadAllCallback, loadAllCallbackData) {
 	var values;
 	if(this.showAddNew == undefined || this.showAddNew == null){
 		this.showAddNew = true;
@@ -174,6 +178,7 @@ IceHRMBase.method('initFieldMasterData' , function(callback, loadAllCallback) {
 	this.fieldMasterData = {};
 	this.fieldMasterDataKeys = {};
 	this.fieldMasterDataCallback = loadAllCallback;
+	this.fieldMasterDataCallbackData = loadAllCallbackData;
 	this.sourceMapping = {};
 	var fields = this.getFormFields();
 	var filterFields = this.getFilters();
@@ -274,7 +279,7 @@ IceHRMBase.method('isAllLoaded' , function(fieldMasterDataKeys) {
 	return true;
 });
 
-IceHRMBase.method('initFieldMasterDataResponse' , function(key,data, callback) {
+IceHRMBase.method('initFieldMasterDataResponse' , function(key,data, callback, loadAllCallbackData) {
 	this.fieldMasterData[key] = data;
 	this.fieldMasterDataKeys[key] = true;
 
@@ -283,7 +288,12 @@ IceHRMBase.method('initFieldMasterDataResponse' , function(key,data, callback) {
 	}
 	
 	if(this.fieldMasterDataCallback != null && this.fieldMasterDataCallback != undefined && this.isAllLoaded(this.fieldMasterDataKeys)){
-		this.fieldMasterDataCallback();
+        if(this.fieldMasterDataCallbackData == null || this.fieldMasterDataCallbackData == undefined){
+            this.fieldMasterDataCallback();
+        }else{
+            this.fieldMasterDataCallback(this.fieldMasterDataCallbackData);
+        }
+
 	}
 	
 });
@@ -1015,6 +1025,8 @@ IceHRMBase.method('showFilters', function(object) {
       language: 'en'
     });
 	
+	$tempDomObj.find('.colorpick').colorpicker();
+	
 	//$tempDomObj.find('.select2Field').select2();
 	$tempDomObj.find('.select2Field').each(function() {
 		$(this).select2().select2('val', $(this).find("option:eq(0)").val());
@@ -1068,6 +1080,9 @@ IceHRMBase.method('preRenderForm', function(object) {
 IceHRMBase.method('renderForm', function(object) {
 	
 	var that = this;
+	if(object == null || object == undefined){
+		this.currentId = null;
+	}
 	
 	this.preRenderForm(object);
 	
@@ -1115,6 +1130,8 @@ IceHRMBase.method('renderForm', function(object) {
       language: 'en'
     });
 	
+	$tempDomObj.find('.colorpick').colorpicker();
+	
 	//$tempDomObj.find('.select2Field').select2();
 	$tempDomObj.find('.select2Field').each(function() {
 		$(this).select2().select2('val', $(this).find("option:eq(0)").val());
@@ -1142,7 +1159,12 @@ IceHRMBase.method('renderForm', function(object) {
 		$tempDomObj.find('.saveBtn').off();
 		$tempDomObj.find('.saveBtn').data("modJs",this);
 		$tempDomObj.find('.saveBtn').on( "click", function() {
-			  $(this ).data('modJs').save();
+              if($(this ).data('modJs').saveSuccessItemCallback != null && $(this ).data('modJs').saveSuccessItemCallback!= undefined){
+                  $(this ).data('modJs').save($(this ).data('modJs').retriveItemsAfterSave(), $(this ).data('modJs').saveSuccessItemCallback);
+              }else{
+                  $(this ).data('modJs').save();
+              }
+
 			  return false;
 		});
 		
@@ -1187,6 +1209,11 @@ IceHRMBase.method('renderForm', function(object) {
 	
 	
 	
+});
+
+
+IceHRMBase.method('retriveItemsAfterSave', function() {
+    return true;
 });
 
 /**
@@ -1304,7 +1331,8 @@ IceHRMBase.method('showDataGroup', function(field, object) {
       language: 'en'
     });
 	
-	//$tempDomObj.find('.select2Field').select2();
+	$tempDomObj.find('.colorpick').colorpicker();
+	
 	$tempDomObj.find('.select2Field').each(function() {
 		$(this).select2().select2('val', $(this).find("option:eq(0)").val());
 	});
@@ -1530,6 +1558,11 @@ IceHRMBase.method('fillForm', function(object, formId, fields) {
 			if(object[fields[i][0]] != '0000-00-00' && object[fields[i][0]] != '' && object[fields[i][0]] != null && object[fields[i][0]] != undefined){
 				$(formId + ' #'+fields[i][0]+"_date").datepicker('setValue', object[fields[i][0]]);
 			}
+		}else if(fields[i][1].type == 'colorpick'){
+			if(object[fields[i][0]] != null && object[fields[i][0]] != undefined){
+				$(formId + ' #'+fields[i][0]+"_colorpick").colorpicker('setValue', object[fields[i][0]]);
+				$(formId + ' #'+fields[i][0]).val(object[fields[i][0]]);
+			}
 		}else if(fields[i][1].type == 'datetime' || fields[i][1].type == 'time'){
 			if(object[fields[i][0]] != '0000-00-00 00:00:00' && object[fields[i][0]] != '' && object[fields[i][0]] != null && object[fields[i][0]] != undefined){
 				var tempDate = object[fields[i][0]];
@@ -1642,6 +1675,10 @@ IceHRMBase.method('renderFormField', function(field) {
 			var key = field[1]['remote-source'][0]+"_"+field[1]['remote-source'][1]+"_"+field[1]['remote-source'][2];
 			t = t.replace('_options_',this.renderFormSelectOptionsRemote(this.fieldMasterData[key],field));
 		}
+		
+	}else if(field[1].type == 'colorpick'){
+		t = t.replace(/_id_/g,field[0]);
+		t = t.replace(/_label_/g,field[1].label);
 		
 	}else if(field[1].type == 'date'){
 		t = t.replace(/_id_/g,field[0]);
