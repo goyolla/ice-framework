@@ -130,7 +130,7 @@ class BaseService{
 	
 	public function buildDefaultFilterQuery($filter){
 		$query = "";
-		$queryData = [];
+		$queryData = array();
 		foreach($filter as $k=>$v){
 			if(empty($v)){
 				continue;
@@ -277,6 +277,13 @@ class BaseService{
 		
 		LogManager::getInstance()->debug("Data Load Query:"."1=1".$query.$orderBy.$limit);
 		LogManager::getInstance()->debug("Data Load Query Data:".json_encode($queryData));
+
+        $processedList = array();
+        foreach($list as $obj){
+            $processedList[] = $obj->postProcessGetData($obj);
+        }
+
+        $list = $processedList;
 		
 		if(!empty($mappingStr) && count($map)>0){
 			$list = $this->populateMapping($list, $map);
