@@ -27,10 +27,15 @@ abstract class EmailSender{
 		//Convert to an html email
 		$emailBody = file_get_contents(APP_BASE_PATH.'/templates/email/emailBody.html');
 
+        $logoFileName = CLIENT_BASE_PATH."data/logo.png";
+        $logoFileUrl = CLIENT_BASE_URL."data/logo.png";
+        if(!file_exists($logoFileName)){
+            $logoFileUrl = BASE_URL."images/logo.png";
+        }
+
 		$emailBody = str_replace("#_emailBody_#", $body, $emailBody);
 		$emailBody = str_replace("#_logourl_#",
-				BASE_URL."images/logo.png"
-				, $emailBody);
+            $logoFileUrl,$emailBody);
 
 		$user = new User();
 		$user->load("username = ?",array('admin'));
